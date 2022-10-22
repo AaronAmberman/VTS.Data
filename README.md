@@ -28,7 +28,7 @@ All objects (UnitSpawner, UnitFields, CONDITIONAL, EventInfo, etc.) will appear 
 This namespace contains classes that can be used to read and write VTS files.
 
 ### VtsWriter
-The writer that reads the VtsCustomScenarioObject runtime object and writes the its object graph to the VTS file. This type is static and only has 1 public method, *WriteVtsFile*.
+The writer that reads the VtsCustomScenarioObject runtime object and writes its object graph to the VTS file. This type is static and only has 1 public method, *WriteVtsFile*.
 
 ### VtsReader
 The reader that reads through the file and constructs the object graph from the file. This type is static and only has 1 public method, *ReadVtsFile*.
