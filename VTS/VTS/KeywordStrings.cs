@@ -88,12 +88,15 @@
         public static IReadOnlyList<string> ObjectStrings => new List<string>
         {
             Actions, Allied, BaseBlock, BaseInfo, Bases, Briefing, BriefingNote, Comp, CompleteEvent,
-            Conditionals, Conditional, ConditionalActions, ConditionalAction, ElseActions, ElseIf, Enemy, Event, EventInfo,
-            EventSequences, EventTarget, FailEvent, Fields, GlobalValues, GlobalValue, ParamAttrInfo, Objectives, ObjectivesOpFor, Objective, ParamInfo, Paths, Path,
-            ResourceManifest, Sequence, SettingsAlpha, SettingsBravo, SettingsCharlie, SettingsDelta, SettingsEcho, SettingsFoxtrot, SettingsGolf, SettingsHotel,
-            SettingsIndia, SettingsJuliet, SettingsKilo, SettingsLima, SettingsMike, SettingsNovember, SettingsOscar, SettingsPapa, SettingsQuebec, SettingsRomeo,
-            SettingsSierra, SettingsTango, SettingsUniform, SettingsVictor, SettingsWhiskey, SettingsXray, SettingsYankee, SettingsZulu,
-            StartEvent, StaticObjects, StaticObject, TimedEventGroups, TimedEventGroup, TimedEventInfo, TriggerEvents, TriggerEvent,
+            Conditionals, Conditional, ConditionalActions, ConditionalAction, ElseActions, ElseIf, 
+            Enemy, Event, EventInfo, EventSequences, EventTarget, FailEvent, Fields, GlobalValues, 
+            GlobalValue, ParamAttrInfo, Objectives, ObjectivesOpFor, Objective, ParamInfo, Paths, Path,
+            ResourceManifest, Sequence, SettingsAlpha, SettingsBravo, SettingsCharlie, SettingsDelta, 
+            SettingsEcho, SettingsFoxtrot, SettingsGolf, SettingsHotel, SettingsIndia, SettingsJuliet, 
+            SettingsKilo, SettingsLima, SettingsMike, SettingsNovember, SettingsOscar, SettingsPapa, 
+            SettingsQuebec, SettingsRomeo, SettingsSierra, SettingsTango, SettingsUniform, SettingsVictor, 
+            SettingsWhiskey, SettingsXray, SettingsYankee, SettingsZulu, StartEvent, StaticObjects, 
+            StaticObject, TimedEventGroups, TimedEventGroup, TimedEventInfo, TriggerEvents, TriggerEvent,
             UnitGroups, Units, UnitSpawner, UnitFields, Waypoints, Waypoint
         };
     }
