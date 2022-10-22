@@ -43,6 +43,32 @@
         public const string Path = "PATH";
         public const string Paths = "PATHS";
         public const string ResourceManifest = "ResourceManifest";
+        public const string SettingsAlpha = "Alpha_SETTINGS";
+        public const string SettingsBravo = "Bravo_SETTINGS";
+        public const string SettingsCharlie = "Charlie_SETTINGS";
+        public const string SettingsDelta = "Delta_SETTINGS";
+        public const string SettingsEcho = "Echo_SETTINGS";
+        public const string SettingsFoxtrot = "Foxtrot_SETTINGS";
+        public const string SettingsGolf = "Golf_SETTINGS";
+        public const string SettingsHotel = "Hotel_SETTINGS";
+        public const string SettingsIndia = "India_SETTINGS";
+        public const string SettingsJuliet = "Juliet_SETTINGS";
+        public const string SettingsKilo = "Kilo_SETTINGS";
+        public const string SettingsLima = "Lima_SETTINGS";
+        public const string SettingsMike = "Mike_SETTINGS";
+        public const string SettingsNovember = "November_SETTINGS";
+        public const string SettingsOscar = "Oscar_SETTINGS";
+        public const string SettingsPapa = "Papa_SETTINGS";
+        public const string SettingsQuebec = "Quebec_SETTINGS";
+        public const string SettingsRomeo = "Romeo_SETTINGS";
+        public const string SettingsSierra = "Sierra_SETTINGS";
+        public const string SettingsTango = "Tango_SETTINGS";
+        public const string SettingsUniform = "Uniform_SETTINGS";
+        public const string SettingsVictor = "Victor_SETTINGS";
+        public const string SettingsWhiskey = "Whiskey_SETTINGS";
+        public const string SettingsXray = "Xray_SETTINGS";
+        public const string SettingsYankee = "Yankee_SETTINGS";
+        public const string SettingsZulu = "Zulu_SETTINGS";
         public const string StaticObjects = "StaticObjects";
         public const string Sequence = "SEQUENCE";
         public const string StartEvent = "startEvent";
@@ -64,7 +90,10 @@
             Actions, Allied, BaseBlock, BaseInfo, Bases, Briefing, BriefingNote, Comp, CompleteEvent,
             Conditionals, Conditional, ConditionalActions, ConditionalAction, ElseActions, ElseIf, Enemy, Event, EventInfo,
             EventSequences, EventTarget, FailEvent, Fields, GlobalValues, GlobalValue, ParamAttrInfo, Objectives, ObjectivesOpFor, Objective, ParamInfo, Paths, Path,
-            ResourceManifest, Sequence, StartEvent, StaticObjects, StaticObject, TimedEventGroups, TimedEventGroup, TimedEventInfo, TriggerEvents, TriggerEvent,
+            ResourceManifest, Sequence, SettingsAlpha, SettingsBravo, SettingsCharlie, SettingsDelta, SettingsEcho, SettingsFoxtrot, SettingsGolf, SettingsHotel,
+            SettingsIndia, SettingsJuliet, SettingsKilo, SettingsLima, SettingsMike, SettingsNovember, SettingsOscar, SettingsPapa, SettingsQuebec, SettingsRomeo,
+            SettingsSierra, SettingsTango, SettingsUniform, SettingsVictor, SettingsWhiskey, SettingsXray, SettingsYankee, SettingsZulu,
+            StartEvent, StaticObjects, StaticObject, TimedEventGroups, TimedEventGroup, TimedEventInfo, TriggerEvents, TriggerEvent,
             UnitGroups, Units, UnitSpawner, UnitFields, Waypoints, Waypoint
         };
     }

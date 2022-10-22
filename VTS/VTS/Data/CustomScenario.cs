@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using VTS.Data.Raw;
+using VTS.File;
 
 namespace VTS.Data
 {
@@ -82,7 +84,7 @@ namespace VTS.Data
 
             try
             {
-
+                VtsCustomScenarioObject cs = VtsReader.ReadVtsFile(vtsFile);
             }
             catch (Exception ex)
             {

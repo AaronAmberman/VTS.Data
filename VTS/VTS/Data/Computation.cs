@@ -8,8 +8,8 @@
         public int Chance { get; set; }
         public string Comparison { get; set; }
         public string ControlCondition { get; set; }
-        public double ControlValue { get; set; }
-        public double CValue { get; set; }
+        public float ControlValue { get; set; }
+        public float CValue { get; set; }
         public string Factors { get; set; }
         public string GlobalValue { get; set; }
         public int Id { get; set; }

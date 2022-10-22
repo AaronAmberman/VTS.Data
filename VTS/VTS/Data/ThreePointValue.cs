@@ -2,8 +2,8 @@
 {
     public class ThreePointValue
     {
-        public double Point1 { get; set; }
-        public double Point2 { get; set; }
-        public double Point3 { get; set; }
+        public float Point1 { get; set; }
+        public float Point2 { get; set; }
+        public float Point3 { get; set; }
     }
 }
