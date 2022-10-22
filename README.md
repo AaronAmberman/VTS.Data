@@ -1,37 +1,37 @@
-# VTS.Data
+# VTS
 An API that contains a VTS mission file reader and writer for VTOL VR as well as data abstractions for runtime management of data.
 
-## At a Glance
-It is a very small and lightweight API that only has a handful of types that make it work.
+The base namespace contains a KeywordStrings class and all the various keyword strings for the VTS file were moved there for easy management and access.
 
-### Strings
-All the various keyword strings for the VTS file were moved into their own class for easy management.
-
-### VtsWriter
-The writer that reads the runtime object and writes the object graph to the file. This type is static and only has 1 public method, *WriteVtsFile*.
-
-### VtsReader
-The reader that reads through the file and constructs the object graph from the file. This type is static and only has 1 public method, *ReadVtsFile*.
-
-### VtsFileLineData
-Helps manage and identify data in a line of text in the file.
-
-### VtsProperty
-Represents any property on any object type from within the VTS file.
+## VTS.Data.Raw
+This namespace contains classes that enable the reader and writer to do their work reading and writing VTS files.
 
 ### VtsBaseObject
 An abstract base class for VTS objects.
 
+### VtsObject
+The generic wrapper for all constructs in the VTS file. Contains children, parent and properties for easily traversable and searchable data.
+
 ### VtsCustomScenarioObject
 The object wrapper for the all the generic objects and properties from inside the VTS file.
 
-### VtsObject
-The generic wrapper for all constructs in the VTS file. Contains children, parent and properties for easily traversable and searchable data.
+### VtsProperty
+Represents any property on any object type from within the VTS file.
+
+### VtsFileLineData
+Helps manage and identify data in a line of text in the VTS file. Powers the reader in scrapping data from the VTS file to transcribe it to VTS objects.
 
 ## Objects
 All objects (UnitSpawner, UnitFields, CONDITIONAL, EventInfo, etc.) will appear as children on the VtsCustomScenarioObject. Each object has properties that describe itself, children that are descendants of that object as well as a parent reference (this is not true for the VtsCustomScenarioObject as that is the root).
 
-### Reading Usage
+## VTS.File
+### VtsWriter
+The writer that reads the VtsCustomScenarioObject runtime object and writes the its object graph to the VTS file. This type is static and only has 1 public method, *WriteVtsFile*.
+
+### VtsReader
+The reader that reads through the file and constructs the object graph from the file. This type is static and only has 1 public method, *ReadVtsFile*.
+
+### VTS.Data.Raw Reading Usage
 ```
 VtsCustomScenarioObject vtsCustomScenarioObject = VtsReader.ReadVtsFile(file);
 ```
@@ -52,7 +52,13 @@ It is a fast API but I am sure speed improvements could be made in places to mak
 
 That is the largest file I have made. It is from [The Shlabovian Conflict](https://steamcommunity.com/sharedfiles/filedetails/?id=2366824583) (it is mission 5). The [VTOL Landing Practice](https://steamcommunity.com/sharedfiles/filedetails/?id=2866426564) mission I made produces a VTS file that is 3,369 lines long and it processes in about 0.011 consistently as well.
 
-### Writing Usage
+#### Growth and Future Expansion
+VtsObject reading is built in such a way that future scalability should be fairly easy for newly added object types or removed object types in the VTS file. The reader and VtsObject are built generically so that as the file is read if an **object keyword** is found we recursively read that object and all its properties. This allows us to easily traverse objects in the VTS file and build the object graph. So when a new object type is added to the VTS file by some future version of VTOL VR the API only has to go into the KeywordStrings class in the base namespace and add a const for that string as it appears in the file and then add it to the read only collection of *ObjectStrings*. Then the VtsReader should identify that as an object type and treat it as something to be read recursively. The opposite is true for removed keywords that no longer appear. Remove the appropriate constants and then remove their reference in the collection of *ObjectStrings*. The Vtsreader will no longer see these as object types and will not construct child objects.
+
+##### Note
+Removing keywords isn't actually necessary if you desire backwards compatibility. The reason is because object types are matched when read. Meaning that if a keyword is present in the **ObjectStrings** collection if it is never read from the file then the object is still not constructed. The API does not construct objects it does not read from the file. Really up to you if you clone and use this repo. I, as the API writer, will by default leave them in for backwards compatibility.
+
+### VTS.Data.Raw Writing Usage
 Writing a VTS file is just as easy code wise.
 ```
 bool success = VtsWriter.WriteVtsFile(vtsCustomScenarioObject, file);
