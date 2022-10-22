@@ -1,4 +1,4 @@
-﻿namespace VTS.Data.Raw
+﻿namespace VTS.Data
 {
     /// <summary>Represents a resource in the resource manifest for the VTS file.</summary>
     public class Resource

@@ -1,4 +1,4 @@
-﻿namespace VTS.Data.Raw
+﻿namespace VTS.Data
 {
     /// <summary>Represents a briefing note in VTOL VR.</summary>
     public class BriefingNote
