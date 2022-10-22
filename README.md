@@ -25,6 +25,8 @@ Helps manage and identify data in a line of text in the VTS file. Powers the rea
 All objects (UnitSpawner, UnitFields, CONDITIONAL, EventInfo, etc.) will appear as children on the VtsCustomScenarioObject. Each object has properties that describe itself, children that are descendants of that object as well as a parent reference (this is not true for the VtsCustomScenarioObject as that is the root).
 
 ## VTS.File
+This namespace contains classes that can be used to read and write VTS files.
+
 ### VtsWriter
 The writer that reads the VtsCustomScenarioObject runtime object and writes the its object graph to the VTS file. This type is static and only has 1 public method, *WriteVtsFile*.
 
