@@ -47,6 +47,8 @@ namespace VTS.File
             {
                 Debug.WriteLine($"An exception occurred attempting to write the VTS file.{Environment.NewLine}{ex}");
 
+                scenario.HasError = true;
+
                 return false;
             }
 

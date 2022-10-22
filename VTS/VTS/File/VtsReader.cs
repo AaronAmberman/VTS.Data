@@ -125,7 +125,7 @@ namespace VTS.File
 
                 return new VtsCustomScenarioObject
                 {
-                    ErrorOnRead = true
+                    HasError = true
                 };
             }
 

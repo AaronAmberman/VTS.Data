@@ -9,7 +9,7 @@ namespace VTS.Data.Raw
         #region Properties
 
         /// <summary>Gets or sets whether or not there was an error reading or writing the VTS file.</summary>
-        public bool ErrorOnRead { get; set; }
+        public bool HasError { get; set; }
 
         /// <summary>Get or sets the file for the CustomScenario object.</summary>
         public string File { get; set; }
