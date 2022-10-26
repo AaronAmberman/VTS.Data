@@ -9,7 +9,7 @@
         public int GroupId { get; set; }
         public string GroupName { get; set; }
         public int InitialDelay { get; set; }
-        public List<TimedEventInfo> TimedEventGroups { get; set; } = new List<TimedEventInfo>();
+        public List<TimedEventInfo> TimedEventInfos { get; set; } = new List<TimedEventInfo>();
 
         #endregion
     }

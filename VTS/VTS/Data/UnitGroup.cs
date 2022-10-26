@@ -33,6 +33,8 @@
         public string Yankee { get; set; }
         public string Zulu { get; set; }
 
+        public List<UnitGroupSettings> UnitGroupSettings { get; set; } = new List<UnitGroupSettings>();
+
         #endregion
     }
 }

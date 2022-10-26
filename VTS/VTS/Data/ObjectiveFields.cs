@@ -11,7 +11,7 @@
         public int? MinRequired { get; set; }
         public int? PerUnitReward { get; set; }
         public int? FullCompletionBonus { get; set; }
-        public int? UnloadRadius { get; set; }
+        public float? UnloadRadius { get; set; }
         public int? DropoffRallyPoint { get; set; }
         public float? TriggerRadius { get; set; }
         public bool? SphericalRadius { get; set; }
