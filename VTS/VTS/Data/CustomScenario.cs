@@ -145,7 +145,7 @@ namespace VTS.Data
                         unitSpawner.UnitName = property.Value;
                     if (property.Name == "globalPosition")
                     {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
                         
                         unitSpawner.GlobalPosition = new ThreePointValue
                         {
@@ -160,7 +160,7 @@ namespace VTS.Data
                         unitSpawner.UnitId = property.Value;
                     if (property.Name == "rotation")
                     {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
 
                         unitSpawner.Rotation = new ThreePointValue
                         {
@@ -173,7 +173,7 @@ namespace VTS.Data
                         unitSpawner.SpawnChance = Convert.ToInt32(property.Value);
                     if (property.Name == "lastValidPlacement")
                     {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
 
                         unitSpawner.LastValidPlacement = new ThreePointValue
                         {
@@ -298,12 +298,12 @@ namespace VTS.Data
                         p.Loop = Convert.ToBoolean(property.Value);
                     if (property.Name == "points")
                     {
-                        string[] points = property.Value.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] points = property.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
                         List<ThreePointValue> pointValues = new List<ThreePointValue>();
 
                         foreach (string point in points)
                         {
-                            string[] values = point.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] values = point.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
                             ThreePointValue threePointValue = new ThreePointValue
                             {
@@ -350,7 +350,7 @@ namespace VTS.Data
                         w.Name = property.Value;
                     if (property.Name == "globalPoint")
                     {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
 
                         ThreePointValue threePointValue = new ThreePointValue
                         {
@@ -1200,7 +1200,7 @@ namespace VTS.Data
 
         private static void ReadStaticObjects(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
-            VtsObject staticObjects = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.ObjectivesOpFor);
+            VtsObject staticObjects = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.StaticObjects);
 
             if (staticObjects == null)
             {
@@ -1220,7 +1220,7 @@ namespace VTS.Data
                         staticObject.Id = Convert.ToInt32(property.Value);
                     if (property.Name == "globalPos")
                     {
-                        string[] temp = property.Value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
                         ThreePointValue threePointValue = new ThreePointValue
                         {
                             Point1 = Convert.ToSingle(temp[0]),
@@ -1232,7 +1232,7 @@ namespace VTS.Data
                     }
                     if (property.Name == "rotation")
                     {
-                        string[] temp = property.Value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
                         ThreePointValue threePointValue = new ThreePointValue
                         {
                             Point1 = Convert.ToSingle(temp[0]),
@@ -1250,7 +1250,97 @@ namespace VTS.Data
 
         private static void ReadConditionals(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject conditionals = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.Conditionals);
 
+            if (conditionals == null)
+            {
+                // do we throw an error or not? force the conditionals block to be required?
+                return;
+            }
+
+            foreach (VtsObject con in conditionals.Children)
+            {
+                Conditional conditional = new Conditional();
+
+                foreach (VtsProperty property in con.Properties)
+                {
+                    if (property.Name == "id")
+                        conditional.Id = Convert.ToInt32(property.Value);
+                    if (property.Name == "outputNodePos")
+                    {
+                        string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        ThreePointValue threePointValue = new ThreePointValue
+                        {
+                            Point1 = Convert.ToSingle(temp[0]),
+                            Point2 = Convert.ToSingle(temp[1]),
+                            Point3 = Convert.ToSingle(temp[2])
+                        };
+
+                        conditional.OutputNodePosition = threePointValue;
+                    }
+                    if (property.Name == "root")
+                        conditional.Id = Convert.ToInt32(property.Value);
+
+                    foreach (VtsObject child in con.Children)
+                    {
+                        Computation computation = new Computation();
+
+                        foreach (VtsProperty vtsProperty in child.Properties)
+                        {
+                            if (property.Name == "id")
+                                computation.Id = Convert.ToInt32(property.Value);
+                            if (property.Name == "type")
+                                computation.Type = property.Value;
+                            if (property.Name == "uiPos")
+                            {
+                                string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                                ThreePointValue threePointValue = new ThreePointValue
+                                {
+                                    Point1 = Convert.ToSingle(temp[0]),
+                                    Point2 = Convert.ToSingle(temp[1]),
+                                    Point3 = Convert.ToSingle(temp[2])
+                                };
+
+                                computation.UiPosition = threePointValue;
+                            }
+                            if (property.Name == "unitGroup")
+                                computation.UnitGroup = property.Value;
+                            if (property.Name == "methodName")
+                                computation.MethodName = property.Value;
+                            if (property.Name == "methodParameters")
+                                computation.MethodParameters = property.Value;
+                            if (property.Name == "isNot")
+                                computation.IsNot = Convert.ToBoolean(property.Value);
+                            if (property.Name == "factors")
+                                computation.Factors = property.Value;
+                            if (property.Name == "gv")
+                                computation.GlobalValue = property.Value;
+                            if (property.Name == "comparison")
+                                computation.Comparison = property.Value;
+                            if (property.Name == "c_value")
+                                computation.CValue = Convert.ToSingle(property.Value);
+                            if (property.Name == "unitList")
+                                computation.UnitList = property.Value;
+                            if (property.Name == "objectReference")
+                                computation.ObjectReference = Convert.ToInt32(property.Value);
+                            if (property.Name == "chance")
+                                computation.Chance = Convert.ToInt32(property.Value);
+                            if (property.Name == "vehicleControl")
+                                computation.VehicleControl = property.Value;
+                            if (property.Name == "controlCondition")
+                                computation.ControlCondition = property.Value;
+                            if (property.Name == "controlValue")
+                                computation.ControlValue = Convert.ToSingle(property.Value);
+                            if (property.Name == "unit")
+                                computation.Unit = Convert.ToInt32(property.Value);
+                        }
+
+                        conditional.Computations.Add(computation);
+                    }
+                }
+
+                scenario.Conditionals.Add(conditional);
+            }
         }
 
         private static void ReadConditionalActions(CustomScenario scenario, VtsCustomScenarioObject cs)
@@ -1260,27 +1350,219 @@ namespace VTS.Data
 
         private static void ReadEventSequences(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject eventSequences = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.EventSequences);
 
+            if (eventSequences == null)
+            {
+                // do we throw an error or not? force the event sequences block to be required?
+                return;
+            }
+
+            foreach (VtsObject es in eventSequences.Children)
+            {
+                Sequence sequence = new Sequence();
+
+                foreach (VtsProperty property in es.Properties)
+                {
+                    if (property.Name == "id")
+                        sequence.Id = Convert.ToInt32(property.Value);
+                    if (property.Name == "sequenceName")
+                        sequence.SequenceName = property.Value;
+                    if (property.Name == "startImmediately")
+                        sequence.StartImmediately = Convert.ToBoolean(property.Value);
+                }
+
+                foreach (VtsObject e in es.Children)
+                {
+                    Event @event = new Event();
+
+                    foreach (VtsProperty property in e.Properties)
+                    {
+                        if (property.Name == "conditional")
+                            @event.Conditional = Convert.ToInt32(property.Value);
+                        if (property.Name == "delay")
+                            @event.Delay = Convert.ToInt32(property.Value);
+                        if (property.Name == "nodeName")
+                            @event.NodeName = property.Value;
+                        if (property.Name == "exitConditional")
+                            @event.ExitConditional = Convert.ToInt32(property.Value);
+                    }
+
+                    foreach (VtsObject ei in e.Children)
+                    {
+                        EventInfo eventInfo = new EventInfo();
+
+                        foreach (VtsProperty property in ei.Properties)
+                        {
+                            if (property.Name == "eventName")
+                                eventInfo.EventName = property.Value;
+                        }
+
+                        foreach (VtsObject et in ei.Children)
+                        {
+                            EventTarget eventTarget = new EventTarget();
+
+                            foreach (VtsProperty property in et.Properties)
+                            {
+                                if (property.Name == "targetType")
+                                    eventTarget.TargetType = property.Value;
+                                if (property.Name == "targetID")
+                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
+                                if (property.Name == "eventName")
+                                    eventTarget.EventName = property.Value;
+                                if (property.Name == "methodName")
+                                    eventTarget.MethodName = property.Value;
+                            }
+
+                            foreach (VtsObject pi in et.Children)
+                            {
+                                ParamInfo paramInfo = new ParamInfo();
+
+                                foreach (VtsProperty property in pi.Properties)
+                                {
+                                    if (property.Name == "type")
+                                        paramInfo.Type = property.Value;
+                                    if (property.Name == "value")
+                                        paramInfo.Value = property.Value;
+                                    if (property.Name == "name")
+                                        paramInfo.Name = property.Value;
+                                }
+
+                                foreach (VtsObject pai in pi.Children)
+                                {
+                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
+
+                                    foreach (VtsProperty property in pai.Properties)
+                                    {
+                                        if (property.Name == "type")
+                                            paramAttrInfo.Type = property.Value;
+                                        if (property.Name == "data")
+                                            paramAttrInfo.Data = property.Value;
+                                    }
+
+                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
+                                }
+
+                                eventTarget.ParamInfos.Add(paramInfo);
+                            }
+                        }
+
+                        @event.EventInfo = eventInfo;
+                    }
+
+                    sequence.Events.Add(@event);
+                }
+
+                scenario.EventSequences.Add(sequence);
+            }
         }
 
         private static void ReadBases(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject bases = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.Bases);
 
+            if (bases == null)
+            {
+                // do we throw an error or not? force the bases block to be required?
+                return;
+            }
+
+            foreach (VtsObject b in bases.Children)
+            {
+                BaseInfo baseInfo = new BaseInfo();
+
+                foreach (VtsProperty property in b.Properties)
+                {
+                    if (property.Name == "id")
+                        baseInfo.Id = Convert.ToInt32(property.Value);
+                    if (property.Name == "overrideBaseName")
+                        baseInfo.OverrideBaseName = property.Value;
+                    if (property.Name == "baseTeam")
+                        baseInfo.BaseTeam = property.Value;
+                }
+
+                scenario.Bases.Add(baseInfo);
+            }
         }
 
         private static void ReadGlobalValues(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject globalValues = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.GlobalValues);
 
+            if (globalValues == null)
+            {
+                // do we throw an error or not? force the global values block to be required?
+                return;
+            }
+
+            foreach (VtsObject gv in globalValues.Children)
+            {
+                GlobalValue globalValue = new GlobalValue();
+
+                foreach (VtsProperty property in gv.Properties)
+                {
+                    string[] data = property.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+                    globalValue.Index = Convert.ToInt32(data[0]);
+                    globalValue.Name = data[1];
+                    globalValue.Description = data[2];
+                    globalValue.Value = Convert.ToInt32(data[3]);
+                }
+
+                scenario.GlobalValues.Add(globalValue);
+            }
         }
 
         private static void ReadBriefingNotes(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject briefingNotes = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.Briefing);
 
+            if (briefingNotes == null)
+            {
+                // do we throw an error or not? force the briefing block to be required?
+                return;
+            }
+
+            foreach (VtsObject bn in briefingNotes.Children)
+            {
+                BriefingNote briefingNote = new BriefingNote();
+
+                foreach (VtsProperty property in bn.Properties)
+                {
+                    if (property.Name == "text")
+                        briefingNote.Text = property.Value;
+                    if (property.Name == "imagePath")
+                        briefingNote.ImagePath = property.Value;
+                    if (property.Name == "audioClipPath")
+                        briefingNote.AudioClipPath = property.Value;
+                }
+
+                scenario.BriefingNotes.Add(briefingNote);
+            }
         }
 
         private static void ReadResourceManifest(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject resourceManifest = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.ResourceManifest);
 
+            if (resourceManifest == null)
+            {
+                // do we throw an error or not? force the resource manifest block to be required?
+                return;
+            }
+
+            foreach (VtsObject bn in resourceManifest.Children)
+            {
+                Resource resource = new Resource();
+
+                foreach (VtsProperty property in bn.Properties)
+                {
+                    resource.Index = Convert.ToInt32(property.Name);
+                    resource.Path = property.Value;
+                }
+
+                scenario.ResourceManifest.Add(resource);
+            }
         }
 
         /// <summary>Reads the VTS file into a CustomScenario object.</summary>
