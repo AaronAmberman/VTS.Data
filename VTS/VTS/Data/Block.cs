@@ -5,11 +5,11 @@
     {
         #region Properties
 
-        public List<EventInfo> Actions { get; set; } = new List<EventInfo>();
+        public EventInfo Actions { get; set; }
         public int BlockId { get; set; }
         public string BlockName { get; set; }
         public Conditional Conditional { get; set; }
-        public List<EventInfo> ElseActions { get; set; } = new List<EventInfo>();
+        public EventInfo ElseActions { get; set; }
         public List<Block> ElseIfBlocks { get; set; } = new List<Block>();
 
         #endregion
