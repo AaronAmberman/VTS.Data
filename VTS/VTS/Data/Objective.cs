@@ -5,15 +5,15 @@
     {
         #region Properties
 
-        public string AutoSetWaypoint { get; set; }
-        public string CompletionReward { get; set; }
+        public bool AutoSetWaypoint { get; set; }
+        public int CompletionReward { get; set; }
         public ObjectiveFields Fields { get; set; }
         public string ObjectiveInfo { get; set; }
-        public string ObjectiveID { get; set; }
+        public int ObjectiveID { get; set; }
         public string ObjectiveName { get; set; }
         public string ObjectiveType { get; set; }
-        public string OrderID { get; set; }
-        public string Required { get; set; }
+        public int OrderID { get; set; }
+        public bool Required { get; set; }
         public string PreReqObjectives { get; set; }
         public string StartMode { get; set; }
         public string Waypoint { get; set; }

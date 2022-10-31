@@ -962,17 +962,17 @@ namespace VTS.Data
                 if (property.Name == "objectiveInfo")
                     objective.ObjectiveInfo = property.Value;
                 if (property.Name == "objectiveID")
-                    objective.ObjectiveID = property.Value;
+                    objective.ObjectiveID = Convert.ToInt32(property.Value);
                 if (property.Name == "orderID")
-                    objective.OrderID = property.Value;
+                    objective.OrderID = Convert.ToInt32(property.Value);
                 if (property.Name == "required")
-                    objective.Required = property.Value;
+                    objective.Required = Convert.ToBoolean(property.Value);
                 if (property.Name == "completionReward")
-                    objective.CompletionReward = property.Value;
+                    objective.CompletionReward = Convert.ToInt32(property.Value);
                 if (property.Name == "waypoint")
-                    objective.Waypoint = property.Value;
+                    objective.Waypoint = property.Value; // can't be an integer because of a value like unit:19
                 if (property.Name == "autoSetWaypoint")
-                    objective.AutoSetWaypoint = property.Value;
+                    objective.AutoSetWaypoint = Convert.ToBoolean(property.Value);
                 if (property.Name == "startMode")
                     objective.StartMode = property.Value;
                 if (property.Name == "objectiveType")
@@ -1036,9 +1036,9 @@ namespace VTS.Data
 
             return new ThreePointValue
             {
-                Point1 = Convert.ToSingle(values[0] == "0" ? "0.0" : values[0]),
-                Point2 = Convert.ToSingle(values[1] == "0" ? "0.0" : values[1]),
-                Point3 = Convert.ToSingle(values[2] == "0" ? "0.0" : values[2]),
+                Point1 = Convert.ToSingle(values[0]),
+                Point2 = Convert.ToSingle(values[1]),
+                Point3 = Convert.ToSingle(values[2]),
             };
         }
 
