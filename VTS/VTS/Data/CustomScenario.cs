@@ -17,8 +17,8 @@ namespace VTS.Data
         public int CampaignOrderIndex { get; set; }
         public bool EquipsConfigurable { get; set; }
         public string EnvironmentName { get; set; }
-        public string ForceEquips { get; set; }
-        public bool ForcedEquips { get; set; }
+        public bool ForceEquips { get; set; }
+        public string ForcedEquips { get; set; }
         public string GameVersion { get; set; }
         public bool IsTraining { get; set; }
         public string MapId { get; set; }
@@ -99,9 +99,9 @@ namespace VTS.Data
                 if (property.Name == "allowedEquips")
                     scenario.AllowedEquips = property.Value;
                 if (property.Name == "forcedEquips")
-                    scenario.ForcedEquips = Convert.ToBoolean(property.Value);
+                    scenario.ForcedEquips = property.Value;
                 if (property.Name == "forceEquips")
-                    scenario.ForceEquips = property.Value;
+                    scenario.ForceEquips = Convert.ToBoolean(property.Value);
                 if (property.Name == "normForcedFuel")
                     scenario.NormalForcedFuel = Convert.ToInt32(property.Value);
                 if (property.Name == "equipsConfigurable")
@@ -276,7 +276,7 @@ namespace VTS.Data
 
                         foreach (string point in points)
                         {
-                            pointValues.Add(ReadThreePointValue(point));
+                            pointValues.Add(ReadThreePointValue(point.Replace("(", "").Replace(")", "")));
                         }
 
                         p.Points = pointValues;
@@ -560,9 +560,9 @@ namespace VTS.Data
                     if (property.Name == "id")
                         staticObject.Id = Convert.ToInt32(property.Value);
                     if (property.Name == "globalPos")
-                        staticObject.GlobalPosition = ReadThreePointValue(property.Value);
+                        staticObject.GlobalPosition = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                     if (property.Name == "rotation")
-                        staticObject.Rotation = ReadThreePointValue(property.Value);
+                        staticObject.Rotation = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                 }
 
                 scenario.StaticObjects.Add(staticObject);
@@ -651,6 +651,8 @@ namespace VTS.Data
                     if (baseBlockChild.Name == KeywordStrings.ElseActions) // this is just an EventInfo object
                         baseBlock.ElseActions = ReadEventInfo(baseBlockChild);
                 }
+
+                conditionalAction.BaseBlock = baseBlock;
 
                 scenario.ConditionalActions.Add(conditionalAction);
             }
@@ -752,7 +754,7 @@ namespace VTS.Data
 
                 foreach (VtsProperty property in gv.Properties)
                 {
-                    string[] data = property.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                    string[] data = property.Value.Split(';');
 
                     globalValue.Index = Convert.ToInt32(data[0]);
                     globalValue.Name = data[1];
@@ -825,7 +827,7 @@ namespace VTS.Data
                 if (property.Name == "id")
                     conditional.Id = Convert.ToInt32(property.Value);
                 if (property.Name == "outputNodePos")
-                    conditional.OutputNodePosition = ReadThreePointValue(property.Value);
+                    conditional.OutputNodePosition = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                 if (property.Name == "root")
                     conditional.Id = Convert.ToInt32(property.Value);
             }
@@ -841,7 +843,7 @@ namespace VTS.Data
                     if (vtsProperty.Name == "type")
                         computation.Type = vtsProperty.Value;
                     if (vtsProperty.Name == "uiPos")
-                        computation.UiPosition = ReadThreePointValue(vtsProperty.Value);
+                        computation.UiPosition = ReadThreePointValue(vtsProperty.Value.Replace("(", "").Replace(")", ""));
                     if (vtsProperty.Name == "unitGroup")
                         computation.UnitGroup = vtsProperty.Value;
                     if (vtsProperty.Name == "methodName")
@@ -1034,9 +1036,9 @@ namespace VTS.Data
 
             return new ThreePointValue
             {
-                Point1 = Convert.ToSingle(values[0]),
-                Point2 = Convert.ToSingle(values[1]),
-                Point3 = Convert.ToSingle(values[2]),
+                Point1 = Convert.ToSingle(values[0] == "0" ? "0.0" : values[0]),
+                Point2 = Convert.ToSingle(values[1] == "0" ? "0.0" : values[1]),
+                Point3 = Convert.ToSingle(values[2] == "0" ? "0.0" : values[2]),
             };
         }
 
@@ -1052,6 +1054,9 @@ namespace VTS.Data
 
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
                 VtsCustomScenarioObject cs = VtsReader.ReadVtsFile(vtsFile);
 
                 ReadCustomScenarioProperties(scenario, cs);
@@ -1071,6 +1076,10 @@ namespace VTS.Data
                 ReadGlobalValues(scenario, cs);
                 ReadBriefingNotes(scenario, cs);
                 ReadResourceManifest(scenario, cs);
+
+                sw.Stop();
+
+                Debug.WriteLine($"CustomScenario read duration:{sw.Elapsed}");
             }
             catch (Exception ex)
             {

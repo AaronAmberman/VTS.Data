@@ -131,7 +131,7 @@ namespace VTS.File
 
             sw.Stop();
 
-            Debug.WriteLine($"Read duration:{sw.Elapsed}");
+            Debug.WriteLine($"VTS file read duration:{sw.Elapsed}");
 
             return scenario;
         }
