@@ -144,44 +144,17 @@ namespace VTS.Data
                     if (property.Name == "unitName")
                         unitSpawner.UnitName = property.Value;
                     if (property.Name == "globalPosition")
-                    {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        
-                        unitSpawner.GlobalPosition = new ThreePointValue
-                        {
-                            Point1 = Convert.ToSingle(values[0]),
-                            Point2 = Convert.ToSingle(values[1]),
-                            Point3 = Convert.ToSingle(values[2]),
-                        };
-                    }
+                        unitSpawner.GlobalPosition = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                     if (property.Name == "unitInstanceID")
                         unitSpawner.UnitInstanceId = Convert.ToInt32(property.Value);
                     if (property.Name == "unitID")
                         unitSpawner.UnitId = property.Value;
                     if (property.Name == "rotation")
-                    {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                        unitSpawner.Rotation = new ThreePointValue
-                        {
-                            Point1 = Convert.ToSingle(values[0]),
-                            Point2 = Convert.ToSingle(values[1]),
-                            Point3 = Convert.ToSingle(values[2]),
-                        };
-                    }
+                        unitSpawner.Rotation = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                     if (property.Name == "spawnChance")
                         unitSpawner.SpawnChance = Convert.ToInt32(property.Value);
                     if (property.Name == "lastValidPlacement")
-                    {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                        unitSpawner.LastValidPlacement = new ThreePointValue
-                        {
-                            Point1 = Convert.ToSingle(values[0]),
-                            Point2 = Convert.ToSingle(values[1]),
-                            Point3 = Convert.ToSingle(values[2]),
-                        };
-                    }
+                        unitSpawner.LastValidPlacement = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                     if (property.Name == "spawnFlags")
                         unitSpawner.SpawnFlags = property.Value;
 
@@ -303,17 +276,10 @@ namespace VTS.Data
 
                         foreach (string point in points)
                         {
-                            string[] values = point.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                            ThreePointValue threePointValue = new ThreePointValue
-                            {
-                                Point1 = Convert.ToSingle(values[0]),
-                                Point2 = Convert.ToSingle(values[1]),
-                                Point3 = Convert.ToSingle(values[2])
-                            };
-
-                            pointValues.Add(threePointValue);
+                            pointValues.Add(ReadThreePointValue(point));
                         }
+
+                        p.Points = pointValues;
                     }
                     if (property.Name == "pathMode")
                         p.PathMode = property.Value;
@@ -349,18 +315,7 @@ namespace VTS.Data
                     if (property.Name == "name")
                         w.Name = property.Value;
                     if (property.Name == "globalPoint")
-                    {
-                        string[] values = property.Value.Replace("(", "").Replace(")", "").Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                        ThreePointValue threePointValue = new ThreePointValue
-                        {
-                            Point1 = Convert.ToSingle(values[0]),
-                            Point2 = Convert.ToSingle(values[1]),
-                            Point3 = Convert.ToSingle(values[2])
-                        };
-
-                        w.GlobalPoint = threePointValue;
-                    }
+                        w.GlobalPoint = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                 }
 
                 scenario.Waypoints.Add(w);
@@ -498,53 +453,7 @@ namespace VTS.Data
 
                     foreach (VtsObject et in tei.Children)
                     {
-                        EventTarget eventTarget = new EventTarget();
-
-                        foreach (VtsProperty property in et.Properties)
-                        {
-                            if (property.Name == "targetType")
-                                eventTarget.TargetType = property.Value;
-                            if (property.Name == "targetID")
-                                eventTarget.TargetId = Convert.ToInt32(property.Value);
-                            if (property.Name == "eventName")
-                                eventTarget.EventName = property.Value;
-                            if (property.Name == "methodName")
-                                eventTarget.MethodName = property.Value;
-                        }
-
-                        foreach (VtsObject pi in et.Children)
-                        {
-                            ParamInfo paramInfo = new ParamInfo();
-
-                            foreach (VtsProperty property in pi.Properties)
-                            {
-                                if (property.Name == "type")
-                                    paramInfo.Type = property.Value;
-                                if (property.Name == "value")
-                                    paramInfo.Value = property.Value;
-                                if (property.Name == "name")
-                                    paramInfo.Name = property.Value;
-                            }
-
-                            foreach (VtsObject pai in pi.Children)
-                            {
-                                ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                foreach (VtsProperty property in pai.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramAttrInfo.Type = property.Value;
-                                    if (property.Name == "data")
-                                        paramAttrInfo.Data = property.Value;
-                                }
-
-                                paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                            }
-
-                            eventTarget.ParamInfos.Add(paramInfo);
-                        }
-
-                        timedEventInfo.EventTargets.Add(eventTarget);
+                        timedEventInfo.EventTargets.Add(ReadEventTarget(et));
                     }
 
                     timedEventGroup.TimedEventInfos.Add(timedEventInfo);
@@ -592,67 +501,7 @@ namespace VTS.Data
                         triggerEvent.ProxyMode = property.Value;
                 }
 
-                VtsObject ei = te.Children[0]; // there should only ever be 1 EventInfo on a TriggerEvent
-                EventInfo eventInfo = new EventInfo();
-
-                foreach (VtsProperty property in ei.Properties)
-                {
-                    if (property.Name == "eventName")
-                        eventInfo.EventName = property.Value;
-                }
-
-                foreach (VtsObject et in ei.Children)
-                {
-                    EventTarget eventTarget = new EventTarget();
-
-                    foreach (VtsProperty property in et.Properties)
-                    {
-                        if (property.Name == "targetType")
-                            eventTarget.TargetType = property.Value;
-                        if (property.Name == "targetID")
-                            eventTarget.TargetId = Convert.ToInt32(property.Value);
-                        if (property.Name == "eventName")
-                            eventTarget.EventName = property.Value;
-                        if (property.Name == "methodName")
-                            eventTarget.MethodName = property.Value;
-                    }
-
-                    foreach (VtsObject pi in et.Children)
-                    {
-                        ParamInfo paramInfo = new ParamInfo();
-
-                        foreach (VtsProperty property in pi.Properties)
-                        {
-                            if (property.Name == "type")
-                                paramInfo.Type = property.Value;
-                            if (property.Name == "value")
-                                paramInfo.Value = property.Value;
-                            if (property.Name == "name")
-                                paramInfo.Name = property.Value;
-                        }
-
-                        foreach (VtsObject pai in pi.Children)
-                        {
-                            ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                            foreach (VtsProperty property in pai.Properties)
-                            {
-                                if (property.Name == "type")
-                                    paramAttrInfo.Type = property.Value;
-                                if (property.Name == "data")
-                                    paramAttrInfo.Data = property.Value;
-                            }
-
-                            paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                        }
-
-                        eventTarget.ParamInfos.Add(paramInfo);
-                    }
-
-                    eventInfo.EventTargets.Add(eventTarget);
-                }
-
-                triggerEvent.EventInfo = eventInfo;
+                triggerEvent.EventInfo = ReadEventInfo(te.Children[0]); // there should only ever be 1 EventInfo on a TriggerEvent
 
                 scenario.TriggerEvents.Add(triggerEvent);
             }
@@ -670,267 +519,7 @@ namespace VTS.Data
 
             foreach (VtsObject obj in objectives.Children)
             {
-                Objective objective = new Objective();
-
-                foreach (VtsProperty property in obj.Properties)
-                {
-                    if (property.Name == "objectiveName")
-                        objective.ObjectiveName = property.Value;
-                    if (property.Name == "objectiveInfo")
-                        objective.ObjectiveInfo = property.Value;
-                    if (property.Name == "objectiveID")
-                        objective.ObjectiveID = property.Value;
-                    if (property.Name == "orderID")
-                        objective.OrderID = property.Value;
-                    if (property.Name == "required")
-                        objective.Required = property.Value;
-                    if (property.Name == "completionReward")
-                        objective.CompletionReward = property.Value;
-                    if (property.Name == "waypoint")
-                        objective.Waypoint = property.Value;
-                    if (property.Name == "autoSetWaypoint")
-                        objective.AutoSetWaypoint = property.Value;
-                    if (property.Name == "startMode")
-                        objective.StartMode = property.Value;
-                    if (property.Name == "objectiveType")
-                        objective.ObjectiveType = property.Value;
-                }
-
-                foreach (VtsObject vtsObject in obj.Children)
-                {
-                    if (vtsObject.Name == KeywordStrings.StartEvent)
-                    {
-                        EventInfo eventInfo = new EventInfo();
-                        VtsObject se = vtsObject.Children[0]; // should be the only EventInfo inside the event
-
-                        foreach (VtsProperty property in se.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in se.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        objective.StartEvent = eventInfo;
-                    }
-                    if (vtsObject.Name == KeywordStrings.FailEvent)
-                    {
-                        EventInfo eventInfo = new EventInfo();
-                        VtsObject se = vtsObject.Children[0]; // should be the only EventInfo inside the event
-
-                        foreach (VtsProperty property in se.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in se.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        objective.FailEvent = eventInfo;
-                    }
-                    if (vtsObject.Name == KeywordStrings.CompleteEvent)
-                    {
-                        EventInfo eventInfo = new EventInfo();
-                        VtsObject se = vtsObject.Children[0]; // should be the only EventInfo inside the event
-
-                        foreach (VtsProperty property in se.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in se.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        objective.CompleteEvent = eventInfo;
-                    }
-                    if (vtsObject.Name == KeywordStrings.Fields)
-                    {
-                        ObjectiveFields objectiveFields = new ObjectiveFields();
-
-                        foreach (VtsProperty property in vtsObject.Properties)
-                        {
-                            if (property.Name == "successConditional")
-                                objectiveFields.SuccessConditional = Convert.ToInt32(property.Value);
-                            if (property.Name == "failConditional")
-                                objectiveFields.FailConditional = Convert.ToInt32(property.Value);
-                            if (property.Name == "targets")
-                                objectiveFields.Targets = property.Value;
-                            if (property.Name == "minRequired")
-                                objectiveFields.MinRequired = Convert.ToInt32(property.Value);
-                            if (property.Name == "perUnitReward")
-                                objectiveFields.PerUnitReward = Convert.ToInt32(property.Value);
-                            if (property.Name == "fullCompleteBonus")
-                                objectiveFields.FullCompletionBonus = Convert.ToInt32(property.Value);
-                            if (property.Name == "unloadRadius")
-                                objectiveFields.UnloadRadius = Convert.ToSingle(property.Value);
-                            if (property.Name == "dropoffRallyPt")
-                                objectiveFields.DropoffRallyPoint = Convert.ToInt32(property.Value);
-                            if (property.Name == "triggerRadius")
-                                objectiveFields.TriggerRadius = Convert.ToSingle(property.Value);
-                            if (property.Name == "sphericalRadius")
-                                objectiveFields.SphericalRadius = Convert.ToBoolean(property.Value);
-                            if (property.Name == "targetUnit")
-                                objectiveFields.TargetUnit = Convert.ToInt32(property.Value);
-                            if (property.Name == "radius")
-                                objectiveFields.Radius = Convert.ToSingle(property.Value);
-                            if (property.Name == "fuelLevel")
-                                objectiveFields.FuelLevel = Convert.ToSingle(property.Value);
-                            if (property.Name == "completionMode")
-                                objectiveFields.CompletionMode = property.Value;
-                        }
-
-                        objective.Fields = objectiveFields;
-                    }
-                }
-
-                scenario.Objectives.Add(objective);
+                scenario.Objectives.Add(ReadObjective(obj));
             }
         }
 
@@ -946,267 +535,7 @@ namespace VTS.Data
 
             foreach (VtsObject obj in objectives.Children)
             {
-                Objective objective = new Objective();
-
-                foreach (VtsProperty property in obj.Properties)
-                {
-                    if (property.Name == "objectiveName")
-                        objective.ObjectiveName = property.Value;
-                    if (property.Name == "objectiveInfo")
-                        objective.ObjectiveInfo = property.Value;
-                    if (property.Name == "objectiveID")
-                        objective.ObjectiveID = property.Value;
-                    if (property.Name == "orderID")
-                        objective.OrderID = property.Value;
-                    if (property.Name == "required")
-                        objective.Required = property.Value;
-                    if (property.Name == "completionReward")
-                        objective.CompletionReward = property.Value;
-                    if (property.Name == "waypoint")
-                        objective.Waypoint = property.Value;
-                    if (property.Name == "autoSetWaypoint")
-                        objective.AutoSetWaypoint = property.Value;
-                    if (property.Name == "startMode")
-                        objective.StartMode = property.Value;
-                    if (property.Name == "objectiveType")
-                        objective.ObjectiveType = property.Value;
-                }
-
-                foreach (VtsObject vtsObject in obj.Children)
-                {
-                    if (vtsObject.Name == KeywordStrings.StartEvent)
-                    {
-                        EventInfo eventInfo = new EventInfo();
-                        VtsObject se = vtsObject.Children[0]; // should be the only EventInfo inside the event
-
-                        foreach (VtsProperty property in se.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in se.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        objective.StartEvent = eventInfo;
-                    }
-                    if (vtsObject.Name == KeywordStrings.FailEvent)
-                    {
-                        EventInfo eventInfo = new EventInfo();
-                        VtsObject se = vtsObject.Children[0]; // should be the only EventInfo inside the event
-
-                        foreach (VtsProperty property in se.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in se.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        objective.FailEvent = eventInfo;
-                    }
-                    if (vtsObject.Name == KeywordStrings.CompleteEvent)
-                    {
-                        EventInfo eventInfo = new EventInfo();
-                        VtsObject se = vtsObject.Children[0]; // should be the only EventInfo inside the event
-
-                        foreach (VtsProperty property in se.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in se.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        objective.CompleteEvent = eventInfo;
-                    }
-                    if (vtsObject.Name == KeywordStrings.Fields)
-                    {
-                        ObjectiveFields objectiveFields = new ObjectiveFields();
-
-                        foreach (VtsProperty property in vtsObject.Properties)
-                        {
-                            if (property.Name == "successConditional")
-                                objectiveFields.SuccessConditional = Convert.ToInt32(property.Value);
-                            if (property.Name == "failConditional")
-                                objectiveFields.FailConditional = Convert.ToInt32(property.Value);
-                            if (property.Name == "targets")
-                                objectiveFields.Targets = property.Value;
-                            if (property.Name == "minRequired")
-                                objectiveFields.MinRequired = Convert.ToInt32(property.Value);
-                            if (property.Name == "perUnitReward")
-                                objectiveFields.PerUnitReward = Convert.ToInt32(property.Value);
-                            if (property.Name == "fullCompleteBonus")
-                                objectiveFields.FullCompletionBonus = Convert.ToInt32(property.Value);
-                            if (property.Name == "unloadRadius")
-                                objectiveFields.UnloadRadius = Convert.ToSingle(property.Value);
-                            if (property.Name == "dropoffRallyPt")
-                                objectiveFields.DropoffRallyPoint = Convert.ToInt32(property.Value);
-                            if (property.Name == "triggerRadius")
-                                objectiveFields.TriggerRadius = Convert.ToSingle(property.Value);
-                            if (property.Name == "sphericalRadius")
-                                objectiveFields.SphericalRadius = Convert.ToBoolean(property.Value);
-                            if (property.Name == "targetUnit")
-                                objectiveFields.TargetUnit = Convert.ToInt32(property.Value);
-                            if (property.Name == "radius")
-                                objectiveFields.Radius = Convert.ToSingle(property.Value);
-                            if (property.Name == "fuelLevel")
-                                objectiveFields.FuelLevel = Convert.ToSingle(property.Value);
-                            if (property.Name == "completionMode")
-                                objectiveFields.CompletionMode = property.Value;
-                        }
-
-                        objective.Fields = objectiveFields;
-                    }
-                }
-
-                scenario.ObjectivesOpFor.Add(objective);
+                scenario.ObjectivesOpFor.Add(ReadObjective(obj));
             }
         }
 
@@ -1231,29 +560,9 @@ namespace VTS.Data
                     if (property.Name == "id")
                         staticObject.Id = Convert.ToInt32(property.Value);
                     if (property.Name == "globalPos")
-                    {
-                        string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        ThreePointValue threePointValue = new ThreePointValue
-                        {
-                            Point1 = Convert.ToSingle(temp[0]),
-                            Point2 = Convert.ToSingle(temp[1]),
-                            Point3 = Convert.ToSingle(temp[2])
-                        };
-
-                        staticObject.GlobalPosition = threePointValue;
-                    }
+                        staticObject.GlobalPosition = ReadThreePointValue(property.Value);
                     if (property.Name == "rotation")
-                    {
-                        string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        ThreePointValue threePointValue = new ThreePointValue
-                        {
-                            Point1 = Convert.ToSingle(temp[0]),
-                            Point2 = Convert.ToSingle(temp[1]),
-                            Point3 = Convert.ToSingle(temp[2])
-                        };
-
-                        staticObject.Rotation = threePointValue;
-                    }
+                        staticObject.Rotation = ReadThreePointValue(property.Value);
                 }
 
                 scenario.StaticObjects.Add(staticObject);
@@ -1272,86 +581,7 @@ namespace VTS.Data
 
             foreach (VtsObject con in conditionals.Children)
             {
-                Conditional conditional = new Conditional();
-
-                foreach (VtsProperty property in con.Properties)
-                {
-                    if (property.Name == "id")
-                        conditional.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "outputNodePos")
-                    {
-                        string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        ThreePointValue threePointValue = new ThreePointValue
-                        {
-                            Point1 = Convert.ToSingle(temp[0]),
-                            Point2 = Convert.ToSingle(temp[1]),
-                            Point3 = Convert.ToSingle(temp[2])
-                        };
-
-                        conditional.OutputNodePosition = threePointValue;
-                    }
-                    if (property.Name == "root")
-                        conditional.Id = Convert.ToInt32(property.Value);
-                }
-
-                foreach (VtsObject child in con.Children)
-                {
-                    Computation computation = new Computation();
-
-                    foreach (VtsProperty vtsProperty in child.Properties)
-                    {
-                        if (vtsProperty.Name == "id")
-                            computation.Id = Convert.ToInt32(vtsProperty.Value);
-                        if (vtsProperty.Name == "type")
-                            computation.Type = vtsProperty.Value;
-                        if (vtsProperty.Name == "uiPos")
-                        {
-                            string[] temp = vtsProperty.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                            ThreePointValue threePointValue = new ThreePointValue
-                            {
-                                Point1 = Convert.ToSingle(temp[0]),
-                                Point2 = Convert.ToSingle(temp[1]),
-                                Point3 = Convert.ToSingle(temp[2])
-                            };
-
-                            computation.UiPosition = threePointValue;
-                        }
-                        if (vtsProperty.Name == "unitGroup")
-                            computation.UnitGroup = vtsProperty.Value;
-                        if (vtsProperty.Name == "methodName")
-                            computation.MethodName = vtsProperty.Value;
-                        if (vtsProperty.Name == "methodParameters")
-                            computation.MethodParameters = vtsProperty.Value;
-                        if (vtsProperty.Name == "isNot")
-                            computation.IsNot = Convert.ToBoolean(vtsProperty.Value);
-                        if (vtsProperty.Name == "factors")
-                            computation.Factors = vtsProperty.Value;
-                        if (vtsProperty.Name == "gv")
-                            computation.GlobalValue = vtsProperty.Value;
-                        if (vtsProperty.Name == "comparison")
-                            computation.Comparison = vtsProperty.Value;
-                        if (vtsProperty.Name == "c_value")
-                            computation.CValue = Convert.ToSingle(vtsProperty.Value);
-                        if (vtsProperty.Name == "unitList")
-                            computation.UnitList = vtsProperty.Value;
-                        if (vtsProperty.Name == "objectReference")
-                            computation.ObjectReference = Convert.ToInt32(vtsProperty.Value);
-                        if (vtsProperty.Name == "chance")
-                            computation.Chance = Convert.ToInt32(vtsProperty.Value);
-                        if (vtsProperty.Name == "vehicleControl")
-                            computation.VehicleControl = vtsProperty.Value;
-                        if (vtsProperty.Name == "controlCondition")
-                            computation.ControlCondition = vtsProperty.Value;
-                        if (vtsProperty.Name == "controlValue")
-                            computation.ControlValue = Convert.ToSingle(vtsProperty.Value);
-                        if (vtsProperty.Name == "unit")
-                            computation.Unit = Convert.ToInt32(vtsProperty.Value);
-                    }
-
-                    conditional.Computations.Add(computation);
-                }
-
-                scenario.Conditionals.Add(conditional);
+                scenario.Conditionals.Add(ReadConditional(con));
             }
         }
 
@@ -1391,151 +621,9 @@ namespace VTS.Data
                 foreach (VtsObject baseBlockChild in bb.Children)
                 {
                     if (baseBlockChild.Name == KeywordStrings.Conditional) // should be 1 conditional
-                    {
-                        Conditional conditional = new Conditional();
-
-                        foreach (VtsProperty property in baseBlockChild.Properties)
-                        {
-                            if (property.Name == "id")
-                                conditional.Id = Convert.ToInt32(property.Value);
-                            if (property.Name == "outputNodePos")
-                            {
-                                string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                ThreePointValue threePointValue = new ThreePointValue
-                                {
-                                    Point1 = Convert.ToSingle(temp[0]),
-                                    Point2 = Convert.ToSingle(temp[1]),
-                                    Point3 = Convert.ToSingle(temp[2])
-                                };
-
-                                conditional.OutputNodePosition = threePointValue;
-                            }
-                            if (property.Name == "root")
-                                conditional.Id = Convert.ToInt32(property.Value);
-                        }
-
-                        foreach (VtsObject child in baseBlockChild.Children)
-                        {
-                            Computation computation = new Computation();
-
-                            foreach (VtsProperty vtsProperty in child.Properties)
-                            {
-                                if (vtsProperty.Name == "id")
-                                    computation.Id = Convert.ToInt32(vtsProperty.Value);
-                                if (vtsProperty.Name == "type")
-                                    computation.Type = vtsProperty.Value;
-                                if (vtsProperty.Name == "uiPos")
-                                {
-                                    string[] temp = vtsProperty.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                    ThreePointValue threePointValue = new ThreePointValue
-                                    {
-                                        Point1 = Convert.ToSingle(temp[0]),
-                                        Point2 = Convert.ToSingle(temp[1]),
-                                        Point3 = Convert.ToSingle(temp[2])
-                                    };
-
-                                    computation.UiPosition = threePointValue;
-                                }
-                                if (vtsProperty.Name == "unitGroup")
-                                    computation.UnitGroup = vtsProperty.Value;
-                                if (vtsProperty.Name == "methodName")
-                                    computation.MethodName = vtsProperty.Value;
-                                if (vtsProperty.Name == "methodParameters")
-                                    computation.MethodParameters = vtsProperty.Value;
-                                if (vtsProperty.Name == "isNot")
-                                    computation.IsNot = Convert.ToBoolean(vtsProperty.Value);
-                                if (vtsProperty.Name == "factors")
-                                    computation.Factors = vtsProperty.Value;
-                                if (vtsProperty.Name == "gv")
-                                    computation.GlobalValue = vtsProperty.Value;
-                                if (vtsProperty.Name == "comparison")
-                                    computation.Comparison = vtsProperty.Value;
-                                if (vtsProperty.Name == "c_value")
-                                    computation.CValue = Convert.ToSingle(vtsProperty.Value);
-                                if (vtsProperty.Name == "unitList")
-                                    computation.UnitList = vtsProperty.Value;
-                                if (vtsProperty.Name == "objectReference")
-                                    computation.ObjectReference = Convert.ToInt32(vtsProperty.Value);
-                                if (vtsProperty.Name == "chance")
-                                    computation.Chance = Convert.ToInt32(vtsProperty.Value);
-                                if (vtsProperty.Name == "vehicleControl")
-                                    computation.VehicleControl = vtsProperty.Value;
-                                if (vtsProperty.Name == "controlCondition")
-                                    computation.ControlCondition = vtsProperty.Value;
-                                if (vtsProperty.Name == "controlValue")
-                                    computation.ControlValue = Convert.ToSingle(vtsProperty.Value);
-                                if (vtsProperty.Name == "unit")
-                                    computation.Unit = Convert.ToInt32(vtsProperty.Value);
-                            }
-
-                            conditional.Computations.Add(computation);
-                        }
-
-                        baseBlock.Conditional = conditional;
-                    }
+                        baseBlock.Conditional = ReadConditional(baseBlockChild);
                     if (baseBlockChild.Name == KeywordStrings.Actions) // this is just an EventInfo object
-                    {
-                        EventInfo eventInfo = new EventInfo();
-
-                        foreach (VtsProperty property in baseBlockChild.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in baseBlockChild.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        baseBlock.Actions = eventInfo;
-                    }
+                        baseBlock.Actions = ReadEventInfo(baseBlockChild);
                     if (baseBlockChild.Name == KeywordStrings.ElseIf) // this is another block object completely (there can be more than one)
                     {
                         Block elseIfBlock = new Block();
@@ -1551,281 +639,17 @@ namespace VTS.Data
                         foreach (VtsObject baseBlockGrandChild in baseBlockChild.Children)
                         {
                             if (baseBlockGrandChild.Name == KeywordStrings.Conditional) // should be 1 conditional
-                            {
-                                Conditional conditional = new Conditional();
-
-                                foreach (VtsProperty property in baseBlockGrandChild.Properties)
-                                {
-                                    if (property.Name == "id")
-                                        conditional.Id = Convert.ToInt32(property.Value);
-                                    if (property.Name == "outputNodePos")
-                                    {
-                                        string[] temp = property.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                        ThreePointValue threePointValue = new ThreePointValue
-                                        {
-                                            Point1 = Convert.ToSingle(temp[0]),
-                                            Point2 = Convert.ToSingle(temp[1]),
-                                            Point3 = Convert.ToSingle(temp[2])
-                                        };
-
-                                        conditional.OutputNodePosition = threePointValue;
-                                    }
-                                    if (property.Name == "root")
-                                        conditional.Id = Convert.ToInt32(property.Value);
-                                }
-
-                                foreach (VtsObject child in baseBlockGrandChild.Children)
-                                {
-                                    Computation computation = new Computation();
-
-                                    foreach (VtsProperty vtsProperty in child.Properties)
-                                    {
-                                        if (vtsProperty.Name == "id")
-                                            computation.Id = Convert.ToInt32(vtsProperty.Value);
-                                        if (vtsProperty.Name == "type")
-                                            computation.Type = vtsProperty.Value;
-                                        if (vtsProperty.Name == "uiPos")
-                                        {
-                                            string[] temp = vtsProperty.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                            ThreePointValue threePointValue = new ThreePointValue
-                                            {
-                                                Point1 = Convert.ToSingle(temp[0]),
-                                                Point2 = Convert.ToSingle(temp[1]),
-                                                Point3 = Convert.ToSingle(temp[2])
-                                            };
-
-                                            computation.UiPosition = threePointValue;
-                                        }
-                                        if (vtsProperty.Name == "unitGroup")
-                                            computation.UnitGroup = vtsProperty.Value;
-                                        if (vtsProperty.Name == "methodName")
-                                            computation.MethodName = vtsProperty.Value;
-                                        if (vtsProperty.Name == "methodParameters")
-                                            computation.MethodParameters = vtsProperty.Value;
-                                        if (vtsProperty.Name == "isNot")
-                                            computation.IsNot = Convert.ToBoolean(vtsProperty.Value);
-                                        if (vtsProperty.Name == "factors")
-                                            computation.Factors = vtsProperty.Value;
-                                        if (vtsProperty.Name == "gv")
-                                            computation.GlobalValue = vtsProperty.Value;
-                                        if (vtsProperty.Name == "comparison")
-                                            computation.Comparison = vtsProperty.Value;
-                                        if (vtsProperty.Name == "c_value")
-                                            computation.CValue = Convert.ToSingle(vtsProperty.Value);
-                                        if (vtsProperty.Name == "unitList")
-                                            computation.UnitList = vtsProperty.Value;
-                                        if (vtsProperty.Name == "objectReference")
-                                            computation.ObjectReference = Convert.ToInt32(vtsProperty.Value);
-                                        if (vtsProperty.Name == "chance")
-                                            computation.Chance = Convert.ToInt32(vtsProperty.Value);
-                                        if (vtsProperty.Name == "vehicleControl")
-                                            computation.VehicleControl = vtsProperty.Value;
-                                        if (vtsProperty.Name == "controlCondition")
-                                            computation.ControlCondition = vtsProperty.Value;
-                                        if (vtsProperty.Name == "controlValue")
-                                            computation.ControlValue = Convert.ToSingle(vtsProperty.Value);
-                                        if (vtsProperty.Name == "unit")
-                                            computation.Unit = Convert.ToInt32(vtsProperty.Value);
-                                    }
-
-                                    conditional.Computations.Add(computation);
-                                }
-
-                                elseIfBlock.Conditional = conditional;
-                            }
+                                elseIfBlock.Conditional = ReadConditional(baseBlockGrandChild);
                             if (baseBlockGrandChild.Name == KeywordStrings.Actions) // this is just an EventInfo object
-                            {
-                                EventInfo eventInfo = new EventInfo();
-
-                                foreach (VtsProperty property in baseBlockGrandChild.Properties)
-                                {
-                                    if (property.Name == "eventName")
-                                        eventInfo.EventName = property.Value;
-                                }
-
-                                foreach (VtsObject et in baseBlockGrandChild.Children)
-                                {
-                                    EventTarget eventTarget = new EventTarget();
-
-                                    foreach (VtsProperty property in et.Properties)
-                                    {
-                                        if (property.Name == "targetType")
-                                            eventTarget.TargetType = property.Value;
-                                        if (property.Name == "targetID")
-                                            eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                        if (property.Name == "eventName")
-                                            eventTarget.EventName = property.Value;
-                                        if (property.Name == "methodName")
-                                            eventTarget.MethodName = property.Value;
-                                    }
-
-                                    foreach (VtsObject pi in et.Children)
-                                    {
-                                        ParamInfo paramInfo = new ParamInfo();
-
-                                        foreach (VtsProperty property in pi.Properties)
-                                        {
-                                            if (property.Name == "type")
-                                                paramInfo.Type = property.Value;
-                                            if (property.Name == "value")
-                                                paramInfo.Value = property.Value;
-                                            if (property.Name == "name")
-                                                paramInfo.Name = property.Value;
-                                        }
-
-                                        foreach (VtsObject pai in pi.Children)
-                                        {
-                                            ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                            foreach (VtsProperty property in pai.Properties)
-                                            {
-                                                if (property.Name == "type")
-                                                    paramAttrInfo.Type = property.Value;
-                                                if (property.Name == "data")
-                                                    paramAttrInfo.Data = property.Value;
-                                            }
-
-                                            paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                        }
-
-                                        eventTarget.ParamInfos.Add(paramInfo);
-                                    }
-
-                                    eventInfo.EventTargets.Add(eventTarget);
-                                }
-
-                                elseIfBlock.Actions = eventInfo;
-                            }
+                                elseIfBlock.Actions = ReadEventInfo(baseBlockGrandChild);
                             if (baseBlockGrandChild.Name == KeywordStrings.ElseActions) // this is just an EventInfo object
-                            {
-                                EventInfo eventInfo = new EventInfo();
-
-                                foreach (VtsProperty property in baseBlockGrandChild.Properties)
-                                {
-                                    if (property.Name == "eventName")
-                                        eventInfo.EventName = property.Value;
-                                }
-
-                                foreach (VtsObject et in baseBlockGrandChild.Children)
-                                {
-                                    EventTarget eventTarget = new EventTarget();
-
-                                    foreach (VtsProperty property in et.Properties)
-                                    {
-                                        if (property.Name == "targetType")
-                                            eventTarget.TargetType = property.Value;
-                                        if (property.Name == "targetID")
-                                            eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                        if (property.Name == "eventName")
-                                            eventTarget.EventName = property.Value;
-                                        if (property.Name == "methodName")
-                                            eventTarget.MethodName = property.Value;
-                                    }
-
-                                    foreach (VtsObject pi in et.Children)
-                                    {
-                                        ParamInfo paramInfo = new ParamInfo();
-
-                                        foreach (VtsProperty property in pi.Properties)
-                                        {
-                                            if (property.Name == "type")
-                                                paramInfo.Type = property.Value;
-                                            if (property.Name == "value")
-                                                paramInfo.Value = property.Value;
-                                            if (property.Name == "name")
-                                                paramInfo.Name = property.Value;
-                                        }
-
-                                        foreach (VtsObject pai in pi.Children)
-                                        {
-                                            ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                            foreach (VtsProperty property in pai.Properties)
-                                            {
-                                                if (property.Name == "type")
-                                                    paramAttrInfo.Type = property.Value;
-                                                if (property.Name == "data")
-                                                    paramAttrInfo.Data = property.Value;
-                                            }
-
-                                            paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                        }
-
-                                        eventTarget.ParamInfos.Add(paramInfo);
-                                    }
-
-                                    eventInfo.EventTargets.Add(eventTarget);
-                                }
-
-                                elseIfBlock.ElseActions = eventInfo;
-                            }
+                                elseIfBlock.ElseActions = ReadEventInfo(baseBlockGrandChild);
                         }
 
                         baseBlock.ElseIfBlocks.Add(elseIfBlock);
                     }
                     if (baseBlockChild.Name == KeywordStrings.ElseActions) // this is just an EventInfo object
-                    {
-                        EventInfo eventInfo = new EventInfo();
-
-                        foreach (VtsProperty property in baseBlockChild.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in baseBlockChild.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-
-                            eventInfo.EventTargets.Add(eventTarget);
-                        }
-
-                        baseBlock.ElseActions = eventInfo;
-                    }
+                        baseBlock.ElseActions = ReadEventInfo(baseBlockChild);
                 }
 
                 scenario.ConditionalActions.Add(conditionalAction);
@@ -1874,64 +698,7 @@ namespace VTS.Data
 
                     foreach (VtsObject ei in e.Children)
                     {
-                        EventInfo eventInfo = new EventInfo();
-
-                        foreach (VtsProperty property in ei.Properties)
-                        {
-                            if (property.Name == "eventName")
-                                eventInfo.EventName = property.Value;
-                        }
-
-                        foreach (VtsObject et in ei.Children)
-                        {
-                            EventTarget eventTarget = new EventTarget();
-
-                            foreach (VtsProperty property in et.Properties)
-                            {
-                                if (property.Name == "targetType")
-                                    eventTarget.TargetType = property.Value;
-                                if (property.Name == "targetID")
-                                    eventTarget.TargetId = Convert.ToInt32(property.Value);
-                                if (property.Name == "eventName")
-                                    eventTarget.EventName = property.Value;
-                                if (property.Name == "methodName")
-                                    eventTarget.MethodName = property.Value;
-                            }
-
-                            foreach (VtsObject pi in et.Children)
-                            {
-                                ParamInfo paramInfo = new ParamInfo();
-
-                                foreach (VtsProperty property in pi.Properties)
-                                {
-                                    if (property.Name == "type")
-                                        paramInfo.Type = property.Value;
-                                    if (property.Name == "value")
-                                        paramInfo.Value = property.Value;
-                                    if (property.Name == "name")
-                                        paramInfo.Name = property.Value;
-                                }
-
-                                foreach (VtsObject pai in pi.Children)
-                                {
-                                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
-
-                                    foreach (VtsProperty property in pai.Properties)
-                                    {
-                                        if (property.Name == "type")
-                                            paramAttrInfo.Type = property.Value;
-                                        if (property.Name == "data")
-                                            paramAttrInfo.Data = property.Value;
-                                    }
-
-                                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
-                                }
-
-                                eventTarget.ParamInfos.Add(paramInfo);
-                            }
-                        }
-
-                        @event.EventInfo = eventInfo;
+                        @event.EventInfo = ReadEventInfo(ei);
                     }
 
                     sequence.Events.Add(@event);
@@ -2047,6 +814,230 @@ namespace VTS.Data
 
                 scenario.ResourceManifest.Add(resource);
             }
+        }
+
+        private static Conditional ReadConditional(VtsObject con)
+        {
+            Conditional conditional = new Conditional();
+
+            foreach (VtsProperty property in con.Properties)
+            {
+                if (property.Name == "id")
+                    conditional.Id = Convert.ToInt32(property.Value);
+                if (property.Name == "outputNodePos")
+                    conditional.OutputNodePosition = ReadThreePointValue(property.Value);
+                if (property.Name == "root")
+                    conditional.Id = Convert.ToInt32(property.Value);
+            }
+
+            foreach (VtsObject child in con.Children)
+            {
+                Computation computation = new Computation();
+
+                foreach (VtsProperty vtsProperty in child.Properties)
+                {
+                    if (vtsProperty.Name == "id")
+                        computation.Id = Convert.ToInt32(vtsProperty.Value);
+                    if (vtsProperty.Name == "type")
+                        computation.Type = vtsProperty.Value;
+                    if (vtsProperty.Name == "uiPos")
+                        computation.UiPosition = ReadThreePointValue(vtsProperty.Value);
+                    if (vtsProperty.Name == "unitGroup")
+                        computation.UnitGroup = vtsProperty.Value;
+                    if (vtsProperty.Name == "methodName")
+                        computation.MethodName = vtsProperty.Value;
+                    if (vtsProperty.Name == "methodParameters")
+                        computation.MethodParameters = vtsProperty.Value;
+                    if (vtsProperty.Name == "isNot")
+                        computation.IsNot = Convert.ToBoolean(vtsProperty.Value);
+                    if (vtsProperty.Name == "factors")
+                        computation.Factors = vtsProperty.Value;
+                    if (vtsProperty.Name == "gv")
+                        computation.GlobalValue = vtsProperty.Value;
+                    if (vtsProperty.Name == "comparison")
+                        computation.Comparison = vtsProperty.Value;
+                    if (vtsProperty.Name == "c_value")
+                        computation.CValue = Convert.ToSingle(vtsProperty.Value);
+                    if (vtsProperty.Name == "unitList")
+                        computation.UnitList = vtsProperty.Value;
+                    if (vtsProperty.Name == "objectReference")
+                        computation.ObjectReference = Convert.ToInt32(vtsProperty.Value);
+                    if (vtsProperty.Name == "chance")
+                        computation.Chance = Convert.ToInt32(vtsProperty.Value);
+                    if (vtsProperty.Name == "vehicleControl")
+                        computation.VehicleControl = vtsProperty.Value;
+                    if (vtsProperty.Name == "controlCondition")
+                        computation.ControlCondition = vtsProperty.Value;
+                    if (vtsProperty.Name == "controlValue")
+                        computation.ControlValue = Convert.ToSingle(vtsProperty.Value);
+                    if (vtsProperty.Name == "unit")
+                        computation.Unit = Convert.ToInt32(vtsProperty.Value);
+                }
+
+                conditional.Computations.Add(computation);
+            }
+
+            return conditional;
+        }
+
+        private static EventInfo ReadEventInfo(VtsObject ei)
+        {
+            EventInfo eventInfo = new EventInfo();
+
+            foreach (VtsProperty property in ei.Properties)
+            {
+                if (property.Name == "eventName")
+                    eventInfo.EventName = property.Value;
+            }
+
+            foreach (VtsObject et in ei.Children)
+            {
+                eventInfo.EventTargets.Add(ReadEventTarget(et));
+            }
+
+            return eventInfo;
+        }
+
+        private static EventTarget ReadEventTarget(VtsObject et)
+        {
+            EventTarget eventTarget = new EventTarget();
+
+            foreach (VtsProperty property in et.Properties)
+            {
+                if (property.Name == "targetType")
+                    eventTarget.TargetType = property.Value;
+                if (property.Name == "targetID")
+                    eventTarget.TargetId = Convert.ToInt32(property.Value);
+                if (property.Name == "eventName")
+                    eventTarget.EventName = property.Value;
+                if (property.Name == "methodName")
+                    eventTarget.MethodName = property.Value;
+            }
+
+            foreach (VtsObject pi in et.Children)
+            {
+                ParamInfo paramInfo = new ParamInfo();
+
+                foreach (VtsProperty property in pi.Properties)
+                {
+                    if (property.Name == "type")
+                        paramInfo.Type = property.Value;
+                    if (property.Name == "value")
+                        paramInfo.Value = property.Value;
+                    if (property.Name == "name")
+                        paramInfo.Name = property.Value;
+                }
+
+                foreach (VtsObject pai in pi.Children)
+                {
+                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo();
+
+                    foreach (VtsProperty property in pai.Properties)
+                    {
+                        if (property.Name == "type")
+                            paramAttrInfo.Type = property.Value;
+                        if (property.Name == "data")
+                            paramAttrInfo.Data = property.Value;
+                    }
+
+                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
+                }
+
+                eventTarget.ParamInfos.Add(paramInfo);
+            }
+
+            return eventTarget;
+        }
+
+        private static Objective ReadObjective(VtsObject obj)
+        {
+            Objective objective = new Objective();
+
+            foreach (VtsProperty property in obj.Properties)
+            {
+                if (property.Name == "objectiveName")
+                    objective.ObjectiveName = property.Value;
+                if (property.Name == "objectiveInfo")
+                    objective.ObjectiveInfo = property.Value;
+                if (property.Name == "objectiveID")
+                    objective.ObjectiveID = property.Value;
+                if (property.Name == "orderID")
+                    objective.OrderID = property.Value;
+                if (property.Name == "required")
+                    objective.Required = property.Value;
+                if (property.Name == "completionReward")
+                    objective.CompletionReward = property.Value;
+                if (property.Name == "waypoint")
+                    objective.Waypoint = property.Value;
+                if (property.Name == "autoSetWaypoint")
+                    objective.AutoSetWaypoint = property.Value;
+                if (property.Name == "startMode")
+                    objective.StartMode = property.Value;
+                if (property.Name == "objectiveType")
+                    objective.ObjectiveType = property.Value;
+            }
+
+            foreach (VtsObject vtsObject in obj.Children)
+            {
+                if (vtsObject.Name == KeywordStrings.StartEvent)
+                    objective.StartEvent = ReadEventInfo(vtsObject.Children[0]);
+                if (vtsObject.Name == KeywordStrings.FailEvent)
+                    objective.FailEvent = ReadEventInfo(vtsObject.Children[0]);
+                if (vtsObject.Name == KeywordStrings.CompleteEvent)
+                    objective.CompleteEvent = ReadEventInfo(vtsObject.Children[0]);
+                if (vtsObject.Name == KeywordStrings.Fields)
+                {
+                    ObjectiveFields objectiveFields = new ObjectiveFields();
+
+                    foreach (VtsProperty property in vtsObject.Properties)
+                    {
+                        if (property.Name == "successConditional")
+                            objectiveFields.SuccessConditional = Convert.ToInt32(property.Value);
+                        if (property.Name == "failConditional")
+                            objectiveFields.FailConditional = Convert.ToInt32(property.Value);
+                        if (property.Name == "targets")
+                            objectiveFields.Targets = property.Value;
+                        if (property.Name == "minRequired")
+                            objectiveFields.MinRequired = Convert.ToInt32(property.Value);
+                        if (property.Name == "perUnitReward")
+                            objectiveFields.PerUnitReward = Convert.ToInt32(property.Value);
+                        if (property.Name == "fullCompleteBonus")
+                            objectiveFields.FullCompletionBonus = Convert.ToInt32(property.Value);
+                        if (property.Name == "unloadRadius")
+                            objectiveFields.UnloadRadius = Convert.ToSingle(property.Value);
+                        if (property.Name == "dropoffRallyPt")
+                            objectiveFields.DropoffRallyPoint = Convert.ToInt32(property.Value);
+                        if (property.Name == "triggerRadius")
+                            objectiveFields.TriggerRadius = Convert.ToSingle(property.Value);
+                        if (property.Name == "sphericalRadius")
+                            objectiveFields.SphericalRadius = Convert.ToBoolean(property.Value);
+                        if (property.Name == "targetUnit")
+                            objectiveFields.TargetUnit = Convert.ToInt32(property.Value);
+                        if (property.Name == "radius")
+                            objectiveFields.Radius = Convert.ToSingle(property.Value);
+                        if (property.Name == "fuelLevel")
+                            objectiveFields.FuelLevel = Convert.ToSingle(property.Value);
+                        if (property.Name == "completionMode")
+                            objectiveFields.CompletionMode = property.Value;
+                    }
+
+                    objective.Fields = objectiveFields;
+                }
+            }
+
+            return objective;
+        }
+
+        private static ThreePointValue ReadThreePointValue(string value)
+        {
+            string[] values = value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+            return new ThreePointValue
+            {
+                Point1 = Convert.ToSingle(values[0]),
+                Point2 = Convert.ToSingle(values[1]),
+                Point3 = Convert.ToSingle(values[2]),
+            };
         }
 
         /// <summary>Reads the VTS file into a CustomScenario object.</summary>
