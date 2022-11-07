@@ -125,6 +125,8 @@ namespace VTS.Data
             }
         }
 
+        private static Dictionary<string, VtsObject> unitAndFields = new Dictionary<string, VtsObject>();
+
         private static void ReadUnits(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
             VtsObject units = cs.Children.FirstOrDefault(c => c.Name == KeywordStrings.Units);
@@ -157,91 +159,96 @@ namespace VTS.Data
                         unitSpawner.LastValidPlacement = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                     if (property.Name == "spawnFlags")
                         unitSpawner.SpawnFlags = property.Value;
-
-                    // every unit will have one child object, the unit fields object
-                    UnitFields uf = new UnitFields();
-                    VtsObject unitFields = unit.Children[0];
-
-                    foreach (VtsProperty ufProperty in unitFields.Properties)
-                    {
-                        if (property.Name == "unitGroup")
-                            uf.UnitGroup = property.Value;
-                        if (property.Name == "defaultBehavior")
-                            uf.DefaultBehavior = property.Value;
-                        if (property.Name == "defaultWaypoint")
-                            uf.DefaultWaypoint = property.Value;
-                        if (property.Name == "defaultPath")
-                            uf.DefaultPath = property.Value;
-                        if (property.Name == "hullNumber")
-                            uf.HullNumber = Convert.ToInt32(property.Value);
-                        if (property.Name == "engageEnemies")
-                            uf.EngageEnemies = Convert.ToBoolean(property.Value);
-                        if (property.Name == "detectionMode")
-                            uf.DetectionMode = property.Value;
-                        if (property.Name == "spawnOnStart")
-                            uf.SpawnOnStart = Convert.ToBoolean(property.Value);
-                        if (property.Name == "invincible")
-                            uf.Invincible = Convert.ToBoolean(property.Value);
-                        if (property.Name == "carrierSpawns")
-                            uf.CarrierSpawns = property.Value;
-                        if (property.Name == "radarUnits")
-                            uf.RadarUnits = property.Value;
-                        if (property.Name == "allowReload")
-                            uf.AllowReload = Convert.ToBoolean(property.Value);
-                        if (property.Name == "reloadTime")
-                            uf.ReloadTime = Convert.ToInt32(property.Value);
-                        if (property.Name == "combatTarget")
-                            uf.CombatTarget = Convert.ToBoolean(property.Value);
-                        if (property.Name == "moveSpeed")
-                            uf.MoveSpeed = property.Value;
-                        if (property.Name == "behavior")
-                            uf.Behavior = property.Value;
-                        if (property.Name == "waypoint")
-                            uf.Waypoint = property.Value;
-                        if (property.Name == "voiceProfile")
-                            uf.VoiceProfile = property.Value;
-                        if (property.Name == "playerCommandsMode")
-                            uf.PlayerCommandsMode = property.Value;
-                        if (property.Name == "initialSpeed")
-                            uf.InitialSpeed = Convert.ToInt32(property.Value);
-                        if (property.Name == "defaultNavSpeed")
-                            uf.DefaultNavSpeed = Convert.ToInt32(property.Value);
-                        if (property.Name == "defaultOrbitPoint")
-                            uf.DefaultOrbitPoint = property.Value;
-                        if (property.Name == "orbitAltitude")
-                            uf.OrbitAltitude = Convert.ToInt32(property.Value);
-                        if (property.Name == "fuel")
-                            uf.Fuel = Convert.ToInt32(property.Value);
-                        if (property.Name == "autoRefuel")
-                            uf.AutoRefuel = Convert.ToBoolean(property.Value);
-                        if (property.Name == "autoRTB")
-                            uf.AutoReturnToBase = Convert.ToBoolean(property.Value);
-                        if (property.Name == "rtbDestination")
-                            uf.ReturnToBaseDestination = property.Value;
-                        if (property.Name == "parkedStartMode")
-                            uf.ParkedStartMode = property.Value;
-                        if (property.Name == "equips")
-                            uf.Equips = property.Value;
-                        if (property.Name == "stopToEngage")
-                            uf.StopToEngage = Convert.ToBoolean(property.Value);
-                        if (property.Name == "startMode")
-                            uf.StartMode = property.Value;
-                        if (property.Name == "receiveFriendlyDamage")
-                            uf.ReceiveFriendlyDamage = Convert.ToBoolean(property.Value);
-                        if (property.Name == "defaultRadarEnabled")
-                            uf.DefaultRadarEnabled = Convert.ToBoolean(property.Value);
-                        if (property.Name == "awacsVoiceProfile")
-                            uf.AwacsVoiceProfile = property.Value;
-                        if (property.Name == "commsEnabled")
-                            uf.CommsEnabled = Convert.ToBoolean(property.Value);
-                        if (property.Name == "defaultShotsPerSalvo")
-                            uf.DefaultShotsPerSalvo =Convert.ToInt32(property.Value);
-                        if (property.Name == "rippleRate")
-                            uf.RippleRate = Convert.ToInt32(property.Value);
-                    }
-
-                    unitSpawner.UnitFields = uf;
                 }
+
+                // every unit will have one child object, the unit fields object
+                UnitFields uf = new UnitFields();
+                VtsObject unitFields = unit.Children[0];
+
+                if (!unitAndFields.ContainsKey(unitSpawner.UnitName))
+                {
+                    unitAndFields.Add(unitSpawner.UnitName, unitFields);
+                }
+
+                foreach (VtsProperty ufProperty in unitFields.Properties)
+                {
+                    if (ufProperty.Name == "unitGroup")
+                        uf.UnitGroup = ufProperty.Value;
+                    if (ufProperty.Name == "defaultBehavior")
+                        uf.DefaultBehavior = ufProperty.Value;
+                    if (ufProperty.Name == "defaultWaypoint")
+                        uf.DefaultWaypoint = ufProperty.Value;
+                    if (ufProperty.Name == "defaultPath")
+                        uf.DefaultPath = ufProperty.Value;
+                    if (ufProperty.Name == "hullNumber")
+                        uf.HullNumber = Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "engageEnemies")
+                        uf.EngageEnemies = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "detectionMode")
+                        uf.DetectionMode = ufProperty.Value;
+                    if (ufProperty.Name == "spawnOnStart")
+                        uf.SpawnOnStart = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "invincible")
+                        uf.Invincible = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "carrierSpawns")
+                        uf.CarrierSpawns = ufProperty.Value;
+                    if (ufProperty.Name == "radarUnits")
+                        uf.RadarUnits = ufProperty.Value;
+                    if (ufProperty.Name == "allowReload")
+                        uf.AllowReload = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "reloadTime")
+                        uf.ReloadTime = Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "combatTarget")
+                        uf.CombatTarget = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "moveSpeed")
+                        uf.MoveSpeed = ufProperty.Value;
+                    if (ufProperty.Name == "behavior")
+                        uf.Behavior = ufProperty.Value;
+                    if (ufProperty.Name == "waypoint")
+                        uf.Waypoint = ufProperty.Value;
+                    if (ufProperty.Name == "voiceProfile")
+                        uf.VoiceProfile = ufProperty.Value;
+                    if (ufProperty.Name == "playerCommandsMode")
+                        uf.PlayerCommandsMode = ufProperty.Value;
+                    if (ufProperty.Name == "initialSpeed")
+                        uf.InitialSpeed = Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "defaultNavSpeed")
+                        uf.DefaultNavSpeed = Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "defaultOrbitPoint")
+                        uf.DefaultOrbitPoint = ufProperty.Value;
+                    if (ufProperty.Name == "orbitAltitude")
+                        uf.OrbitAltitude = Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "fuel")
+                        uf.Fuel = Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "autoRefuel")
+                        uf.AutoRefuel = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "autoRTB")
+                        uf.AutoReturnToBase = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "rtbDestination")
+                        uf.ReturnToBaseDestination = ufProperty.Value;
+                    if (ufProperty.Name == "parkedStartMode")
+                        uf.ParkedStartMode = ufProperty.Value;
+                    if (ufProperty.Name == "equips")
+                        uf.Equips = ufProperty.Value;
+                    if (ufProperty.Name == "stopToEngage")
+                        uf.StopToEngage = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "startMode")
+                        uf.StartMode = ufProperty.Value;
+                    if (ufProperty.Name == "receiveFriendlyDamage")
+                        uf.ReceiveFriendlyDamage = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "defaultRadarEnabled")
+                        uf.DefaultRadarEnabled = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "awacsVoiceProfile")
+                        uf.AwacsVoiceProfile = ufProperty.Value;
+                    if (ufProperty.Name == "commsEnabled")
+                        uf.CommsEnabled = Convert.ToBoolean(ufProperty.Value);
+                    if (ufProperty.Name == "defaultShotsPerSalvo")
+                        uf.DefaultShotsPerSalvo =Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "rippleRate")
+                        uf.RippleRate = Convert.ToInt32(ufProperty.Value);
+                }
+
+                unitSpawner.UnitFields = uf;
 
                 scenario.Units.Add(unitSpawner);
             }
@@ -1095,6 +1102,150 @@ namespace VTS.Data
             return scenario;
         }
 
+        private static void WriteCustomScenarioProperties(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            cs.Properties.Add(new VtsProperty { Name = "gameVersion", Value = scenario.GameVersion });
+            cs.Properties.Add(new VtsProperty { Name = "campaignID", Value = scenario.CampaignId == null ? "" : scenario.CampaignId });
+            cs.Properties.Add(new VtsProperty { Name = "campaignOrderIdx", Value = scenario.CampaignOrderIndex.ToString() });
+            cs.Properties.Add(new VtsProperty { Name = "scenarioName", Value = scenario.ScenarioName });
+            cs.Properties.Add(new VtsProperty { Name = "scenarioID", Value = scenario.ScenarioId });
+            cs.Properties.Add(new VtsProperty { Name = "scenarioDescription", Value = scenario.ScenarioDescription == null ? "" : scenario.ScenarioDescription });
+            cs.Properties.Add(new VtsProperty { Name = "mapID", Value = scenario.MapId });
+            cs.Properties.Add(new VtsProperty { Name = "vehicle", Value = scenario.Vehicle });
+            cs.Properties.Add(new VtsProperty { Name = "multiplayer", Value = scenario.Multiplayer ? "True" : "False" });
+
+            if (!string.IsNullOrWhiteSpace(scenario.AllowedEquips) || scenario.AllowedEquips.Equals("none", StringComparison.OrdinalIgnoreCase))
+                cs.Properties.Add(new VtsProperty { Name = "allowedEquips", Value = scenario.AllowedEquips });
+            
+            cs.Properties.Add(new VtsProperty { Name = "forcedEquips", Value = string.IsNullOrWhiteSpace(scenario.ForcedEquips) ? ";;;;;;;" : scenario.ForcedEquips });
+            cs.Properties.Add(new VtsProperty { Name = "forceEquips", Value = scenario.ForceEquips ? "True" : "False" });
+            cs.Properties.Add(new VtsProperty { Name = "normForcedFuel", Value = scenario.NormalForcedFuel.ToString() });
+            cs.Properties.Add(new VtsProperty { Name = "equipsConfigurable", Value = scenario.EquipsConfigurable ? "True" : "False" });
+            cs.Properties.Add(new VtsProperty { Name = "baseBudget", Value = scenario.BaseBudget.ToString() });
+            cs.Properties.Add(new VtsProperty { Name = "isTraining", Value = scenario.IsTraining ? "True" : "False" });
+            cs.Properties.Add(new VtsProperty { Name = "rtbWptID", Value = scenario.ReturnToBaseWaypointId == null ? "" : scenario.ReturnToBaseWaypointId });
+            cs.Properties.Add(new VtsProperty { Name = "refuelWptID", Value = scenario.RefuelWaypointId == null ? "" : scenario.RefuelWaypointId });
+            cs.Properties.Add(new VtsProperty { Name = "envName", Value = scenario.EnvironmentName });
+            cs.Properties.Add(new VtsProperty { Name = "selectableEnv", Value = scenario.SelectableEnvironment ? "True" : "False" });
+            cs.Properties.Add(new VtsProperty { Name = "qsMode", Value = scenario.QuickSaveMode });
+            cs.Properties.Add(new VtsProperty { Name = "qsLimit", Value = scenario.QuickSaveLimit.ToString() });
+        }
+
+        private static void WriteUnits(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            VtsObject units = new VtsObject { Name = KeywordStrings.Units };
+
+            foreach (UnitSpawner unitSpawner in scenario.Units)
+            {
+                VtsObject unit = new VtsObject();
+                unit.Properties.Add(new VtsProperty { Name = "unitName", Value = unitSpawner.UnitName });
+                unit.Properties.Add(new VtsProperty { Name = "globalPosition", Value = unitSpawner.GlobalPosition.ToString() });
+                unit.Properties.Add(new VtsProperty { Name = "unitInstanceID", Value = unitSpawner.UnitInstanceId.ToString() });
+                unit.Properties.Add(new VtsProperty { Name = "unitID", Value = unitSpawner.UnitId });
+                unit.Properties.Add(new VtsProperty { Name = "rotation", Value = unitSpawner.Rotation.ToString() });
+                unit.Properties.Add(new VtsProperty { Name = "spawnChance", Value = unitSpawner.SpawnChance.ToString() });
+                unit.Properties.Add(new VtsProperty { Name = "lastValidPlacement", Value = unitSpawner.LastValidPlacement.ToString() });
+                unit.Properties.Add(new VtsProperty { Name = "editorPlacementMode", Value = unitSpawner.EditorPlacementMode });
+                unit.Properties.Add(new VtsProperty { Name = "spawnFlags", Value = string.IsNullOrWhiteSpace(unitSpawner.SpawnFlags) ? "" : unitSpawner.SpawnFlags });
+
+                // process unit fields
+                VtsObject unitFields = new VtsObject();
+
+                /*
+                 * todo :
+                 *      process properties
+                 *      
+                 * In some circumstances properties should be written with an empty string or even null written out. However, 
+                 * in other circumstances the properties just aren't written at all. So simply checking null or empty values
+                 * won't suffice for determining which properties get written for the unit fields.
+                 * 
+                 * Maybe properties should be broken up by unit type or even be identified at a unit specific level? This way
+                 * I know what properties to write just by type????
+                 */
+
+                unit.Children.Add(unitFields);
+
+                units.Children.Add(unit);
+            }
+
+            cs.Children.Add(units);
+        }
+
+        private static void WritePaths(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteWaypoints(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteUnitGroups(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteTimedEventGroups(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteTriggerEvents(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteObjectives(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteObjectvesOpFor(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteStaticObjects(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteConditionals(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteConditionalActions(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteEventSequences(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteBases(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteGlobalValues(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteBriefingNotes(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
+        private static void WriteResourceManifest(CustomScenario scenario, VtsCustomScenarioObject cs)
+        {
+            
+        }
+
         /// <summary>Writes the CustomScenario object to a VTS file. CustomScenario.File must be set.</summary>
         /// <param name="scenario">The CustomScenario object to write to the VTS file.</param>
         /// <returns>True if the VTS file was written, false if not (HasError will get set if an error occurred).</returns>
@@ -1108,7 +1259,34 @@ namespace VTS.Data
                 if (string.IsNullOrWhiteSpace(scenario.File))
                     throw new ArgumentException("scenario File property cannot be empty, null or consist of white-space characters only.");
 
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
 
+                VtsCustomScenarioObject cs = new VtsCustomScenarioObject();
+
+                WriteCustomScenarioProperties(scenario, cs);
+                WriteUnits(scenario, cs);
+                WritePaths(scenario, cs);
+                WriteWaypoints(scenario, cs);
+                WriteUnitGroups(scenario, cs);
+                WriteTimedEventGroups(scenario, cs);
+                WriteTriggerEvents(scenario, cs);
+                WriteObjectives(scenario, cs);
+                WriteObjectvesOpFor(scenario, cs);
+                WriteStaticObjects(scenario, cs);
+                WriteConditionals(scenario, cs);
+                WriteConditionalActions(scenario, cs);
+                WriteEventSequences(scenario, cs);
+                WriteBases(scenario, cs);
+                WriteGlobalValues(scenario, cs);
+                WriteBriefingNotes(scenario, cs);
+                WriteResourceManifest(scenario, cs);
+
+                VtsWriter.WriteVtsFile(cs, scenario.File);
+
+                sw.Stop();
+
+                Debug.WriteLine($"CustomScenario write duration:{sw.Elapsed}");
 
                 return true;
             }

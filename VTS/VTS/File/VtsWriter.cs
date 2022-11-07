@@ -54,7 +54,7 @@ namespace VTS.File
 
             stopWatch.Stop();
 
-            Debug.WriteLine($"Write duration:{stopWatch.Elapsed}");
+            Debug.WriteLine($"VTS file write duration:{stopWatch.Elapsed}");
 
             return true;
         }
