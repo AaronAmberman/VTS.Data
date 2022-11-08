@@ -11,10 +11,10 @@ namespace VTS.Data.Raw
     {
         #region Properties
 
-        /// <summary>Get or sets the indent depth for the object.</summary>
+        /// <summary>Get or sets the indent depth for the object. This will need to be set for writing. Filled in on read.</summary>
         public int IndentDepth { get; set; }
 
-        /// <summary>Get or sets the line number the object starts on.</summary>
+        /// <summary>Get or sets the line number the object starts on. This is not used for writing. Filled in on read.</summary>
         public int LineNumber { get; set; }
 
         /// <summary>Get or sets the parent of the object.</summary>

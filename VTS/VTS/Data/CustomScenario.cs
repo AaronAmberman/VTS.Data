@@ -214,7 +214,7 @@ namespace VTS.Data
                     if (ufProperty.Name == "defaultOrbitPoint")
                         uf.DefaultOrbitPoint = ufProperty.Value == "null" ? null : ufProperty.Value;
                     if (ufProperty.Name == "orbitAltitude")
-                        uf.OrbitAltitude = Convert.ToInt32(ufProperty.Value);
+                        uf.OrbitAltitude = Convert.ToSingle(ufProperty.Value);
                     if (ufProperty.Name == "fuel")
                         uf.Fuel = Convert.ToInt32(ufProperty.Value);
                     if (ufProperty.Name == "autoRefuel")
@@ -1107,64 +1107,134 @@ namespace VTS.Data
 
         private static void WriteCustomScenarioProperties(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
-            cs.Properties.Add(new VtsProperty { Name = "gameVersion", Value = scenario.GameVersion });
-            cs.Properties.Add(new VtsProperty { Name = "campaignID", Value = scenario.CampaignId == null ? "" : scenario.CampaignId });
-            cs.Properties.Add(new VtsProperty { Name = "campaignOrderIdx", Value = scenario.CampaignOrderIndex.ToString() });
-            cs.Properties.Add(new VtsProperty { Name = "scenarioName", Value = scenario.ScenarioName });
-            cs.Properties.Add(new VtsProperty { Name = "scenarioID", Value = scenario.ScenarioId });
-            cs.Properties.Add(new VtsProperty { Name = "scenarioDescription", Value = scenario.ScenarioDescription == null ? "" : scenario.ScenarioDescription });
-            cs.Properties.Add(new VtsProperty { Name = "mapID", Value = scenario.MapId });
-            cs.Properties.Add(new VtsProperty { Name = "vehicle", Value = scenario.Vehicle });
-            cs.Properties.Add(new VtsProperty { Name = "multiplayer", Value = scenario.Multiplayer ? "True" : "False" });
+            cs.Properties.Add(new VtsProperty { Name = "gameVersion", Value = scenario.GameVersion, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "campaignID", Value = scenario.CampaignId == null ? "" : scenario.CampaignId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "campaignOrderIdx", Value = scenario.CampaignOrderIndex.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "scenarioName", Value = scenario.ScenarioName, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "scenarioID", Value = scenario.ScenarioId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "scenarioDescription", Value = scenario.ScenarioDescription == null ? "" : scenario.ScenarioDescription, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "mapID", Value = scenario.MapId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "vehicle", Value = scenario.Vehicle, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "multiplayer", Value = scenario.Multiplayer ? "True" : "False", IndentDepth = 1 });
 
             if (!string.IsNullOrWhiteSpace(scenario.AllowedEquips) || scenario.AllowedEquips.Equals("none", StringComparison.OrdinalIgnoreCase))
-                cs.Properties.Add(new VtsProperty { Name = "allowedEquips", Value = scenario.AllowedEquips });
+                cs.Properties.Add(new VtsProperty { Name = "allowedEquips", Value = scenario.AllowedEquips, IndentDepth = 1 });
 
-            cs.Properties.Add(new VtsProperty { Name = "forcedEquips", Value = string.IsNullOrWhiteSpace(scenario.ForcedEquips) ? ";;;;;;;" : scenario.ForcedEquips });
-            cs.Properties.Add(new VtsProperty { Name = "forceEquips", Value = scenario.ForceEquips ? "True" : "False" });
-            cs.Properties.Add(new VtsProperty { Name = "normForcedFuel", Value = scenario.NormalForcedFuel.ToString() });
-            cs.Properties.Add(new VtsProperty { Name = "equipsConfigurable", Value = scenario.EquipsConfigurable ? "True" : "False" });
-            cs.Properties.Add(new VtsProperty { Name = "baseBudget", Value = scenario.BaseBudget.ToString() });
-            cs.Properties.Add(new VtsProperty { Name = "isTraining", Value = scenario.IsTraining ? "True" : "False" });
-            cs.Properties.Add(new VtsProperty { Name = "rtbWptID", Value = scenario.ReturnToBaseWaypointId == null ? "" : scenario.ReturnToBaseWaypointId });
-            cs.Properties.Add(new VtsProperty { Name = "refuelWptID", Value = scenario.RefuelWaypointId == null ? "" : scenario.RefuelWaypointId });
-            cs.Properties.Add(new VtsProperty { Name = "envName", Value = scenario.EnvironmentName });
-            cs.Properties.Add(new VtsProperty { Name = "selectableEnv", Value = scenario.SelectableEnvironment ? "True" : "False" });
-            cs.Properties.Add(new VtsProperty { Name = "qsMode", Value = scenario.QuickSaveMode });
-            cs.Properties.Add(new VtsProperty { Name = "qsLimit", Value = scenario.QuickSaveLimit.ToString() });
+            cs.Properties.Add(new VtsProperty { Name = "forcedEquips", Value = string.IsNullOrWhiteSpace(scenario.ForcedEquips) ? ";;;;;;;;" : scenario.ForcedEquips, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "forceEquips", Value = scenario.ForceEquips ? "True" : "False", IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "normForcedFuel", Value = scenario.NormalForcedFuel.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "equipsConfigurable", Value = scenario.EquipsConfigurable ? "True" : "False", IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "baseBudget", Value = scenario.BaseBudget.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "isTraining", Value = scenario.IsTraining ? "True" : "False", IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "rtbWptID", Value = scenario.ReturnToBaseWaypointId == null ? "" : scenario.ReturnToBaseWaypointId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "refuelWptID", Value = scenario.RefuelWaypointId == null ? "" : scenario.RefuelWaypointId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "envName", Value = scenario.EnvironmentName, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "selectableEnv", Value = scenario.SelectableEnvironment ? "True" : "False", IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "qsMode", Value = scenario.QuickSaveMode, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = "qsLimit", Value = scenario.QuickSaveLimit.ToString(), IndentDepth = 1 });
         }
 
         private static void WriteUnits(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
-            VtsObject units = new VtsObject { Name = KeywordStrings.Units };
+            VtsObject units = new VtsObject { Name = KeywordStrings.Units, IndentDepth = 1 };
 
             foreach (UnitSpawner unitSpawner in scenario.Units)
             {
-                VtsObject unit = new VtsObject();
-                unit.Properties.Add(new VtsProperty { Name = "unitName", Value = unitSpawner.UnitName });
-                unit.Properties.Add(new VtsProperty { Name = "globalPosition", Value = unitSpawner.GlobalPosition.ToString() });
-                unit.Properties.Add(new VtsProperty { Name = "unitInstanceID", Value = unitSpawner.UnitInstanceId.ToString() });
-                unit.Properties.Add(new VtsProperty { Name = "unitID", Value = unitSpawner.UnitId });
-                unit.Properties.Add(new VtsProperty { Name = "rotation", Value = unitSpawner.Rotation.ToString() });
-                unit.Properties.Add(new VtsProperty { Name = "spawnChance", Value = unitSpawner.SpawnChance.ToString() });
-                unit.Properties.Add(new VtsProperty { Name = "lastValidPlacement", Value = unitSpawner.LastValidPlacement.ToString() });
-                unit.Properties.Add(new VtsProperty { Name = "editorPlacementMode", Value = unitSpawner.EditorPlacementMode });
-                unit.Properties.Add(new VtsProperty { Name = "spawnFlags", Value = string.IsNullOrWhiteSpace(unitSpawner.SpawnFlags) ? "" : unitSpawner.SpawnFlags });
+                VtsObject unit = new VtsObject { IndentDepth = 2 };
+                unit.Properties.Add(new VtsProperty { Name = "unitName", Value = unitSpawner.UnitName, IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "globalPosition", Value = unitSpawner.GlobalPosition.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "unitInstanceID", Value = unitSpawner.UnitInstanceId.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "unitID", Value = unitSpawner.UnitId, IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "rotation", Value = unitSpawner.Rotation.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "spawnChance", Value = unitSpawner.SpawnChance.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "lastValidPlacement", Value = unitSpawner.LastValidPlacement.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "editorPlacementMode", Value = unitSpawner.EditorPlacementMode, IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = "spawnFlags", Value = string.IsNullOrWhiteSpace(unitSpawner.SpawnFlags) ? "" : unitSpawner.SpawnFlags, IndentDepth = 3 });
 
                 // process unit fields
-                VtsObject unitFields = new VtsObject();
+                VtsObject unitFields = new VtsObject() { IndentDepth = 3 };
 
-                /*
-                 * todo :
-                 *      process properties
-                 *      
-                 * In some circumstances properties should be written with an empty string or even null written out. However, 
-                 * in other circumstances the properties just aren't written at all. So simply checking null or empty values
-                 * won't suffice for determining which properties get written for the unit fields.
-                 * 
-                 * Maybe properties should be broken up by unit type or even be identified at a unit specific level? This way
-                 * I know what properties to write just by type????
-                 */
+                List<string> propertiesForUnitFields = UnitFields.GetUnitFieldsForUnitType(unitSpawner.UnitId);
+                
+                foreach (string property in propertiesForUnitFields)
+                {
+                    if (property == "unitGroup")
+                        unitFields.Properties.Add(new VtsProperty { Name = "unitGroup", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.UnitGroup) ? "null" : unitSpawner.UnitFields.UnitGroup, IndentDepth = 4 });
+                    if (property == "defaultBehavior")
+                        unitFields.Properties.Add(new VtsProperty { Name = "defaultBehavior", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultBehavior) ? "null" : unitSpawner.UnitFields.DefaultBehavior, IndentDepth = 4 });
+                    if (property == "defaultWaypoint")
+                        unitFields.Properties.Add(new VtsProperty { Name = "defaultWaypoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultWaypoint) ? "null" : unitSpawner.UnitFields.DefaultWaypoint, IndentDepth = 4 });
+                    if (property== "defaultPath")
+                        unitFields.Properties.Add(new VtsProperty { Name = "defaultPath", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultPath) ? "null" : unitSpawner.UnitFields.DefaultPath, IndentDepth = 4 });
+                    if (property == "hullNumber")
+                        unitFields.Properties.Add(new VtsProperty { Name = "hullNumber", Value = unitSpawner.UnitFields.HullNumber.ToString(), IndentDepth = 4 });
+                    if (property == "engageEnemies")
+                        unitFields.Properties.Add(new VtsProperty { Name = "engageEnemies", Value = unitSpawner.UnitFields.EngageEnemies ? "True" : "False", IndentDepth = 4 });
+                    if (property == "detectionMode")
+                        unitFields.Properties.Add(new VtsProperty { Name = "detectionMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DetectionMode) ? "null" : unitSpawner.UnitFields.DetectionMode, IndentDepth = 4 });
+                    if (property == "spawnOnStart")
+                        unitFields.Properties.Add(new VtsProperty { Name = "spawnOnStart", Value = unitSpawner.UnitFields.SpawnOnStart ? "True" : "False", IndentDepth = 4 });
+                    if (property == "invincible")
+                        unitFields.Properties.Add(new VtsProperty { Name = "invincible", Value = unitSpawner.UnitFields.Invincible ? "True" : "False", IndentDepth = 4 });
+                    if (property == "carrierSpawns")
+                        unitFields.Properties.Add(new VtsProperty { Name = "carrierSpawns", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.CarrierSpawns) ? "" : unitSpawner.UnitFields.CarrierSpawns, IndentDepth = 4 });
+                    if (property == "radarUnits")
+                        unitFields.Properties.Add(new VtsProperty { Name = "radarUnits", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.RadarUnits) ? "" : unitSpawner.UnitFields.RadarUnits, IndentDepth = 4 });
+                    if (property == "allowReload")
+                        unitFields.Properties.Add(new VtsProperty { Name = "allowReload", Value = unitSpawner.UnitFields.AllowReload ? "True" : "False", IndentDepth = 4 });
+                    if (property == "reloadTime")
+                        unitFields.Properties.Add(new VtsProperty { Name = "reloadTime", Value = unitSpawner.UnitFields.ReloadTime.ToString(), IndentDepth = 4 });
+                    if (property == "combatTarget")
+                        unitFields.Properties.Add(new VtsProperty { Name = "combatTarget", Value = unitSpawner.UnitFields.CombatTarget ? "True" : "False", IndentDepth = 4 });
+                    if (property == "moveSpeed")
+                        unitFields.Properties.Add(new VtsProperty { Name = "moveSpeed", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.MoveSpeed) ? "null" : unitSpawner.UnitFields.MoveSpeed, IndentDepth = 4 });
+                    if (property == "behavior")
+                        unitFields.Properties.Add(new VtsProperty { Name = "behavior", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Behavior) ? "null" : unitSpawner.UnitFields.Behavior, IndentDepth = 4 });
+                    if (property == "waypoint")
+                        unitFields.Properties.Add(new VtsProperty { Name = "waypoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Waypoint) ? "null" : unitSpawner.UnitFields.Waypoint, IndentDepth = 4 });
+                    if (property == "voiceProfile")
+                        unitFields.Properties.Add(new VtsProperty { Name = "voiceProfile", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.VoiceProfile) ? "null" : unitSpawner.UnitFields.VoiceProfile, IndentDepth = 4 });
+                    if (property == "playerCommandsMode")
+                        unitFields.Properties.Add(new VtsProperty { Name = "playerCommandsMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.PlayerCommandsMode) ? "null" : unitSpawner.UnitFields.PlayerCommandsMode, IndentDepth = 4 });
+                    if (property == "initialSpeed")
+                        unitFields.Properties.Add(new VtsProperty { Name = "initialSpeed", Value = unitSpawner.UnitFields.InitialSpeed.ToString(), IndentDepth = 4 });
+                    if (property == "defaultNavSpeed")
+                        unitFields.Properties.Add(new VtsProperty { Name = "defaultNavSpeed", Value = unitSpawner.UnitFields.DefaultNavSpeed.ToString(), IndentDepth = 4 });
+                    if (property == "defaultOrbitPoint")
+                        unitFields.Properties.Add(new VtsProperty { Name = "defaultOrbitPoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultOrbitPoint) ? "null" : unitSpawner.UnitFields.DefaultOrbitPoint, IndentDepth = 4 });
+                    if (property == "orbitAltitude")
+                        // this might need some kinf of special formatting for a decimal number, we shall see
+                        unitFields.Properties.Add(new VtsProperty { Name = "orbitAltitude", Value = unitSpawner.UnitFields.OrbitAltitude.ToString(), IndentDepth = 4 });
+                    if (property == "fuel")
+                        unitFields.Properties.Add(new VtsProperty { Name = "fuel", Value = unitSpawner.UnitFields.Fuel.ToString(), IndentDepth = 4 });
+                    if (property == "autoRefuel")
+                        unitFields.Properties.Add(new VtsProperty { Name = "autoRefuel", Value = unitSpawner.UnitFields.AutoRefuel ? "True" : "False", IndentDepth = 4 });
+                    if (property == "autoRTB")
+                        unitFields.Properties.Add(new VtsProperty { Name = "autoRTB", Value = unitSpawner.UnitFields.AutoReturnToBase ? "True" : "False", IndentDepth = 4 });
+                    if (property == "rtbDestination")
+                        unitFields.Properties.Add(new VtsProperty { Name = "rtbDestination", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ReturnToBaseDestination) ? "" : unitSpawner.UnitFields.ReturnToBaseDestination, IndentDepth = 4 });
+                    if (property == "parkedStartMode")
+                        unitFields.Properties.Add(new VtsProperty { Name = "parkedStartMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ParkedStartMode) ? "null" : unitSpawner.UnitFields.ParkedStartMode, IndentDepth = 4 });
+                    if (property == "equips")
+                        // the default value here may need to become unit specific
+                        unitFields.Properties.Add(new VtsProperty { Name = "equips", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Equips) ? ";;;;;;" : unitSpawner.UnitFields.Equips, IndentDepth = 4 });
+                    if (property == "stopToEngage")
+                        unitFields.Properties.Add(new VtsProperty { Name = "stopToEngage", Value = unitSpawner.UnitFields.StopToEngage ? "True" : "False", IndentDepth = 4 });
+                    if (property == "startMode")
+                        unitFields.Properties.Add(new VtsProperty { Name = "startMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.StartMode) ? "null" : unitSpawner.UnitFields.StartMode, IndentDepth = 4 });
+                    if (property == "receiveFriendlyDamage")
+                        unitFields.Properties.Add(new VtsProperty { Name = "receiveFriendlyDamage", Value = unitSpawner.UnitFields.ReceiveFriendlyDamage ? "True" : "False", IndentDepth = 4 });
+                    if (property == "defaultRadarEnabled")
+                        unitFields.Properties.Add(new VtsProperty { Name = "defaultRadarEnabled", Value = unitSpawner.UnitFields.DefaultRadarEnabled ? "True" : "False", IndentDepth = 4 });
+                    if (property == "awacsVoiceProfile")
+                        unitFields.Properties.Add(new VtsProperty { Name = "awacsVoiceProfile", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.AwacsVoiceProfile) ? "null" : unitSpawner.UnitFields.AwacsVoiceProfile, IndentDepth = 4 });
+                    if (property == "commsEnabled")
+                        unitFields.Properties.Add(new VtsProperty { Name = "commsEnabled", Value = unitSpawner.UnitFields.CommsEnabled ? "True" : "False", IndentDepth = 4 });
+                    if (property == "defaultShotsPerSalvo")
+                        unitFields.Properties.Add(new VtsProperty { Name = "defaultShotsPerSalvo", Value = unitSpawner.UnitFields.DefaultShotsPerSalvo.ToString(), IndentDepth = 4 });
+                    if (property == "rippleRate")
+                        unitFields.Properties.Add(new VtsProperty { Name = "rippleRate", Value = unitSpawner.UnitFields.RippleRate.ToString(), IndentDepth = 4 });
+                }
 
                 unit.Children.Add(unitFields);
 
