@@ -1140,7 +1140,7 @@ namespace VTS.Data
 
             foreach (UnitSpawner unitSpawner in scenario.Units)
             {
-                VtsObject unit = new VtsObject { IndentDepth = 2 };
+                VtsObject unit = new VtsObject { Name = KeywordStrings.UnitSpawner, IndentDepth = 2 };
                 unit.Properties.Add(new VtsProperty { Name = "unitName", Value = unitSpawner.UnitName, IndentDepth = 3 });
                 unit.Properties.Add(new VtsProperty { Name = "globalPosition", Value = unitSpawner.GlobalPosition.ToString(), IndentDepth = 3 });
                 unit.Properties.Add(new VtsProperty { Name = "unitInstanceID", Value = unitSpawner.UnitInstanceId.ToString(), IndentDepth = 3 });
@@ -1152,7 +1152,7 @@ namespace VTS.Data
                 unit.Properties.Add(new VtsProperty { Name = "spawnFlags", Value = string.IsNullOrWhiteSpace(unitSpawner.SpawnFlags) ? "" : unitSpawner.SpawnFlags, IndentDepth = 3 });
 
                 // process unit fields
-                VtsObject unitFields = new VtsObject() { IndentDepth = 3 };
+                VtsObject unitFields = new VtsObject() { Name = KeywordStrings.UnitFields, IndentDepth = 3 };
 
                 List<string> propertiesForUnitFields = UnitFields.GetUnitFieldsForUnitType(unitSpawner.UnitId);
                 
@@ -1246,22 +1246,177 @@ namespace VTS.Data
 
         private static void WritePaths(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject paths = new VtsObject { Name = KeywordStrings.Paths, IndentDepth = 1 };
 
+            foreach (Path path in scenario.Paths)
+            {
+                VtsObject p = new VtsObject { Name = KeywordStrings.Path, IndentDepth = 2 };
+                p.Properties.Add(new VtsProperty { Name = "id", Value = path.Id.ToString(), IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = "name", Value = path.Name, IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = "loop", Value = path.Loop ? "True" : "False", IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = "points", Value = string.Join(';', path.Points) + ";", IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = "pathMode", Value = path.PathMode.ToString(), IndentDepth = 3 });
+
+                paths.Children.Add(p);
+            }
+
+            cs.Children.Add(paths);
         }
 
         private static void WriteWaypoints(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject waypoints = new VtsObject { Name = KeywordStrings.Waypoints, IndentDepth = 1 };
 
+            foreach (Waypoint waypoint in scenario.Waypoints)
+            {
+                VtsObject wp = new VtsObject { Name = KeywordStrings.Waypoint, IndentDepth = 2 };
+                wp.Properties.Add(new VtsProperty { Name = "id", Value = waypoint.Id.ToString(), IndentDepth = 3 });
+                wp.Properties.Add(new VtsProperty { Name = "name", Value = waypoint.Name, IndentDepth = 3 });
+                wp.Properties.Add(new VtsProperty { Name = "globalPoint", Value = waypoint.GlobalPoint.ToString(), IndentDepth = 3 });
+
+                waypoints.Children.Add(wp);
+            }
+
+            cs.Children.Add(waypoints);
         }
 
         private static void WriteUnitGroups(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject unitGroups = new VtsObject { Name = KeywordStrings.UnitGroups, IndentDepth = 1 };
 
+            UnitGroup alliedUG = scenario.UnitGroups.FirstOrDefault(ug => ug.Name == KeywordStrings.Allied);
+            VtsObject allied = new VtsObject { Name = KeywordStrings.Allied, IndentDepth = 2 };
+            
+            WriteUnitGroupProperties(alliedUG, allied);
+
+            unitGroups.Children.Add(allied);
+
+            UnitGroup enemyUG = scenario.UnitGroups.FirstOrDefault(ug => ug.Name == KeywordStrings.Enemy);
+            VtsObject enemy = new VtsObject { Name = KeywordStrings.Enemy, IndentDepth = 2 };
+            
+            WriteUnitGroupProperties(enemyUG, enemy);
+
+            unitGroups.Children.Add(enemy);
+
+            cs.Children.Add(unitGroups);
+        }
+
+        private static void WriteUnitGroupProperties(UnitGroup unitGroup, VtsObject ug)
+        {
+            if (!string.IsNullOrWhiteSpace(unitGroup.Alpha))
+                ug.Properties.Add(new VtsProperty { Name = "Alpha", Value = unitGroup.Alpha, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Bravo))
+                ug.Properties.Add(new VtsProperty { Name = "Bravo", Value = unitGroup.Bravo, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Charlie))
+                ug.Properties.Add(new VtsProperty { Name = "Charlie", Value = unitGroup.Charlie, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Delta))
+                ug.Properties.Add(new VtsProperty { Name = "Delta", Value = unitGroup.Delta, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Echo))
+                ug.Properties.Add(new VtsProperty { Name = "Echo", Value = unitGroup.Echo, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Foxtrot))
+                ug.Properties.Add(new VtsProperty { Name = "Foxtrot", Value = unitGroup.Foxtrot, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Golf))
+                ug.Properties.Add(new VtsProperty { Name = "Golf", Value = unitGroup.Golf, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Hotel))
+                ug.Properties.Add(new VtsProperty { Name = "Hotel", Value = unitGroup.Hotel, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.India))
+                ug.Properties.Add(new VtsProperty { Name = "India", Value = unitGroup.India, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Juliet))
+                ug.Properties.Add(new VtsProperty { Name = "Juliet", Value = unitGroup.Juliet, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Kilo))
+                ug.Properties.Add(new VtsProperty { Name = "Kilo", Value = unitGroup.Kilo, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Lima))
+                ug.Properties.Add(new VtsProperty { Name = "Lima", Value = unitGroup.Lima, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Mike))
+                ug.Properties.Add(new VtsProperty { Name = "Mike", Value = unitGroup.Mike, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.November))
+                ug.Properties.Add(new VtsProperty { Name = "November", Value = unitGroup.November, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Oscar))
+                ug.Properties.Add(new VtsProperty { Name = "Oscar", Value = unitGroup.Oscar, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Papa))
+                ug.Properties.Add(new VtsProperty { Name = "Papa", Value = unitGroup.Papa, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Quebec))
+                ug.Properties.Add(new VtsProperty { Name = "Quebec", Value = unitGroup.Quebec, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Romeo))
+                ug.Properties.Add(new VtsProperty { Name = "Romeo", Value = unitGroup.Romeo, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Sierra))
+                ug.Properties.Add(new VtsProperty { Name = "Sierra", Value = unitGroup.Sierra, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Tango))
+                ug.Properties.Add(new VtsProperty { Name = "Tango", Value = unitGroup.Tango, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Uniform))
+                ug.Properties.Add(new VtsProperty { Name = "Uniform", Value = unitGroup.Uniform, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Victor))
+                ug.Properties.Add(new VtsProperty { Name = "Victor", Value = unitGroup.Victor, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Whiskey))
+                ug.Properties.Add(new VtsProperty { Name = "Whiskey", Value = unitGroup.Whiskey, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Xray))
+                ug.Properties.Add(new VtsProperty { Name = "Xray", Value = unitGroup.Xray, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Yankee))
+                ug.Properties.Add(new VtsProperty { Name = "Yankee", Value = unitGroup.Yankee, IndentDepth = 3 });
+            if (!string.IsNullOrWhiteSpace(unitGroup.Zulu))
+                ug.Properties.Add(new VtsProperty { Name = "Zulu", Value = unitGroup.Zulu, IndentDepth = 3 });
         }
 
         private static void WriteTimedEventGroups(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject tegs = new VtsObject { Name = KeywordStrings.TimedEventGroups, IndentDepth = 1 };
 
+            foreach (TimedEventGroup timedEventGroup in scenario.TimedEventGroups)
+            {
+                VtsObject teg = new VtsObject { Name = KeywordStrings.TimedEventGroup, IndentDepth = 2 };
+                teg.Properties.Add(new VtsProperty { Name = "groupName", Value = timedEventGroup.GroupName, IndentDepth = 3 });
+                teg.Properties.Add(new VtsProperty { Name = "groupID", Value = timedEventGroup.GroupId.ToString(), IndentDepth = 3 });
+                teg.Properties.Add(new VtsProperty { Name = "beginImmediately", Value = timedEventGroup.BeginImmediately ? "True" : "False", IndentDepth = 3 });
+                teg.Properties.Add(new VtsProperty { Name = "initialDelay", Value = timedEventGroup.InitialDelay.ToString(), IndentDepth = 3 });
+
+                foreach (TimedEventInfo timedEventInfo in timedEventGroup.TimedEventInfos)
+                {
+                    VtsObject tei = new VtsObject { Name = KeywordStrings.TimedEventInfo, IndentDepth = 3 };
+                    tei.Properties.Add(new VtsProperty { Name = "eventName", Value = timedEventInfo.EventName, IndentDepth = 4 });
+                    tei.Properties.Add(new VtsProperty { Name = "time", Value = timedEventInfo.Time.ToString(), IndentDepth = 4 });
+
+                    foreach (EventTarget eventTarget in timedEventInfo.EventTargets)
+                    {
+                        tei.Children.Add(WriteEventTarget(eventTarget, 4));
+                    }
+
+                    teg.Children.Add(tei);
+                }
+
+                tegs.Children.Add(teg);
+            }
+
+            cs.Children.Add(tegs);
+        }
+
+        private static VtsObject WriteEventTarget(EventTarget eventTarget, int indentDepth)
+        {
+            VtsObject et = new VtsObject { Name = KeywordStrings.EventTarget, IndentDepth = indentDepth };
+            et.Properties.Add(new VtsProperty { Name = "targetType", Value = eventTarget.TargetType, IndentDepth = indentDepth + 1 });
+            et.Properties.Add(new VtsProperty { Name = "targetID", Value = eventTarget.TargetId.ToString(), IndentDepth = indentDepth + 1 });
+            et.Properties.Add(new VtsProperty { Name = "eventName", Value = eventTarget.EventName, IndentDepth = indentDepth + 1 });
+            et.Properties.Add(new VtsProperty { Name = "methodName", Value = eventTarget.MethodName, IndentDepth = indentDepth + 1 });
+
+            foreach (ParamInfo paramInfo in eventTarget.ParamInfos)
+            {
+                VtsObject pi = new VtsObject { Name = KeywordStrings.ParamInfo, IndentDepth = indentDepth + 1 };
+                pi.Properties.Add(new VtsProperty { Name = "type", Value = paramInfo.Type, IndentDepth = indentDepth + 2 });
+                pi.Properties.Add(new VtsProperty { Name = "value", Value = paramInfo.Value, IndentDepth = indentDepth + 2 });
+                pi.Properties.Add(new VtsProperty { Name = "name", Value = paramInfo.Name, IndentDepth = indentDepth + 2 });
+
+                foreach (ParamAttrInfo paramAttrInfo in paramInfo.ParamAttrInfos)
+                {
+                    VtsObject pai = new VtsObject { Name = KeywordStrings.ParamAttrInfo, IndentDepth = indentDepth + 2 };
+                    pai.Properties.Add(new VtsProperty { Name = "type", Value = paramAttrInfo.Type, IndentDepth = indentDepth + 3 });
+                    pai.Properties.Add(new VtsProperty { Name = "data", Value = paramAttrInfo.Data, IndentDepth = indentDepth + 3 });
+
+                    pi.Children.Add(pai);
+                }
+
+                et.Children.Add(pi);
+            }
+
+            return et;
         }
 
         private static void WriteTriggerEvents(CustomScenario scenario, VtsCustomScenarioObject cs)
