@@ -865,7 +865,7 @@ namespace VTS.Data
                     if (vtsProperty.Name == "factors")
                         computation.Factors = vtsProperty.Value;
                     if (vtsProperty.Name == "gv")
-                        computation.GlobalValue = vtsProperty.Value;
+                        computation.GlobalValue = Convert.ToInt32(vtsProperty.Value);
                     if (vtsProperty.Name == "comparison")
                         computation.Comparison = vtsProperty.Value;
                     if (vtsProperty.Name == "c_value")
@@ -1421,57 +1421,380 @@ namespace VTS.Data
 
         private static void WriteTriggerEvents(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject tes = new VtsObject { Name = KeywordStrings.TriggerEvents, IndentDepth = 1 };
 
+            foreach (TriggerEvent triggerEvent in scenario.TriggerEvents)
+            {
+                VtsObject te = new VtsObject { Name = KeywordStrings.TriggerEvent, IndentDepth = 2 };
+                te.Properties.Add(new VtsProperty { Name = "id", Value = triggerEvent.Id.ToString(), IndentDepth = 3 });
+                te.Properties.Add(new VtsProperty { Name = "enabled", Value = triggerEvent.Enabled ? "True" : "False", IndentDepth = 3 });
+                te.Properties.Add(new VtsProperty { Name = "triggerType", Value = triggerEvent.TriggerType, IndentDepth = 3 });
+
+                if (triggerEvent.Conditional.HasValue)
+                    te.Properties.Add(new VtsProperty { Name = "conditional", Value = triggerEvent.Conditional.Value.ToString(), IndentDepth = 3 });
+
+                if (triggerEvent.Waypoint.HasValue)
+                    te.Properties.Add(new VtsProperty { Name = "waypoint", Value = triggerEvent.Waypoint.Value.ToString(), IndentDepth = 3 });
+
+                if (triggerEvent.Radius.HasValue)
+                    te.Properties.Add(new VtsProperty { Name = "radius", Value = triggerEvent.Radius.Value.ToString(), IndentDepth = 3 });
+
+                if (triggerEvent.SphericalRadius.HasValue)
+                    te.Properties.Add(new VtsProperty { Name = "sphericalRadius", Value = triggerEvent.SphericalRadius.Value ? "True" : "False", IndentDepth = 3 });
+
+                if (!string.IsNullOrWhiteSpace(triggerEvent.TriggerMode))
+                    te.Properties.Add(new VtsProperty { Name = "triggerMode", Value = triggerEvent.TriggerMode, IndentDepth = 3 });
+
+                if (!string.IsNullOrWhiteSpace(triggerEvent.ProxyMode))
+                    te.Properties.Add(new VtsProperty { Name = "proxyMode", Value = triggerEvent.ProxyMode, IndentDepth = 3 });
+
+                te.Properties.Add(new VtsProperty { Name = "eventName", Value = triggerEvent.EventName, IndentDepth = 3 });
+
+                te.Children.Add(WriteEventInfo(triggerEvent.EventInfo, 3, 0));
+
+                tes.Children.Add(te);
+            }
+
+            cs.Children.Add(tes);
+        }
+
+        private static VtsObject WriteEventInfo(EventInfo eventInfo, int indentDepth, int stringToUse)
+        {
+            VtsObject ei = new VtsObject { Name = stringToUse == 0 ? KeywordStrings.EventInfo : stringToUse == 1 ? KeywordStrings.Actions : stringToUse == 2 ? KeywordStrings.ElseActions : KeywordStrings.EventInfo, IndentDepth = indentDepth };
+            ei.Properties.Add(new VtsProperty { Name = "eventName", Value = eventInfo.EventName, IndentDepth = indentDepth + 1 });
+
+            foreach (EventTarget eventTarget in eventInfo.EventTargets)
+            {
+                ei.Children.Add(WriteEventTarget(eventTarget, indentDepth + 1));
+            }
+
+            return ei;
+        }
+
+        private static VtsObject WriteObjectives(bool isOpFor, List<Objective> objectives)
+        {
+            VtsObject objs = new VtsObject { Name = isOpFor ? KeywordStrings.ObjectivesOpFor : KeywordStrings.Objectives, IndentDepth = 1 };
+
+            foreach (Objective objective in objectives)
+            {
+                VtsObject obj = new VtsObject { Name = KeywordStrings.Objective, IndentDepth = 2 };
+                obj.Properties.Add(new VtsProperty { Name = "objectiveName", Value = objective.ObjectiveName, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "objectiveInfo", Value = objective.ObjectiveInfo, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "objectiveID", Value = objective.ObjectiveID.ToString(), IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "orderID", Value = objective.OrderID.ToString(), IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "required", Value = objective.Required ? "True" : "False", IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "completionReward", Value = objective.CompletionReward.ToString(), IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "waypoint", Value = string.IsNullOrWhiteSpace(objective.Waypoint) ? "null" : objective.Waypoint, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "autoSetWaypoint", Value = objective.AutoSetWaypoint ? "True" : "False", IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "startMode", Value = objective.StartMode, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = "objectiveType", Value = objective.ObjectiveType, IndentDepth = 3 });
+
+                if (!string.IsNullOrWhiteSpace(objective.PreReqObjectives))
+                    obj.Properties.Add(new VtsProperty { Name = "preReqObjectives", Value = objective.PreReqObjectives, IndentDepth = 3 });
+
+                VtsObject startEvent = new VtsObject { Name = KeywordStrings.StartEvent, IndentDepth = 3 };
+                startEvent.Children.Add(WriteEventInfo(objective.StartEvent, 4, 0));
+
+                obj.Children.Add(startEvent);
+
+                VtsObject failEvent = new VtsObject { Name = KeywordStrings.FailEvent, IndentDepth = 3 };
+                failEvent.Children.Add(WriteEventInfo(objective.FailEvent, 4, 0));
+
+                obj.Children.Add(failEvent);
+
+                VtsObject completeEvent = new VtsObject { Name = KeywordStrings.CompleteEvent, IndentDepth = 3 };
+                completeEvent.Children.Add(WriteEventInfo(objective.CompleteEvent, 4, 0));
+
+                obj.Children.Add(completeEvent);
+
+                VtsObject objectiveFields = new VtsObject { Name = KeywordStrings.Fields, IndentDepth = 3 };
+
+                if (objective.Fields.SuccessConditional.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "successConditional", Value = objective.Fields.SuccessConditional.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.FailConditional.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "failConditional", Value = objective.Fields.FailConditional.Value.ToString(), IndentDepth = 4 });
+
+                if (!string.IsNullOrWhiteSpace(objective.Fields.Targets))
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "targets", Value = objective.Fields.Targets, IndentDepth = 4 });
+
+                if (objective.Fields.MinRequired.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "minRequired", Value = objective.Fields.MinRequired.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.PerUnitReward.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "perUnitReward", Value = objective.Fields.PerUnitReward.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.FullCompletionBonus.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "fullCompleteBonus", Value = objective.Fields.FullCompletionBonus.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.UnloadRadius.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "unloadRadius", Value = objective.Fields.UnloadRadius.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.DropoffRallyPoint.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "dropoffRallyPt", Value = objective.Fields.DropoffRallyPoint.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.TriggerRadius.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "triggerRadius", Value = objective.Fields.TriggerRadius.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.SphericalRadius.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "sphericalRadius", Value = objective.Fields.SphericalRadius.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.TargetUnit.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "targetUnit", Value = objective.Fields.TargetUnit.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.Radius.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "radius", Value = objective.Fields.Radius.Value.ToString(), IndentDepth = 4 });
+
+                if (objective.Fields.FuelLevel.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "fuelLevel", Value = objective.Fields.FuelLevel.Value.ToString(), IndentDepth = 4 });
+
+                if (!string.IsNullOrWhiteSpace(objective.Fields.CompletionMode))
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "targets", Value = objective.Fields.CompletionMode, IndentDepth = 4 });
+
+                obj.Children.Add(objectiveFields);
+
+                objs.Children.Add(obj);
+            }
+
+            return objs;
         }
 
         private static void WriteObjectives(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
-
+            cs.Children.Add(WriteObjectives(false, scenario.Objectives));
         }
 
         private static void WriteObjectvesOpFor(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
-
+            cs.Children.Add(WriteObjectives(true, scenario.ObjectivesOpFor));
         }
 
         private static void WriteStaticObjects(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject sos = new VtsObject { Name = KeywordStrings.StaticObjects, IndentDepth = 1 };
 
+            foreach (StaticObject staticObject in scenario.StaticObjects)
+            {
+                VtsObject so = new VtsObject { Name = KeywordStrings.StaticObject, IndentDepth = 2 };
+                so.Properties.Add(new VtsProperty { Name = "prefabID", Value = staticObject.PrefabId, IndentDepth = 3 });
+                so.Properties.Add(new VtsProperty { Name = "id", Value = staticObject.Id.ToString(), IndentDepth = 3 });
+                so.Properties.Add(new VtsProperty { Name = "globalPos", Value = staticObject.GlobalPosition.ToString(), IndentDepth = 3 });
+                so.Properties.Add(new VtsProperty { Name = "rotation", Value = staticObject.Rotation.ToString(), IndentDepth = 3 });
+
+                sos.Children.Add(so);
+            }
+
+            cs.Children.Add(sos);
+        }
+
+        private static VtsObject WriteConditional(Conditional conditional, int indentDepth)
+        {
+            VtsObject c = new VtsObject { Name = KeywordStrings.Conditional, IndentDepth = indentDepth };
+            c.Properties.Add(new VtsProperty { Name = "id", Value = conditional.Id.ToString(), IndentDepth = indentDepth + 1 });
+            c.Properties.Add(new VtsProperty { Name = "outputNodePos", Value = conditional.OutputNodePosition.ToString(), IndentDepth = indentDepth + 1 });
+
+            if (conditional.Root.HasValue)
+                c.Properties.Add(new VtsProperty { Name = "root", Value = conditional.Root.Value.ToString(), IndentDepth = indentDepth + 1 });
+
+            foreach (Computation computation in conditional.Computations)
+            {
+                VtsObject comp = new VtsObject { Name = KeywordStrings.Comp, IndentDepth = indentDepth + 1 };
+                comp.Properties.Add(new VtsProperty { Name = "id", Value = computation.Id.ToString(), IndentDepth = indentDepth + 2 });
+                comp.Properties.Add(new VtsProperty { Name = "type", Value = computation.Type, IndentDepth = indentDepth + 2 });
+                comp.Properties.Add(new VtsProperty { Name = "uiPos", Value = computation.UiPosition.ToString(), IndentDepth = indentDepth + 2 });
+
+                if (computation.Unit.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "unit", Value = computation.Unit.ToString(), IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.UnitGroup))
+                    comp.Properties.Add(new VtsProperty { Name = "unitGroup", Value = computation.UnitGroup, IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.UnitList))
+                    comp.Properties.Add(new VtsProperty { Name = "unitList", Value = computation.UnitList, IndentDepth = indentDepth + 2 });
+
+                if (computation.ObjectReference.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "objectReference", Value = computation.ObjectReference.ToString(), IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.MethodName))
+                    comp.Properties.Add(new VtsProperty { Name = "methodName", Value = computation.MethodName, IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.MethodParameters))
+                    comp.Properties.Add(new VtsProperty { Name = "methodParameters", Value = computation.MethodParameters, IndentDepth = indentDepth + 2 });
+
+                if (computation.IsNot.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "isNot", Value = computation.IsNot.Value ? "True" : "False", IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.Factors))
+                    comp.Properties.Add(new VtsProperty { Name = "factors", Value = computation.Factors, IndentDepth = indentDepth + 2 });
+
+                if (computation.Chance.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "chance", Value = computation.Chance.ToString(), IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.VehicleControl))
+                    comp.Properties.Add(new VtsProperty { Name = "vehicleControl", Value = computation.VehicleControl, IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.ControlCondition))
+                    comp.Properties.Add(new VtsProperty { Name = "controlCondition", Value = computation.ControlCondition, IndentDepth = indentDepth + 2 });
+
+                if (computation.ControlValue.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "controlValue", Value = computation.ControlValue.ToString(), IndentDepth = indentDepth + 2 });
+
+                if (computation.GlobalValue.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "gv", Value = computation.GlobalValue.ToString(), IndentDepth = indentDepth + 2 });
+
+                if (!string.IsNullOrWhiteSpace(computation.Comparison))
+                    comp.Properties.Add(new VtsProperty { Name = "comparison", Value = computation.Comparison, IndentDepth = indentDepth + 2 });
+
+                if (computation.CValue.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "c_value", Value = computation.CValue.ToString(), IndentDepth = indentDepth + 2 });
+
+                c.Children.Add(comp);
+            }
+
+            return c;
         }
 
         private static void WriteConditionals(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject conditionals = new VtsObject { Name = KeywordStrings.Conditionals, IndentDepth = 1 };
 
+            foreach (Conditional conditional in scenario.Conditionals)
+            {
+                conditionals.Children.Add(WriteConditional(conditional, 2));
+            }
+
+            cs.Children.Add(conditionals);
         }
 
         private static void WriteConditionalActions(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject conditionalActions = new VtsObject { Name = KeywordStrings.ConditionalActions, IndentDepth = 1 };
 
+            foreach (ConditionalAction conditionalAction in scenario.ConditionalActions)
+            {
+                VtsObject ca = new VtsObject { Name = KeywordStrings.ConditionalAction, IndentDepth = 2 };
+                ca.Properties.Add(new VtsProperty { Name = "id", Value = conditionalAction.Id.ToString(), IndentDepth = 3 });
+                ca.Properties.Add(new VtsProperty { Name = "name", Value = conditionalAction.Name, IndentDepth = 3 });
+
+                VtsObject bb = new VtsObject { Name = KeywordStrings.BaseBlock, IndentDepth = 3 };
+                ca.Properties.Add(new VtsProperty { Name = "blockName", Value = conditionalAction.BaseBlock.BlockName, IndentDepth = 4 });
+                ca.Properties.Add(new VtsProperty { Name = "blockId", Value = conditionalAction.BaseBlock.BlockId.ToString(), IndentDepth = 4 });
+
+                bb.Children.Add(WriteConditional(conditionalAction.BaseBlock.Conditional, 4));
+                bb.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.Actions, 4, 1));
+
+                foreach (Block elseIfBlock in conditionalAction.BaseBlock.ElseIfBlocks)
+                {
+                    VtsObject eib = new VtsObject { Name = KeywordStrings.ElseIf, IndentDepth = 4 };
+                    eib.Properties.Add(new VtsProperty { Name = "blockName", Value = elseIfBlock.BlockName, IndentDepth = 5 });
+                    eib.Properties.Add(new VtsProperty { Name = "blockId", Value = elseIfBlock.BlockId.ToString(), IndentDepth = 5 });
+
+                    eib.Children.Add(WriteConditional(conditionalAction.BaseBlock.Conditional, 5));
+                    eib.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.Actions, 5, 1));
+                    eib.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.ElseActions, 5, 2));
+                }
+
+                bb.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.ElseActions, 4, 2));
+
+                ca.Children.Add(bb);
+
+                conditionalActions.Children.Add(ca);
+            }
+
+            cs.Children.Add(conditionalActions);
         }
 
         private static void WriteEventSequences(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject eventSequences = new VtsObject { Name = KeywordStrings.EventSequences, IndentDepth = 1 };
 
+            foreach (Sequence sequence in scenario.EventSequences)
+            {
+                VtsObject s = new VtsObject { Name = KeywordStrings.Sequence, IndentDepth = 2 };
+                s.Properties.Add(new VtsProperty { Name = "id", Value = sequence.Id.ToString(), IndentDepth = 3 });
+                s.Properties.Add(new VtsProperty { Name = "sequenceName", Value = sequence.SequenceName, IndentDepth = 3 });
+                s.Properties.Add(new VtsProperty { Name = "startImmediately", Value = sequence.StartImmediately ? "True" : "False", IndentDepth = 3 });
+
+                foreach (Event @event in sequence.Events)
+                {
+                    VtsObject e = new VtsObject { Name = KeywordStrings.Event, IndentDepth = 3 };
+                    e.Properties.Add(new VtsProperty { Name = "conditional", Value = @event.Conditional.ToString(), IndentDepth = 4 });
+                    e.Properties.Add(new VtsProperty { Name = "delay", Value = @event.Delay.ToString(), IndentDepth = 4 });
+                    e.Properties.Add(new VtsProperty { Name = "nodeName", Value = @event.NodeName, IndentDepth = 4 });
+                    e.Properties.Add(new VtsProperty { Name = "exitConditional", Value = @event.ExitConditional.ToString(), IndentDepth = 4 });
+
+                    VtsObject ei = WriteEventInfo(@event.EventInfo, 4, 0);
+
+                    e.Children.Add(ei);
+
+                    s.Children.Add(e);
+                }
+
+                eventSequences.Children.Add(s);
+            }
+
+            cs.Children.Add(eventSequences);
         }
 
         private static void WriteBases(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject bases = new VtsObject { Name = KeywordStrings.Bases, IndentDepth = 1 };
 
+            foreach (BaseInfo baseInfo in scenario.Bases)
+            {
+                VtsObject b = new VtsObject { Name = KeywordStrings.BaseInfo, IndentDepth = 2 };
+                b.Properties.Add(new VtsProperty { Name = "id", Value = baseInfo.Id.ToString(), IndentDepth = 3 });
+                b.Properties.Add(new VtsProperty { Name = "overrideBaseName", Value = baseInfo.OverrideBaseName, IndentDepth = 3 });
+                b.Properties.Add(new VtsProperty { Name = "baseTeam", Value = baseInfo.BaseTeam, IndentDepth = 3 });
+
+                bases.Children.Add(b);
+            }
+
+            cs.Children.Add(bases);
         }
 
         private static void WriteGlobalValues(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject globalValues = new VtsObject { Name = KeywordStrings.GlobalValues, IndentDepth = 1 };
 
+            foreach (GlobalValue globalValue in scenario.GlobalValues)
+            {
+                VtsObject gv = new VtsObject { Name = KeywordStrings.GlobalValue, IndentDepth = 2 };
+                gv.Properties.Add(new VtsProperty { Name = "data", Value = globalValue.ToString(), IndentDepth = 3 });
+
+                globalValues.Children.Add(gv);
+            }
+
+            cs.Children.Add(globalValues);
         }
 
         private static void WriteBriefingNotes(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject briefing = new VtsObject { Name = KeywordStrings.Briefing, IndentDepth = 1 };
 
+            foreach (BriefingNote briefingNote in scenario.BriefingNotes)
+            {
+                VtsObject bn = new VtsObject { Name = KeywordStrings.BriefingNote, IndentDepth = 2 };
+                bn.Properties.Add(new VtsProperty { Name = "text", Value = briefingNote.Text, IndentDepth = 3 });
+                bn.Properties.Add(new VtsProperty { Name = "imagePath", Value = briefingNote.ImagePath, IndentDepth = 3 });
+                bn.Properties.Add(new VtsProperty { Name = "audioClipPath", Value = briefingNote.AudioClipPath, IndentDepth = 3 });
+
+                briefing.Children.Add(bn);
+            }
+
+            cs.Children.Add(briefing);
         }
 
         private static void WriteResourceManifest(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
+            VtsObject resourceManifest = new VtsObject { Name = KeywordStrings.ResourceManifest, IndentDepth = 1 };
 
+            foreach (Resource resource in scenario.ResourceManifest)
+            {
+                resourceManifest.Properties.Add(new VtsProperty { Name = resource.Index.ToString(), Value = resource.Path, IndentDepth = 2 });
+            }
+
+            cs.Children.Add(resourceManifest);
         }
 
         /// <summary>Writes the CustomScenario object to a VTS file. CustomScenario.File must be set.</summary>

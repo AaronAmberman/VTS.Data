@@ -12,5 +12,14 @@
         public int Value { get; set; }
 
         #endregion
+
+        #region Methods
+
+        public override string ToString()
+        {
+            return $"{Index};{Name};{Description};{Value};";
+        }
+
+        #endregion
     }
 }

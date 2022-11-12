@@ -8,7 +8,7 @@
         public List<Computation> Computations { get; set; } = new List<Computation>();
         public int Id { get; set; }
         public ThreePointValue OutputNodePosition { get; set; }
-        public int Root { get; set; }
+        public int? Root { get; set; }
 
         #endregion
     }
