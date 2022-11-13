@@ -1,7 +1,7 @@
 ﻿namespace VTS.Data
 {
     /// <summary>Represents a global value in VTOL VR.</summary>
-    public class GlobalValue
+    public class GlobalValue : ICloneable
     {
         #region Properties
 
@@ -14,6 +14,24 @@
         #endregion
 
         #region Methods
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>Creates a new instance of <see cref="GlobalValue"/> with all the same values as this instance.</summary>
+        /// <returns>A cloned GlobalValue object.</returns>
+        public GlobalValue Clone()
+        {
+            return new GlobalValue
+            {
+                Index = Index,
+                Name = Name,
+                Description = Description,
+                Value = Value
+            };
+        }
 
         public override string ToString()
         {

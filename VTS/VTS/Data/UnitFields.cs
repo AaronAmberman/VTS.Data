@@ -3,7 +3,7 @@
 namespace VTS.Data
 {
     /// <summary>Represents the unit fields on a unit.</summary>
-    public class UnitFields
+    public class UnitFields : ICloneable
     {
         #region Properties
 
@@ -252,6 +252,57 @@ namespace VTS.Data
         #endregion
 
         #region Methods
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>Creates a new instance of <see cref="UnitFields"/> with all the same values as this instance.</summary>
+        /// <returns>A cloned UnitFields object.</returns>
+        public UnitFields Clone()
+        {
+            return new UnitFields
+            {
+                AllowReload = AllowReload,
+                AutoRefuel = AutoRefuel,
+                AutoReturnToBase = AutoReturnToBase,
+                AwacsVoiceProfile = AwacsVoiceProfile,
+                Behavior = Behavior,
+                CarrierSpawns = CarrierSpawns,
+                CombatTarget = CombatTarget,
+                CommsEnabled = CommsEnabled,
+                DefaultBehavior = DefaultBehavior,
+                DefaultNavSpeed = DefaultNavSpeed,
+                DefaultOrbitPoint = DefaultOrbitPoint,
+                DefaultPath = DefaultPath,
+                DefaultRadarEnabled = DefaultRadarEnabled,
+                DefaultShotsPerSalvo = DefaultShotsPerSalvo,
+                DefaultWaypoint = DefaultWaypoint,
+                DetectionMode = DetectionMode,
+                EngageEnemies = EngageEnemies,
+                Equips = Equips,
+                Fuel = Fuel,
+                HullNumber = HullNumber,
+                InitialSpeed = InitialSpeed,
+                Invincible = Invincible,
+                MoveSpeed = MoveSpeed,
+                OrbitAltitude = OrbitAltitude,
+                ParkedStartMode = ParkedStartMode,
+                PlayerCommandsMode = PlayerCommandsMode,
+                RadarUnits = RadarUnits,
+                RippleRate = RippleRate,
+                ReceiveFriendlyDamage = ReceiveFriendlyDamage,
+                ReloadTime = ReloadTime,
+                ReturnToBaseDestination = ReturnToBaseDestination,
+                SpawnOnStart = SpawnOnStart,
+                StartMode = StartMode,
+                StopToEngage = StopToEngage,
+                UnitGroup = UnitGroup,
+                VoiceProfile = VoiceProfile,
+                Waypoint = Waypoint
+            };
+        }
 
         public static List<string> GetUnitFieldsForUnitType(string unitType)
         {

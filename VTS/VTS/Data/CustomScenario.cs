@@ -8,7 +8,7 @@ namespace VTS.Data
 {
     /// <summary>A managed wrapper for the VTS file.</summary>
     [DebuggerDisplay("VTS File:{File} (HasError:{HasError})")]
-    public class CustomScenario
+    public class CustomScenario : ICloneable
     {
         #region Properties
 
@@ -77,6 +77,60 @@ namespace VTS.Data
         #endregion
 
         #region Methods
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>Creates a new instance of <see cref="CustomScenario"/> with all the same values as this instance.</summary>
+        /// <returns>A cloned CustomScenario object.</returns>
+        public CustomScenario Clone()
+        {
+            return new CustomScenario
+            {
+                AllowedEquips = AllowedEquips,
+                BaseBudget = BaseBudget,
+                CampaignId = CampaignId,
+                CampaignOrderIndex = CampaignOrderIndex,
+                EquipsConfigurable = EquipsConfigurable,
+                EnvironmentName = EnvironmentName,
+                ForceEquips = ForceEquips,
+                ForcedEquips = ForcedEquips,
+                GameVersion = GameVersion,
+                IsTraining = IsTraining,
+                MapId = MapId,
+                Multiplayer = Multiplayer,
+                NormalForcedFuel = NormalForcedFuel,
+                QuickSaveLimit = QuickSaveLimit,
+                QuickSaveMode = QuickSaveMode,
+                RefuelWaypointId = RefuelWaypointId,
+                ReturnToBaseWaypointId = ReturnToBaseWaypointId,
+                ScenarioId = ScenarioId,
+                ScenarioName = ScenarioName,
+                ScenarioDescription = ScenarioDescription,
+                SelectableEnvironment = SelectableEnvironment,
+                Vehicle = Vehicle,
+                Bases = Bases.Select(x => x.Clone()).ToList(),
+                BriefingNotes = BriefingNotes.Select(x => x.Clone()).ToList(),
+                ConditionalActions = ConditionalActions.Select(x => x.Clone()).ToList(),
+                Conditionals = Conditionals.Select(x => x.Clone()).ToList(),
+                EventSequences = EventSequences.Select(x => x.Clone()).ToList(),
+                GlobalValues = GlobalValues.Select(x => x.Clone()).ToList(),
+                Objectives = Objectives.Select(x => x.Clone()).ToList(),
+                ObjectivesOpFor = ObjectivesOpFor.Select(x => x.Clone()).ToList(),
+                Paths = Paths.Select(x => x.Clone()).ToList(),
+                ResourceManifest = ResourceManifest.Select(x => x.Clone()).ToList(),
+                StaticObjects = StaticObjects.Select(x => x.Clone()).ToList(),
+                TimedEventGroups = TimedEventGroups.Select(x => x.Clone()).ToList(),
+                TriggerEvents = TriggerEvents.Select(x => x.Clone()).ToList(),
+                UnitGroups = UnitGroups.Select(x => x.Clone()).ToList(),
+                Units = Units.Select(x => x.Clone()).ToList(),
+                Waypoints = new PropertyedCollection<Waypoint>(Waypoints),
+                HasError = HasError,
+                File = File
+            };
+        }
 
         private static void ReadCustomScenarioProperties(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
@@ -1046,9 +1100,9 @@ namespace VTS.Data
 
             return new ThreePointValue
             {
-                Point1 = Convert.ToSingle(values[0]),
-                Point2 = Convert.ToSingle(values[1]),
-                Point3 = Convert.ToSingle(values[2]),
+                X = Convert.ToSingle(values[0]),
+                Y = Convert.ToSingle(values[1]),
+                Z = Convert.ToSingle(values[2]),
             };
         }
 

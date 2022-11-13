@@ -1,14 +1,40 @@
 ﻿namespace VTS.Data
 {
-    public class ThreePointValue
+    /// <summary>Represents a location in a 3D space.</summary>
+    public class ThreePointValue : ICloneable
     {
-        public float Point1 { get; set; }
-        public float Point2 { get; set; }
-        public float Point3 { get; set; }
+        #region Properties
+
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+
+        #endregion
+
+        #region Methods
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>Creates a new instance of <see cref="ThreePointValue"/> with all the same values as this instance.</summary>
+        /// <returns>A cloned ThreePointValue object.</returns>
+        public ThreePointValue Clone()
+        {
+            return new ThreePointValue
+            {
+                X = X,
+                Y = Y,
+                Z = Z
+            };
+        }
 
         public override string ToString()
         {
-            return $"({Point1},{Point2},{Point3})";
+            return $"({X},{Y},{Z})";
         }
+
+        #endregion
     }
 }

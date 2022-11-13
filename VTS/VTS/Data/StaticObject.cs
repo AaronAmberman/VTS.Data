@@ -1,7 +1,7 @@
 ﻿namespace VTS.Data
 {
     /// <summary>Represents a static object in VTOL VR.</summary>
-    public class StaticObject
+    public class StaticObject : ICloneable
     {
         #region Properties
 
@@ -9,6 +9,28 @@
         public int Id { get; set; }
         public ThreePointValue GlobalPosition { get; set; }
         public ThreePointValue Rotation { get; set; }
+
+        #endregion
+
+        #region Methods
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>Creates a new instance of <see cref="StaticObject"/> with all the same values as this instance.</summary>
+        /// <returns>A cloned StaticObject object.</returns>
+        public StaticObject Clone()
+        {
+            return new StaticObject
+            {
+                PrefabId = PrefabId,
+                Id = Id,
+                GlobalPosition = GlobalPosition.Clone(),
+                Rotation = Rotation.Clone()
+            };
+        }
 
         #endregion
     }

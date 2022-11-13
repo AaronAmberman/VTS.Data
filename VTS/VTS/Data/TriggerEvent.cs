@@ -1,7 +1,7 @@
 ﻿namespace VTS.Data
 {
     /// <summary>Represents a trigger event in VTOL VR.</summary>
-    public class TriggerEvent
+    public class TriggerEvent : ICloneable
     {
         #region Properties
 
@@ -16,6 +16,35 @@
         public string TriggerMode { get; set; }
         public string TriggerType { get; set; }
         public int? Waypoint { get; set; }
+
+        #endregion
+
+        #region Methods
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>Creates a new instance of <see cref="TriggerEvent"/> with all the same values as this instance.</summary>
+        /// <returns>A cloned TriggerEvent object.</returns>
+        public TriggerEvent Clone()
+        {
+            return new TriggerEvent
+            {
+                Conditional = Conditional,
+                Enabled = Enabled,
+                EventInfo = EventInfo.Clone(),
+                EventName = EventName,
+                Id = Id,
+                ProxyMode = ProxyMode,
+                Radius = Radius,
+                SphericalRadius = SphericalRadius,
+                TriggerMode = TriggerMode,
+                TriggerType = TriggerType,
+                Waypoint = Waypoint
+            };
+        }
 
         #endregion
     }

@@ -1,7 +1,7 @@
 ﻿namespace VTS.Data
 {
     /// <summary>Represents a block in a conditional action (this can be the BASE_BLOCK or ELSE_IF blocks inside the BASE_BLOCK block).</summary>
-    public class Block
+    public class Block : ICloneable
     {
         #region Properties
 
@@ -11,6 +11,31 @@
         public Conditional Conditional { get; set; }
         public EventInfo ElseActions { get; set; }
         public List<Block> ElseIfBlocks { get; set; } = new List<Block>();
+
+        #endregion
+
+        #region Methods
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>Creates a new instance of <see cref="Block"/> with all the same values as this instance.</summary>
+        /// <returns>A cloned Block object.</returns>
+        public Block Clone()
+        {
+            return new Block
+            {
+                Actions = Actions.Clone(),
+                BlockId = BlockId,
+                BlockName = BlockName,
+                Conditional = Conditional.Clone(),
+                ElseActions = ElseActions.Clone(),
+                ElseIfBlocks = ElseIfBlocks.Select(x => x.Clone()).ToList(),
+
+            };
+        }
 
         #endregion
     }
