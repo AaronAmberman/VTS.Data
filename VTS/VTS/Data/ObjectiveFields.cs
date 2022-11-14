@@ -18,6 +18,7 @@
         public int? TargetUnit { get; set; }
         public float? FuelLevel { get; set; }
         public string CompletionMode { get; set; }
+        public int? Target { get; set; }
 
         #endregion
 
@@ -47,7 +48,8 @@
                 SphericalRadius = SphericalRadius,
                 TargetUnit = TargetUnit,
                 FuelLevel = FuelLevel,
-                CompletionMode = CompletionMode
+                CompletionMode = CompletionMode,
+                Target = Target
             };
         }
 

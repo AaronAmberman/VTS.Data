@@ -213,6 +213,8 @@ namespace VTS.Data
                         unitSpawner.SpawnChance = Convert.ToInt32(property.Value);
                     if (property.Name == "lastValidPlacement")
                         unitSpawner.LastValidPlacement = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                    if (property.Name == "editorPlacementMode")
+                        unitSpawner.EditorPlacementMode = property.Value;
                     if (property.Name == "spawnFlags")
                         unitSpawner.SpawnFlags = property.Value;
                 }
@@ -893,7 +895,7 @@ namespace VTS.Data
                 if (property.Name == "outputNodePos")
                     conditional.OutputNodePosition = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
                 if (property.Name == "root")
-                    conditional.Id = Convert.ToInt32(property.Value);
+                    conditional.Root = Convert.ToInt32(property.Value);
             }
 
             foreach (VtsObject child in con.Children)
@@ -1041,6 +1043,8 @@ namespace VTS.Data
                     objective.StartMode = property.Value;
                 if (property.Name == "objectiveType")
                     objective.ObjectiveType = property.Value;
+                if (property.Name == "preReqObjectives")
+                    objective.PreReqObjectives = property.Value;
             }
 
             foreach (VtsObject vtsObject in obj.Children)
@@ -1085,6 +1089,8 @@ namespace VTS.Data
                             objectiveFields.FuelLevel = Convert.ToSingle(property.Value);
                         if (property.Name == "completionMode")
                             objectiveFields.CompletionMode = property.Value;
+                        if (property.Name == "target")
+                            objectiveFields.Target = Convert.ToInt32(property.Value);
                     }
 
                     objective.Fields = objectiveFields;
@@ -1358,57 +1364,174 @@ namespace VTS.Data
         private static void WriteUnitGroupProperties(UnitGroup unitGroup, VtsObject ug)
         {
             if (!string.IsNullOrWhiteSpace(unitGroup.Alpha))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Alpha", Value = unitGroup.Alpha, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Alpha");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Bravo))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Bravo", Value = unitGroup.Bravo, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Bravo");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Charlie))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Charlie", Value = unitGroup.Charlie, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Charlie");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Delta))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Delta", Value = unitGroup.Delta, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Delta");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Echo))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Echo", Value = unitGroup.Echo, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Echo");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Foxtrot))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Foxtrot", Value = unitGroup.Foxtrot, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Foctrot");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Golf))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Golf", Value = unitGroup.Golf, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Golf");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Hotel))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Hotel", Value = unitGroup.Hotel, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Hotel");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.India))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "India", Value = unitGroup.India, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "India");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Juliet))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Juliet", Value = unitGroup.Juliet, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Juliet");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Kilo))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Kilo", Value = unitGroup.Kilo, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Kilo");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Lima))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Lima", Value = unitGroup.Lima, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Lima");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Mike))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Mike", Value = unitGroup.Mike, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Mike");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.November))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "November", Value = unitGroup.November, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "November");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Oscar))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Oscar", Value = unitGroup.Oscar, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Oscar");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Papa))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Papa", Value = unitGroup.Papa, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Papa");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Quebec))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Quebec", Value = unitGroup.Quebec, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Quebec");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Romeo))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Romeo", Value = unitGroup.Romeo, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Romeo");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Sierra))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Sierra", Value = unitGroup.Sierra, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Sierra");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Tango))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Tango", Value = unitGroup.Tango, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Tango");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Uniform))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Uniform", Value = unitGroup.Uniform, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Uniform");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Victor))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Victor", Value = unitGroup.Victor, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Victor");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Whiskey))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Whiskey", Value = unitGroup.Whiskey, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Whiskey");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Xray))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Xray", Value = unitGroup.Xray, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Xray");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Yankee))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Yankee", Value = unitGroup.Yankee, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Yankee");
+            }
             if (!string.IsNullOrWhiteSpace(unitGroup.Zulu))
+            {
                 ug.Properties.Add(new VtsProperty { Name = "Zulu", Value = unitGroup.Zulu, IndentDepth = 3 });
+
+                WriteUnitGroupSettings(unitGroup, ug, "Zulu");
+            }
+        }
+
+        private static void WriteUnitGroupSettings(UnitGroup unitGroup, VtsObject ug, string name)
+        {
+            UnitGroupSettings unitGroupSettings = unitGroup.UnitGroupSettings.FirstOrDefault(x => x.Name == $"{name}_SETTINGS");
+
+            // if we don't find a match should we throw an exception of some kind?
+            if (unitGroupSettings == null) return;
+
+            VtsObject ugs = new VtsObject { Name = $"{name}_SETTINGS", IndentDepth = 3 };
+            ugs.Properties.Add(new VtsProperty { Name = "syncAltSpawns", Value = unitGroupSettings.SyncAltSpawns, IndentDepth = 4 });
+
+            ug.Children.Add(ugs);
         }
 
         private static void WriteTimedEventGroups(CustomScenario scenario, VtsCustomScenarioObject cs)
@@ -1596,6 +1719,9 @@ namespace VTS.Data
                 if (objective.Fields.TargetUnit.HasValue)
                     objectiveFields.Properties.Add(new VtsProperty { Name = "targetUnit", Value = objective.Fields.TargetUnit.Value.ToString(), IndentDepth = 4 });
 
+                if (objective.Fields.Target.HasValue)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "target", Value = objective.Fields.Target.Value.ToString(), IndentDepth = 4 });
+
                 if (objective.Fields.Radius.HasValue)
                     objectiveFields.Properties.Add(new VtsProperty { Name = "radius", Value = objective.Fields.Radius.Value.ToString(), IndentDepth = 4 });
 
@@ -1603,7 +1729,7 @@ namespace VTS.Data
                     objectiveFields.Properties.Add(new VtsProperty { Name = "fuelLevel", Value = objective.Fields.FuelLevel.Value.ToString(), IndentDepth = 4 });
 
                 if (!string.IsNullOrWhiteSpace(objective.Fields.CompletionMode))
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "targets", Value = objective.Fields.CompletionMode, IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = "completionMode", Value = objective.Fields.CompletionMode, IndentDepth = 4 });
 
                 obj.Children.Add(objectiveFields);
 
@@ -1675,9 +1801,6 @@ namespace VTS.Data
                 if (!string.IsNullOrWhiteSpace(computation.MethodParameters))
                     comp.Properties.Add(new VtsProperty { Name = "methodParameters", Value = computation.MethodParameters, IndentDepth = indentDepth + 2 });
 
-                if (computation.IsNot.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "isNot", Value = computation.IsNot.Value ? "True" : "False", IndentDepth = indentDepth + 2 });
-
                 if (!string.IsNullOrWhiteSpace(computation.Factors))
                     comp.Properties.Add(new VtsProperty { Name = "factors", Value = computation.Factors, IndentDepth = indentDepth + 2 });
 
@@ -1701,6 +1824,9 @@ namespace VTS.Data
 
                 if (computation.CValue.HasValue)
                     comp.Properties.Add(new VtsProperty { Name = "c_value", Value = computation.CValue.ToString(), IndentDepth = indentDepth + 2 });
+
+                if (computation.IsNot.HasValue)
+                    comp.Properties.Add(new VtsProperty { Name = "isNot", Value = computation.IsNot.Value ? "True" : "False", IndentDepth = indentDepth + 2 });
 
                 c.Children.Add(comp);
             }
@@ -1731,8 +1857,8 @@ namespace VTS.Data
                 ca.Properties.Add(new VtsProperty { Name = "name", Value = conditionalAction.Name, IndentDepth = 3 });
 
                 VtsObject bb = new VtsObject { Name = KeywordStrings.BaseBlock, IndentDepth = 3 };
-                ca.Properties.Add(new VtsProperty { Name = "blockName", Value = conditionalAction.BaseBlock.BlockName, IndentDepth = 4 });
-                ca.Properties.Add(new VtsProperty { Name = "blockId", Value = conditionalAction.BaseBlock.BlockId.ToString(), IndentDepth = 4 });
+                bb.Properties.Add(new VtsProperty { Name = "blockName", Value = conditionalAction.BaseBlock.BlockName, IndentDepth = 4 });
+                bb.Properties.Add(new VtsProperty { Name = "blockId", Value = conditionalAction.BaseBlock.BlockId.ToString(), IndentDepth = 4 });
 
                 bb.Children.Add(WriteConditional(conditionalAction.BaseBlock.Conditional, 4));
                 bb.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.Actions, 4, 1));
@@ -1746,6 +1872,8 @@ namespace VTS.Data
                     eib.Children.Add(WriteConditional(conditionalAction.BaseBlock.Conditional, 5));
                     eib.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.Actions, 5, 1));
                     eib.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.ElseActions, 5, 2));
+
+                    bb.Children.Add(eib);
                 }
 
                 bb.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.ElseActions, 4, 2));

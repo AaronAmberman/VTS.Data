@@ -47,6 +47,7 @@
                 Factors = Factors,
                 GlobalValue = GlobalValue,
                 Id = Id,
+                IsNot = IsNot,
                 MethodParameters = MethodParameters,
                 MethodName = MethodName,
                 ObjectReference = ObjectReference,
