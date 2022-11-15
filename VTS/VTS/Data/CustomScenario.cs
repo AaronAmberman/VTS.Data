@@ -870,15 +870,13 @@ namespace VTS.Data
                 return;
             }
 
-            foreach (VtsObject bn in resourceManifest.Children)
+            foreach (VtsProperty property in resourceManifest.Properties)
             {
-                Resource resource = new Resource();
-
-                foreach (VtsProperty property in bn.Properties)
+                Resource resource = new Resource
                 {
-                    resource.Index = Convert.ToInt32(property.Name);
-                    resource.Path = property.Value;
-                }
+                    Index = Convert.ToInt32(property.Name),
+                    Path = property.Value
+                };
 
                 scenario.ResourceManifest.Add(resource);
             }
@@ -1869,9 +1867,9 @@ namespace VTS.Data
                     eib.Properties.Add(new VtsProperty { Name = "blockName", Value = elseIfBlock.BlockName, IndentDepth = 5 });
                     eib.Properties.Add(new VtsProperty { Name = "blockId", Value = elseIfBlock.BlockId.ToString(), IndentDepth = 5 });
 
-                    eib.Children.Add(WriteConditional(conditionalAction.BaseBlock.Conditional, 5));
-                    eib.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.Actions, 5, 1));
-                    eib.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.ElseActions, 5, 2));
+                    eib.Children.Add(WriteConditional(elseIfBlock.Conditional, 5));
+                    eib.Children.Add(WriteEventInfo(elseIfBlock.Actions, 5, 1));
+                    eib.Children.Add(WriteEventInfo(elseIfBlock.ElseActions, 5, 2));
 
                     bb.Children.Add(eib);
                 }
@@ -1903,7 +1901,9 @@ namespace VTS.Data
                     e.Properties.Add(new VtsProperty { Name = "conditional", Value = @event.Conditional.ToString(), IndentDepth = 4 });
                     e.Properties.Add(new VtsProperty { Name = "delay", Value = @event.Delay.ToString(), IndentDepth = 4 });
                     e.Properties.Add(new VtsProperty { Name = "nodeName", Value = @event.NodeName, IndentDepth = 4 });
-                    e.Properties.Add(new VtsProperty { Name = "exitConditional", Value = @event.ExitConditional.ToString(), IndentDepth = 4 });
+
+                    if (@event.ExitConditional.HasValue)
+                        e.Properties.Add(new VtsProperty { Name = "exitConditional", Value = @event.ExitConditional.Value.ToString(), IndentDepth = 4 });
 
                     VtsObject ei = WriteEventInfo(@event.EventInfo, 4, 0);
 

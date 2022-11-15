@@ -8,7 +8,7 @@
         public int Conditional { get; set; }
         public int Delay { get; set; }
         public EventInfo EventInfo { get; set; }
-        public int ExitConditional { get; set; }
+        public int? ExitConditional { get; set; }
         public string NodeName { get; set; }
 
         #endregion
