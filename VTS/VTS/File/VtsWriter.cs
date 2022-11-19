@@ -15,6 +15,15 @@ namespace VTS.File
         /// <returns>True if successfully written otherwise false.</returns>
         public static bool WriteVtsFile(VtsCustomScenarioObject scenario, string file)
         {
+            if (scenario == null) 
+                throw new ArgumentNullException(nameof(scenario));
+
+            if (string.IsNullOrWhiteSpace(file))
+                throw new ArgumentNullException(nameof(file));
+
+            if (!System.IO.File.Exists(file))
+                throw new ArgumentException("File must exist!");
+
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
 

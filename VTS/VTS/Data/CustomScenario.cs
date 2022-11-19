@@ -1115,6 +1115,12 @@ namespace VTS.Data
         /// <returns>The CustomScenario object containing the contents of the file or one with the HasError property set if a problem occurred.</returns>
         public static CustomScenario ReadVtsFile(string vtsFile)
         {
+            if (string.IsNullOrWhiteSpace(vtsFile))
+                throw new ArgumentException("vtsFile cannot be empty, null or consist of white-space characters only.");
+
+            if (!System.IO.File.Exists(vtsFile))
+                throw new ArgumentException("File must exist!");
+
             CustomScenario scenario = new CustomScenario
             {
                 File = vtsFile
@@ -1985,13 +1991,13 @@ namespace VTS.Data
         /// <exception cref="ArgumentException">Occurs if the File property on the CustomScenario object is empty, null or consist of only white-space characters.</exception>
         public static bool WriteVtsFile(CustomScenario scenario)
         {
+            if (scenario == null) return false;
+            if (scenario.HasError) return false;
+            if (string.IsNullOrWhiteSpace(scenario.File))
+                throw new ArgumentException("scenario File property cannot be empty, null or consist of white-space characters only.");
+
             try
             {
-                if (scenario == null) return false;
-                if (scenario.HasError) return false;
-                if (string.IsNullOrWhiteSpace(scenario.File))
-                    throw new ArgumentException("scenario File property cannot be empty, null or consist of white-space characters only.");
-
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 
