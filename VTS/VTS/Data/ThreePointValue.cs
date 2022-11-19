@@ -32,6 +32,11 @@
 
         public override string ToString()
         {
+            // todo : If I can ever figure out which string format was used for some of the outputs
+            //        then we could match the output of the file exactly but I cannot seem to get it
+            //        to match all outputs. Specifically I cannot get the ones that have up to 15
+            //        decimals to match the file output exactly. The general .ToString does a better
+            //        job than any of the custom formats I tried.
             return $"({X}, {Y}, {Z})";
         }
 
