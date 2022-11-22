@@ -18,7 +18,7 @@
         /// <summary>Get or sets the line from the VTS file.</summary>
         public string Line { get; set; }
 
-        /// <summary>Get or sets the line number for the line.</summary>
+        /// <summary>Get or sets the line number for the line of text. This is filled in on read and is not used on write.</summary>
         public int LineNumber { get; set; }
     }
 }
