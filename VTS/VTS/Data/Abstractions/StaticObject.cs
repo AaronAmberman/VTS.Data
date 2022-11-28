@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a static object in VTOL VR.</summary>
     public class StaticObject : ICloneable

@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a resource in the resource manifest for the VTS file.</summary>
     public class Resource : ICloneable

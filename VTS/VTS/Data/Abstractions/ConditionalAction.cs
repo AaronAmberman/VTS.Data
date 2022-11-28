@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a conditional action in the VTS file.</summary>
     public class ConditionalAction : ICloneable

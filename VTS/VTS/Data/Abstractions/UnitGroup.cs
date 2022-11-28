@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents all the unit groups for a team.</summary>
     public class UnitGroup : ICloneable

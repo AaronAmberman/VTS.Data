@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a COMP in VTS file for a conditional.</summary>
     public class Computation : ICloneable

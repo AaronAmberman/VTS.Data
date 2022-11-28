@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a param attr info object for a param info object.</summary>
     public class ParamAttrInfo : ICloneable

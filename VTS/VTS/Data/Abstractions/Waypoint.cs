@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a waypoint in VTOL VR.</summary>
     public class Waypoint : ICloneable

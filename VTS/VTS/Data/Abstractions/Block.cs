@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a block in a conditional action (this can be the BASE_BLOCK or ELSE_IF blocks inside the BASE_BLOCK block).</summary>
     public class Block : ICloneable

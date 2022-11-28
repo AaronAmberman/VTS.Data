@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a trigger event in VTOL VR.</summary>
     public class TriggerEvent : ICloneable

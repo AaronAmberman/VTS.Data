@@ -1,6 +1,6 @@
 ﻿using VTS.Data.Diagnostics;
 
-namespace VTS.Data
+namespace VTS.Data.Abstractions
 {
     /// <summary>Represents the unit fields on a unit.</summary>
     public class UnitFields : ICloneable

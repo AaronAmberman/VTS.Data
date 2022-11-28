@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents an event sequence in VTOL VR.</summary>
     public class Sequence : ICloneable

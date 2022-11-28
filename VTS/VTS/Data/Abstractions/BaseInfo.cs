@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a base in VTOL VR.</summary>
     public class BaseInfo : ICloneable

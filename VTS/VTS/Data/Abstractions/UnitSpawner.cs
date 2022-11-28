@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a unit in VTOL VR.</summary>
     public class UnitSpawner : ICloneable

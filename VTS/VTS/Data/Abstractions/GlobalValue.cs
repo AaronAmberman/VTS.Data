@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a global value in VTOL VR.</summary>
     public class GlobalValue : ICloneable

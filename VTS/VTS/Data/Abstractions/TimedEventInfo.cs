@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a timed event info in VTOL VR.</summary>
     public class TimedEventInfo : ICloneable

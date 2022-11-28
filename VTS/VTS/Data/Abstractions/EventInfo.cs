@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents a event info on a trigger event.</summary>
     public class EventInfo : ICloneable

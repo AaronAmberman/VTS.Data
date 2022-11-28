@@ -1,4 +1,4 @@
-﻿namespace VTS.Data
+﻿namespace VTS.Data.Abstractions
 {
     /// <summary>Represents an objective in VTOL VR.</summary>
     public class Objective : ICloneable

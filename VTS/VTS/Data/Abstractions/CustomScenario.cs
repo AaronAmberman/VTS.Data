@@ -4,7 +4,7 @@ using VTS.Data.Diagnostics;
 using VTS.Data.Raw;
 using VTS.File;
 
-namespace VTS.Data
+namespace VTS.Data.Abstractions
 {
     /// <summary>A managed wrapper for the VTS file.</summary>
     [DebuggerDisplay("VTS File:{File} (HasError:{HasError})")]
