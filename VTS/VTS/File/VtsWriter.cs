@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using VTS.Data.Diagnostics;
 using VTS.Data.Raw;
 
 namespace VTS.File
@@ -63,7 +64,8 @@ namespace VTS.File
 
             stopWatch.Stop();
 
-            Debug.WriteLine($"VTS file write duration:{stopWatch.Elapsed}");
+            if (DiagnosticOptions.OutputReadWriteTimes)
+                Debug.WriteLine($"VTS file write duration:{stopWatch.Elapsed}");
 
             return true;
         }

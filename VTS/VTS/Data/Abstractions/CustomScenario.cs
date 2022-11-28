@@ -58,9 +58,6 @@ namespace VTS.Data.Abstractions
         /// <summary>Gets or sets the file reference for CustomScenario object.</summary>
         public string File { get; set; }
 
-        /// <summary>Get or sets the the diagnostic options to use when reading and writing the VTS file.</summary>
-        public static DiagnosticOptions ReadWriteDiagnosticOptions { get; set; } = new DiagnosticOptions();
-
         #endregion
 
         #region Constructors
@@ -305,11 +302,11 @@ namespace VTS.Data.Abstractions
 
                 scenario.Units.Add(unitSpawner);
 
-                if (ReadWriteDiagnosticOptions.OutputUnitFieldsGroups)
+                if (DiagnosticOptions.OutputUnitFieldsGroups)
                     VtsDiagnosticHelper.UnitAndFields.Add(new Tuple<VtsObject, VtsObject>(unit, unitFields));
             }
 
-            if (ReadWriteDiagnosticOptions.OutputUnitFieldsGroups)
+            if (DiagnosticOptions.OutputUnitFieldsGroups)
                 VtsDiagnosticHelper.OutputUnitFieldGroups();
         }
 
@@ -1153,7 +1150,8 @@ namespace VTS.Data.Abstractions
 
                 sw.Stop();
 
-                Debug.WriteLine($"CustomScenario read duration:{sw.Elapsed}");
+                if (DiagnosticOptions.OutputReadWriteTimes)
+                    Debug.WriteLine($"CustomScenario read duration:{sw.Elapsed}");
             }
             catch (Exception ex)
             {
@@ -2025,7 +2023,8 @@ namespace VTS.Data.Abstractions
 
                 sw.Stop();
 
-                Debug.WriteLine($"CustomScenario write duration:{sw.Elapsed}");
+                if (DiagnosticOptions.OutputReadWriteTimes)
+                    Debug.WriteLine($"CustomScenario write duration:{sw.Elapsed}");
 
                 return true;
             }

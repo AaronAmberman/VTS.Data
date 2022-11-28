@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using VTS.Data.Diagnostics;
 using VTS.Data.Raw;
 
 namespace VTS.File
@@ -131,7 +132,8 @@ namespace VTS.File
 
             sw.Stop();
 
-            Debug.WriteLine($"VTS file read duration:{sw.Elapsed}");
+            if (DiagnosticOptions.OutputReadWriteTimes)
+                Debug.WriteLine($"VTS file read duration:{sw.Elapsed}");
 
             return scenario;
         }
