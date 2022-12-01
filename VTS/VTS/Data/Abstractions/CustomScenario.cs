@@ -52,24 +52,11 @@ namespace VTS.Data.Abstractions
         public List<UnitSpawner> Units { get; set; } = new List<UnitSpawner>();
         public PropertyedCollection<Waypoint> Waypoints { get; set; } = new PropertyedCollection<Waypoint>();
 
-        /// <summary>Gets or sets whether or not there was a read or write error.</summary>
-        public bool HasError { get; set; }
-
         /// <summary>Gets or sets the file reference for CustomScenario object.</summary>
         public string File { get; set; }
 
-        #endregion
-
-        #region Constructors
-
-        /// <summary>Initializes a new instance of the <see cref="CustomScenario"/> class.</summary>
-        /// <remarks>
-        /// For constructing a blank CustomScenario object. If you wish to get a CustomScenario that 
-        /// represents the contents of a VTS file please use the static method ReadVtsFile.
-        /// </remarks>
-        public CustomScenario()
-        {
-        }
+        /// <summary>Gets or sets whether or not there was a read or write error.</summary>
+        public bool HasError { get; set; }
 
         #endregion
 
