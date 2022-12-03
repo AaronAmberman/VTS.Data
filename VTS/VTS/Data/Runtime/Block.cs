@@ -1,4 +1,4 @@
-﻿namespace VTS.Data.Abstractions
+﻿namespace VTS.Data.Runtime
 {
     /// <summary>Represents a block in a conditional action (this can be the BASE_BLOCK or ELSE_IF blocks inside the BASE_BLOCK block).</summary>
     public class Block : ICloneable
@@ -11,6 +11,9 @@
         public Conditional Conditional { get; set; }
         public EventInfo ElseActions { get; set; }
         public List<Block> ElseIfBlocks { get; set; } = new List<Block>();
+
+        // can be a ConditionalAction or another Block (ElseIfBlocks)
+        public object Parent { get; set; }
 
         #endregion
 
@@ -32,7 +35,8 @@
                 BlockName = BlockName,
                 Conditional = Conditional.Clone(),
                 ElseActions = ElseActions.Clone(),
-                ElseIfBlocks = ElseIfBlocks.Select(x => x.Clone()).ToList()
+                ElseIfBlocks = ElseIfBlocks.Select(x => x.Clone()).ToList(),
+                Parent = Parent
             };
         }
 

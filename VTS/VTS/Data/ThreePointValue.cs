@@ -1,4 +1,4 @@
-﻿namespace VTS.Data.Abstractions
+﻿namespace VTS.Data
 {
     /// <summary>Represents a location in a 3D space.</summary>
     public class ThreePointValue : ICloneable
