@@ -11,18 +11,20 @@
         public float? ControlValue { get; set; }
         public float? CValue { get; set; }
         public string Factors { get; set; }
-        public int? GlobalValue { get; set; }
+        public GlobalValue GlobalValue { get; set; }
         public int Id { get; set; }
         public bool? IsNot { get; set; }
         public string MethodParameters { get; set; }
         public string MethodName { get; set; }
-        public int? ObjectReference { get; set; }
+        public object ObjectReference { get; set; } // could be a StaticObject, ?
         public string Type { get; set; }
         public ThreePointValue UiPosition { get; set; }
-        public int? Unit { get; set; }
+        public UnitSpawner Unit { get; set; }
         public string UnitGroup { get; set; }
-        public string UnitList { get; set; }
+        public List<UnitSpawner> UnitList { get; set; } = new List<UnitSpawner>();
         public string VehicleControl { get; set; }
+
+        public Conditional Parent { get; set; }
 
         #endregion
 
@@ -56,7 +58,8 @@
                 Unit = Unit,
                 UnitGroup = UnitGroup,
                 UnitList = UnitList,
-                VehicleControl = VehicleControl
+                VehicleControl = VehicleControl,
+                Parent = Parent
             };
         }
 

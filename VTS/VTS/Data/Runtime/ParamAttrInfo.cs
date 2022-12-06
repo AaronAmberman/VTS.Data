@@ -8,6 +8,8 @@
         public string Data { get; set; }
         public string Type { get; set; }
 
+        public ParamInfo Parent { get; set; }
+
         #endregion
 
         #region Methods

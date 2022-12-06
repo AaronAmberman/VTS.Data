@@ -8,7 +8,8 @@
         public string EventName { get; set; }
         public string MethodName { get; set; }
         public List<ParamInfo> ParamInfos { get; set; } = new List<ParamInfo>();
-        public int TargetId { get; set; }
+        //public int TargetId { get; set; }
+        public UnitSpawner Target { get; set; } // UnitSpawner.UnitInstanceId is TargetId when making Abstraction equivalent 
         public string TargetType { get; set; }
 
         public EventInfo Parent { get; set; }
@@ -31,7 +32,8 @@
                 EventName = EventName,
                 MethodName = MethodName,
                 ParamInfos = ParamInfos.Select(x => x.Clone()).ToList(),
-                TargetId = TargetId,
+                //TargetId = TargetId,
+                Target = Target.Clone(),
                 TargetType = TargetType,
                 Parent = Parent
             };

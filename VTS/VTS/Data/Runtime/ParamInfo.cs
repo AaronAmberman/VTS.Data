@@ -8,6 +8,7 @@
         public string Name { get; set; }
         public List<ParamAttrInfo> ParamAttrInfos { get; set; } = new List<ParamAttrInfo>();
         public string Type { get; set; }
+        //public object Value { get; set; } // this will be very complex and tedious to track down all the various types of objects that can be referenced here
         public string Value { get; set; }
 
         public EventTarget Parent { get; set; }

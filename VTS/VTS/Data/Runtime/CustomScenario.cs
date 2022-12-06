@@ -413,12 +413,50 @@ namespace VTS.Data.Runtime
 
                 foreach (Abstractions.UnitGroup ug in customScenario.UnitGroups)
                 {
+                    UnitGroup unitGroup = new UnitGroup
+                    {
+                        Name = ug.Name, // ALLIED or ENEMY
+                        Parent = this
+                    };
 
+                    unitGroup.Alpha = ReadUnitGroup(ug, "Alpha", ug.Alpha);
+                    unitGroup.Bravo = ReadUnitGroup(ug, "Bravo", ug.Bravo);
+                    unitGroup.Charlie = ReadUnitGroup(ug, "Charlie", ug.Charlie);
+                    unitGroup.Delta = ReadUnitGroup(ug, "Delta", ug.Delta);
+                    unitGroup.Echo = ReadUnitGroup(ug, "Echo", ug.Echo);
+                    unitGroup.Foxtrot = ReadUnitGroup(ug, "Foxtrot", ug.Foxtrot);
+                    unitGroup.Golf = ReadUnitGroup(ug, "Golf", ug.Golf);
+                    unitGroup.Hotel = ReadUnitGroup(ug, "Hotel", ug.Hotel);
+                    unitGroup.India = ReadUnitGroup(ug, "India", ug.India);
+                    unitGroup.Juliet = ReadUnitGroup(ug, "Juliet", ug.Juliet);
+                    unitGroup.Kilo = ReadUnitGroup(ug, "Kilo", ug.Kilo);
+                    unitGroup.Lima = ReadUnitGroup(ug, "Lima", ug.Lima);
+                    unitGroup.Mike = ReadUnitGroup(ug, "Mike", ug.Mike);
+                    unitGroup.November = ReadUnitGroup(ug, "November", ug.November);
+                    unitGroup.Oscar = ReadUnitGroup(ug, "Oscar", ug.Oscar);
+                    unitGroup.Papa = ReadUnitGroup(ug, "Papa", ug.Papa);
+                    unitGroup.Quebec = ReadUnitGroup(ug, "Quebec", ug.Quebec);
+                    unitGroup.Romeo = ReadUnitGroup(ug, "Romeo", ug.Romeo);
+                    unitGroup.Sierra = ReadUnitGroup(ug, "Sierra", ug.Sierra);
+                    unitGroup.Tango = ReadUnitGroup(ug, "Tango", ug.Tango);
+                    unitGroup.Uniform = ReadUnitGroup(ug, "Uniform", ug.Uniform);
+                    unitGroup.Victor = ReadUnitGroup(ug, "Victor", ug.Victor);
+                    unitGroup.Whiskey = ReadUnitGroup(ug, "Whiskey", ug.Whiskey);
+                    unitGroup.Xray = ReadUnitGroup(ug, "Xray", ug.Xray);
+                    unitGroup.Yankee = ReadUnitGroup(ug, "Yankee", ug.Yankee);
+                    unitGroup.Zulu = ReadUnitGroup(ug, "Zulu", ug.Zulu);
+
+                    UnitGroups.Add(unitGroup);
                 }
 
                 /*
                  * get types that depend on other types
                  */
+                foreach (Abstractions.Conditional c in customScenario.Conditionals)
+                {
+                    Conditionals.Add(ReadConditional(c, customScenario));
+                }
+
                 foreach (Abstractions.ConditionalAction ca in customScenario.ConditionalActions)
                 {
                     ConditionalAction conditionalAction = new ConditionalAction
@@ -435,43 +473,29 @@ namespace VTS.Data.Runtime
                         Parent = conditionalAction
                     };
 
-                    EventInfo actionsEventInfo = new EventInfo
-                    {
-                        EventName = ca.BaseBlock.Actions.EventName,
-                        Parent = baseBlock
-                    };
+                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock);
+                    baseBlock.Conditional = ReadConditional(ca.BaseBlock.Conditional, baseBlock);
+                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock);
 
-                    foreach (Abstractions.EventTarget et in ca.BaseBlock.Actions.EventTargets)
+                    foreach (Abstractions.Block eib in ca.BaseBlock.ElseIfBlocks)
                     {
-                        EventTarget eventTarget = new EventTarget
+                        Block elseIfBlock = new Block
                         {
-                            EventName = et.EventName,
-                            MethodName = et.MethodName,
-                            TargetId = et.TargetId,
-                            TargetType = et.TargetType,
-                            Parent = actionsEventInfo
+                            BlockId = eib.BlockId,
+                            BlockName = eib.BlockName,
+                            Parent = baseBlock
                         };
 
-                        foreach (Abstractions.ParamInfo pi in et.ParamInfos)
-                        {
+                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock);
+                        elseIfBlock.Conditional = ReadConditional(eib.Conditional, elseIfBlock);
+                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock);
 
-                        }
+                        baseBlock.ElseIfBlocks.Add(elseIfBlock);
                     }
 
-                    Conditional conditional = new Conditional
-                    {
-                        Id = ca.BaseBlock.Conditional.Id,
-                        OutputNodePosition = ca.BaseBlock.Conditional.OutputNodePosition.Clone(),
-                        Root = ca.BaseBlock.Conditional.Root,
-                        Parent = baseBlock
-                    };
+                    conditionalAction.BaseBlock = baseBlock;
 
                     ConditionalActions.Add(conditionalAction);
-                }
-
-                foreach (Abstractions.Conditional c in customScenario.Conditionals)
-                {
-
                 }
 
                 foreach (Abstractions.Sequence s in customScenario.EventSequences)
@@ -503,6 +527,210 @@ namespace VTS.Data.Runtime
             {
                 throw new TypeInitializationException("VTS.Data.Runtime.CustomScenario", ex);
             }
+        }
+
+        private UnitGroupGrouping ReadUnitGroup(Abstractions.UnitGroup ug, string group, string groupUnits)
+        {
+            UnitGroupGrouping groupGrouping = new UnitGroupGrouping
+            {
+                Name = group // Alpha, Bravo, Charlie, etc.
+            };
+
+            Abstractions.UnitGroupSettings ugs = ug.UnitGroupSettings.FirstOrDefault(ugs => ugs.Name.StartsWith(group));
+
+            if (ugs != null)
+            {
+                groupGrouping.Settings = new UnitGroupSettings
+                {
+                    Name = ugs.Name, // Alpha_SETTINGS, Bravo_SETTINGS, etc.
+                    SyncAltSpawns = ugs.SyncAltSpawns
+                };
+            }
+
+            string[] unitsIds = groupUnits.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string unitId in unitsIds)
+            {
+                int id = Convert.ToInt32(unitId);
+
+                UnitSpawner unit = Units.First(u => u.UnitInstanceId == id); // should always be a match, error if not
+
+                /*
+                 * Note: there seems to be an issue with VTOL VR for unit groups. Sometimes units are repeated
+                 * within the same group and will often times appear in multiple groups incorrectly. Units can
+                 * only be assigned to one group. Validate both of these and throw warning out to Debug console.
+                 * Also, put data in the correct location based on UnitSpawner.UnitFields.UnitGroup data.
+                 */
+
+                // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
+                if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != "null")
+                {
+                    string[] groupData = unit.UnitFields.UnitGroup.Split(':');
+
+                    // should match "enemy" or "allied"
+                    if (groupData[0].Equals(ugs.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (groupData[1] != group)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct larger group of groups. Current group: {ugs.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
+
+                        continue;
+                    }
+                }
+
+                // check duplicity, should be ok to check the instance because all instances come from the Units collection
+                if (groupGrouping.Units.Contains(unit))
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
+                else
+                    groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
+            }
+
+            return groupGrouping;
+        }
+
+        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent)
+        {
+            EventInfo eventInfo = new EventInfo
+            {
+                EventName = ei.EventName,
+                Parent = parent
+            };
+
+            foreach (Abstractions.EventTarget et in ei.EventTargets)
+            {
+                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo));
+            }
+
+            return eventInfo;
+        }
+
+        private EventTarget ReadEventTarget(Abstractions.EventTarget et, EventInfo parent)
+        {
+            EventTarget eventTarget = new EventTarget
+            {
+                EventName = et.EventName,
+                MethodName = et.MethodName,
+                //TargetId = et.TargetId,
+                TargetType = et.TargetType,
+                Parent = parent
+            };
+
+            int id = Convert.ToInt32(et.TargetId);
+
+            // UnitSpawner.UnitInstanceId is TargetId when making Abstraction equivalent 
+            eventTarget.Target = Units.First(u => u.UnitInstanceId == id); // should always be a match, error if not
+
+            foreach (Abstractions.ParamInfo pi in et.ParamInfos)
+            {
+                ParamInfo paramInfo = new ParamInfo
+                {
+                    Name = pi.Name,
+                    Type = pi.Type,
+                    Value = pi.Value,
+                    Parent = eventTarget
+                };
+
+                // this will be very complex and tedious to track down all the various types of objects that can be referenced here
+                //string value = pi.Value; // this will be an int, a string, a Unit, a list of Units, a Path, a Waypoint, ???
+                // todo
+
+                foreach (Abstractions.ParamAttrInfo pai in pi.ParamAttrInfos)
+                {
+                    ParamAttrInfo paramAttrInfo = new ParamAttrInfo
+                    {
+                        Data = pai.Data,
+                        Type = pai.Type,
+                        Parent = paramInfo
+                    };
+
+                    paramInfo.ParamAttrInfos.Add(paramAttrInfo);
+                }
+
+                eventTarget.ParamInfos.Add(paramInfo);
+            }
+
+            return eventTarget;
+        }
+
+        private Conditional ReadConditional(Abstractions.Conditional c, object parent)
+        {
+            Conditional conditional = new Conditional
+            {
+                Id = c.Id,
+                OutputNodePosition = c.OutputNodePosition.Clone(),
+                Root = c.Root,
+                Parent = parent
+            };
+
+            foreach (Abstractions.Computation comp in c.Computations)
+            {
+                Computation computation = new Computation
+                {
+                    Chance = comp.Chance,
+                    Comparison = comp.Comparison,
+                    ControlCondition = comp.ControlCondition,
+                    ControlValue = comp.ControlValue,
+                    CValue = comp.CValue,
+                    Factors = comp.Factors,
+                    Id = comp.Id,
+                    IsNot = comp.IsNot,
+                    MethodName = comp.MethodName,
+                    MethodParameters = comp.MethodParameters,
+                    Type = comp.Type,
+                    UiPosition = comp.UiPosition,
+                    UnitGroup = comp.UnitGroup,
+                    VehicleControl = comp.VehicleControl,                    
+                    Parent = conditional
+                };
+
+                if (!string.IsNullOrWhiteSpace(comp.Type) && comp.ObjectReference.HasValue)
+                {
+                    if (comp.Type == "SCCStaticObject")
+                    {
+                        int id = Convert.ToInt32(comp.ObjectReference);
+
+                        computation.ObjectReference = StaticObjects.First(x => x.Id == id); // should always be a match, error if not
+                    }
+                    // todo : identify if there can be other object types
+                    else
+                    {
+                        computation.ObjectReference = comp.ObjectReference;
+                    }
+                }
+
+                if (comp.GlobalValue.HasValue)
+                {
+                    computation.GlobalValue = GlobalValues.First(x => x.Index == comp.GlobalValue); // should always be a match, error if not
+                }
+
+                if (comp.Unit.HasValue)
+                {
+                    computation.Unit = Units.First(x => x.UnitInstanceId == comp.Unit);  // should always be a match, error if not
+                }
+
+                if (!string.IsNullOrWhiteSpace(comp.UnitList))
+                {
+                    string[] units = comp.UnitList.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string unit in units)
+                    {
+                        int id = Convert.ToInt32(unit);
+
+                        computation.UnitList.Add(Units.First(x => x.UnitInstanceId == id)); // should always be a match, error if not
+                    }
+                }
+
+                conditional.Computations.Add(computation);
+            }
+
+            return conditional;
         }
 
         #endregion
