@@ -11,6 +11,8 @@
         public int InitialDelay { get; set; }
         public List<TimedEventInfo> TimedEventInfos { get; set; } = new List<TimedEventInfo>();
 
+        public CustomScenario Parent { get; set; }
+
         #endregion
 
         #region Methods
@@ -30,7 +32,8 @@
                 GroupId = GroupId,
                 GroupName = GroupName,
                 InitialDelay = InitialDelay,
-                TimedEventInfos = TimedEventInfos.Select(x => x.Clone()).ToList()
+                TimedEventInfos = TimedEventInfos.Select(x => x.Clone()).ToList(),
+                Parent = Parent
             };
         }
 

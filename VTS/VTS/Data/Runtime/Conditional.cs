@@ -10,7 +10,7 @@
         public ThreePointValue OutputNodePosition { get; set; }
         public int? Root { get; set; }
 
-        // can be a CustomScenario (in the conditionals collection) or can be a Block
+        // can be a CustomScenario (in the conditionals collection), Block or an Event
         public object Parent { get; set; }
 
         #endregion

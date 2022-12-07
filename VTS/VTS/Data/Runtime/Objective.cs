@@ -14,12 +14,14 @@
         public string ObjectiveType { get; set; }
         public int OrderID { get; set; }
         public bool Required { get; set; }
-        public string PreReqObjectives { get; set; }
+        public List<Objective> PreReqObjectives { get; set; } = new List<Objective>();
         public string StartMode { get; set; }
-        public string Waypoint { get; set; }
+        public Waypoint Waypoint { get; set; }
         public EventInfo CompleteEvent { get; set; }
         public EventInfo FailEvent { get; set; }
         public EventInfo StartEvent { get; set; }
+
+        public CustomScenario Parent { get; set; }
 
         #endregion
 
@@ -50,7 +52,8 @@
                 Waypoint = Waypoint,
                 CompleteEvent = CompleteEvent.Clone(),
                 FailEvent = FailEvent.Clone(),
-                StartEvent = StartEvent.Clone()
+                StartEvent = StartEvent.Clone(),
+                Parent = Parent
             };
         }
 

@@ -5,11 +5,13 @@
     {
         #region Properties
 
-        public int Conditional { get; set; }
+        public Conditional Conditional { get; set; }
         public int Delay { get; set; }
         public EventInfo EventInfo { get; set; }
-        public int? ExitConditional { get; set; }
+        public Conditional ExitConditional { get; set; }
         public string NodeName { get; set; }
+
+        public Sequence Parent { get; set; }
 
         #endregion
 
@@ -31,6 +33,7 @@
                 EventInfo = EventInfo.Clone(),
                 ExitConditional = ExitConditional,
                 NodeName = NodeName,
+                Parent = Parent
             };
         }
 

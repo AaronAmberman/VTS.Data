@@ -9,6 +9,8 @@
         public List<EventTarget> EventTargets { get; set; } = new List<EventTarget>();
         public int Time { get; set; }
 
+        public TimedEventGroup Parent { get; set; }
+
         #endregion
 
         #region Methods
@@ -26,7 +28,8 @@
             {
                 EventName = EventName, 
                 EventTargets = EventTargets.Select(x => x.Clone()).ToList(),
-                Time = Time
+                Time = Time,
+                Parent = Parent
             };
         }
 

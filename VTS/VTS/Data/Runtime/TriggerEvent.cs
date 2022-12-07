@@ -5,7 +5,7 @@
     {
         #region Properties
 
-        public int? Conditional { get; set; }
+        public Conditional Conditional { get; set; }
         public bool Enabled { get; set; }
         public EventInfo EventInfo { get; set; }
         public string EventName { get; set; }
@@ -15,7 +15,9 @@
         public bool? SphericalRadius { get; set; }
         public string TriggerMode { get; set; }
         public string TriggerType { get; set; }
-        public int? Waypoint { get; set; }
+        public Waypoint Waypoint { get; set; }
+
+        public CustomScenario Parent { get; set; }
 
         #endregion
 
@@ -42,7 +44,8 @@
                 SphericalRadius = SphericalRadius,
                 TriggerMode = TriggerMode,
                 TriggerType = TriggerType,
-                Waypoint = Waypoint
+                Waypoint = Waypoint,
+                Parent = Parent
             };
         }
 

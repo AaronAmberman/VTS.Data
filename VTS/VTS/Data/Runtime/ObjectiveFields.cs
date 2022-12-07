@@ -4,21 +4,23 @@
     {
         #region Properties
 
-        public int? FailConditional { get; set; }
-        public int? SuccessConditional { get; set; }
+        public Conditional FailConditional { get; set; }
+        public Conditional SuccessConditional { get; set; }
         public float? Radius { get; set; }
-        public string Targets { get; set; }
+        public List<UnitSpawner> Targets { get; set; } = new List<UnitSpawner>();
         public int? MinRequired { get; set; }
         public int? PerUnitReward { get; set; }
         public int? FullCompletionBonus { get; set; }
         public float? UnloadRadius { get; set; }
-        public int? DropoffRallyPoint { get; set; }
+        public Waypoint DropoffRallyPoint { get; set; }
         public float? TriggerRadius { get; set; }
         public bool? SphericalRadius { get; set; }
-        public int? TargetUnit { get; set; }
+        public UnitSpawner TargetUnit { get; set; }
         public float? FuelLevel { get; set; }
         public string CompletionMode { get; set; }
-        public int? Target { get; set; }
+        public UnitSpawner Target { get; set; }
+
+        public Objective Parent { get; set; }
 
         #endregion
 
@@ -49,7 +51,8 @@
                 TargetUnit = TargetUnit,
                 FuelLevel = FuelLevel,
                 CompletionMode = CompletionMode,
-                Target = Target
+                Target = Target,
+                Parent = Parent
             };
         }
 

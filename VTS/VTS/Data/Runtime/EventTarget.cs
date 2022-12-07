@@ -12,7 +12,7 @@
         public UnitSpawner Target { get; set; } // UnitSpawner.UnitInstanceId is TargetId when making Abstraction equivalent 
         public string TargetType { get; set; }
 
-        public EventInfo Parent { get; set; }
+        public object Parent { get; set; }
 
         #endregion
 

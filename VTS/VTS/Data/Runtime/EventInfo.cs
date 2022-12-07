@@ -8,7 +8,7 @@
         public string EventName { get; set; }
         public List<EventTarget> EventTargets { get; set; } = new List<EventTarget>();
 
-        // can be a Block, a TriggerEvent or an Objective
+        // can be a Block, a TriggerEvent, Objective or a Sequence
         public object Parent { get; set; }
 
         #endregion

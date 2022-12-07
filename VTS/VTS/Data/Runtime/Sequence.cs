@@ -10,6 +10,8 @@
         public string SequenceName { get; set; }
         public bool StartImmediately { get; set; }
 
+        public CustomScenario Parent { get; set; }
+
         #endregion
 
         #region Methods
@@ -28,7 +30,8 @@
                 Events = Events.Select(x => x.Clone()).ToList(),
                 Id = Id,
                 SequenceName = SequenceName,
-                StartImmediately = StartImmediately
+                StartImmediately = StartImmediately,
+                Parent = Parent
             };
         }
 

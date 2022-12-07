@@ -500,27 +500,120 @@ namespace VTS.Data.Runtime
 
                 foreach (Abstractions.Sequence s in customScenario.EventSequences)
                 {
+                    Sequence sequence = new Sequence
+                    {
+                        Id = s.Id,
+                        SequenceName = s.SequenceName,
+                        StartImmediately = s.StartImmediately,
+                        Parent = this
+                    };
 
+                    foreach (Abstractions.Event e in s.Events)
+                    {
+                        Event @event = new Event
+                        {
+                            Delay = e.Delay,
+                            NodeName = e.NodeName,
+                            Parent = sequence
+                        };
+
+                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence);
+                        @event.Conditional = Conditionals.First(x => x.Id == e.Conditional); // should always be a match, error if not
+
+                        if (e.ExitConditional.HasValue)
+                        {
+                            @event.ExitConditional = Conditionals.First(x => x.Id == e.ExitConditional.Value); // should always be a match, error if not
+                        }
+
+                        sequence.Events.Add(@event);
+                    }
+
+                    EventSequences.Add(sequence);
                 }
 
                 foreach (Abstractions.Objective o in customScenario.Objectives)
                 {
+                    Objectives.Add(ReadObjective(o));
+                }
 
+                // loop through a second time to assign the prereq property because it is a list of other Objectives
+                // (loop a second time because I am not sure if the order of Objectives is guaranteed)
+                for (int i = 0; i < Objectives.Count; i++)
+                {
+                    SetObjectivePreReqs(i, false);
                 }
 
                 foreach (Abstractions.Objective o in customScenario.ObjectivesOpFor)
                 {
+                    ObjectivesOpFor.Add(ReadObjective(o));
+                }
 
+                // loop through a second time to assign the prereq property because it is a list of other Objectives
+                // (loop a second time because I am not sure if the order of Objectives is guaranteed)
+                for (int i = 0; i < ObjectivesOpFor.Count; i++)
+                {
+                    SetObjectivePreReqs(i, true);
                 }
 
                 foreach (Abstractions.TimedEventGroup teg in customScenario.TimedEventGroups)
                 {
+                    TimedEventGroup timedEventGroup = new TimedEventGroup
+                    {
+                        BeginImmediately = teg.BeginImmediately,
+                        GroupId = teg.GroupId,
+                        GroupName = teg.GroupName,
+                        InitialDelay = teg.InitialDelay,
+                        Parent = this
+                    };
 
+                    foreach (Abstractions.TimedEventInfo tei in teg.TimedEventInfos)
+                    {
+                        TimedEventInfo timedEventInfo = new TimedEventInfo
+                        {
+                            EventName = tei.EventName,
+                            Time = tei.Time,
+                            Parent = timedEventGroup
+                        };
+
+                        foreach (Abstractions.EventTarget et in tei.EventTargets)
+                        {
+                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo));
+                        }
+
+                        timedEventGroup.TimedEventInfos.Add(timedEventInfo);
+                    }
+
+                    TimedEventGroups.Add(timedEventGroup);
                 }
 
                 foreach (Abstractions.TriggerEvent te in customScenario.TriggerEvents)
                 {
+                    TriggerEvent triggerEvent = new TriggerEvent
+                    {
+                        Enabled = te.Enabled,
+                        EventName = te.EventName,
+                        Id = te.Id,
+                        ProxyMode = te.ProxyMode,
+                        Radius = te.Radius,
+                        SphericalRadius = te.SphericalRadius,
+                        TriggerMode = te.TriggerMode,
+                        TriggerType = te.TriggerType,
+                        Parent = this
+                    };
 
+                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent);
+
+                    if (te.Conditional.HasValue)
+                    {
+                        triggerEvent.Conditional = Conditionals.First(x => x.Id == te.Conditional.Value);
+                    }
+
+                    if (te.Waypoint.HasValue)
+                    {
+                        triggerEvent.Waypoint = Waypoints.First(x => x.Id == te.Waypoint.Value);
+                    }
+
+                    TriggerEvents.Add(triggerEvent);
                 }          
             }
             catch (Exception ex)
@@ -611,7 +704,7 @@ namespace VTS.Data.Runtime
             return eventInfo;
         }
 
-        private EventTarget ReadEventTarget(Abstractions.EventTarget et, EventInfo parent)
+        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent)
         {
             EventTarget eventTarget = new EventTarget
             {
@@ -622,10 +715,8 @@ namespace VTS.Data.Runtime
                 Parent = parent
             };
 
-            int id = Convert.ToInt32(et.TargetId);
-
             // UnitSpawner.UnitInstanceId is TargetId when making Abstraction equivalent 
-            eventTarget.Target = Units.First(u => u.UnitInstanceId == id); // should always be a match, error if not
+            eventTarget.Target = Units.First(u => u.UnitInstanceId == et.TargetId); // should always be a match, error if not
 
             foreach (Abstractions.ParamInfo pi in et.ParamInfos)
             {
@@ -678,7 +769,6 @@ namespace VTS.Data.Runtime
                     ControlCondition = comp.ControlCondition,
                     ControlValue = comp.ControlValue,
                     CValue = comp.CValue,
-                    Factors = comp.Factors,
                     Id = comp.Id,
                     IsNot = comp.IsNot,
                     MethodName = comp.MethodName,
@@ -694,9 +784,7 @@ namespace VTS.Data.Runtime
                 {
                     if (comp.Type == "SCCStaticObject")
                     {
-                        int id = Convert.ToInt32(comp.ObjectReference);
-
-                        computation.ObjectReference = StaticObjects.First(x => x.Id == id); // should always be a match, error if not
+                        computation.ObjectReference = StaticObjects.First(x => x.Id == comp.ObjectReference.Value); // should always be a match, error if not
                     }
                     // todo : identify if there can be other object types
                     else
@@ -730,7 +818,135 @@ namespace VTS.Data.Runtime
                 conditional.Computations.Add(computation);
             }
 
+            // loop through a second time to assign the factors property because it is a list of other computations
+            // (loop a second time because I am not sure if the order of COMPs is guaranteed)
+            for (int i = 0; i < conditional.Computations.Count; i++)
+            {
+                Computation computation = conditional.Computations[i];
+                Abstractions.Computation con = c.Computations[i];
+
+                if (!string.IsNullOrWhiteSpace(con.Factors))
+                {
+                    string[] comps = con.Factors.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string factor in comps)
+                    {
+                        int id = Convert.ToInt32(factor);
+
+                        Computation item = conditional.Computations.First(x => x.Id == id); // should always be a match, error if not
+
+                        computation.Factors.Add(item);
+                    }
+                }
+            }
+
             return conditional;
+        }
+
+        private Objective ReadObjective(Abstractions.Objective o)
+        {
+            Objective objective = new Objective
+            {
+                AutoSetWaypoint = o.AutoSetWaypoint,
+                CompletionReward = o.CompletionReward,
+                ObjectiveID = o.ObjectiveID,
+                ObjectiveInfo = o.ObjectiveInfo,
+                ObjectiveName = o.ObjectiveName,
+                ObjectiveType = o.ObjectiveType,
+                OrderID = o.OrderID,
+                Required = o.Required,
+                StartMode = o.StartMode,
+                Parent = this
+            };
+
+            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective);
+            objective.FailEvent = ReadEventInfo(o.FailEvent, objective);
+            objective.StartEvent = ReadEventInfo(o.StartEvent, objective);
+
+            int id;
+
+            if (o.Waypoint != "null")
+            {
+                id = Convert.ToInt32(o.Waypoint);
+
+                objective.Waypoint = Waypoints.First(x => x.Id == id); // should always be a match, error if not
+            }
+
+            ObjectiveFields objectiveFields = new ObjectiveFields
+            {
+                CompletionMode = o.Fields.CompletionMode,
+                FuelLevel = o.Fields.FuelLevel,
+                FullCompletionBonus = o.Fields.FullCompletionBonus,
+                MinRequired = o.Fields.MinRequired,
+                PerUnitReward = o.Fields.PerUnitReward,
+                Radius = o.Fields.Radius,
+                SphericalRadius = o.Fields.SphericalRadius,
+                TriggerRadius = o.Fields.TriggerRadius,
+                UnloadRadius = o.Fields.UnloadRadius,
+                Parent = objective
+            };
+
+            if (o.Fields.FailConditional.HasValue)
+            {
+                objectiveFields.FailConditional = Conditionals.First(x => x.Id == o.Fields.FailConditional.Value); // should always be a match, error if not
+            }
+
+            if (o.Fields.SuccessConditional.HasValue)
+            {
+                objectiveFields.SuccessConditional = Conditionals.First(x => x.Id == o.Fields.SuccessConditional.Value); // should always be a match, error if not
+            }
+
+            if (o.Fields.DropoffRallyPoint.HasValue)
+            {
+                objectiveFields.DropoffRallyPoint = Waypoints.First(x => x.Id == o.Fields.DropoffRallyPoint.Value); // should always be a match, error if not
+            }            
+
+            if (o.Fields.Target.HasValue)
+            {
+                objectiveFields.Target = Units.First(x => x.UnitInstanceId == o.Fields.Target.Value); // should always be a match, error if not
+            }
+
+            if (o.Fields.TargetUnit.HasValue)
+            {
+                objectiveFields.TargetUnit = Units.First(x => x.UnitInstanceId == o.Fields.TargetUnit.Value); // should always be a match, error if not
+            }
+
+            if (!string.IsNullOrWhiteSpace(o.Fields.Targets))
+            {
+                string[] units = o.Fields.Targets.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string unit in units)
+                {
+                    id = Convert.ToInt32(unit);
+
+                    objectiveFields.Targets.Add(Units.First(x => x.UnitInstanceId == id)); // should always be a match, error if not
+                }
+            }
+
+            objective.Fields = objectiveFields;
+
+            return objective;
+        }
+
+        private void SetObjectivePreReqs(int index, bool opFor)
+        {
+            Objective objective = opFor ? ObjectivesOpFor[index] : Objectives[index];
+            Abstractions.Objective o = opFor ? customScenario.ObjectivesOpFor[index] : customScenario.Objectives[index];
+
+            if (!string.IsNullOrWhiteSpace(o.PreReqObjectives))
+            {
+                string[] objs = o.PreReqObjectives.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string s in objs)
+                {
+                    int id = Convert.ToInt32(s);
+
+                    if (opFor)
+                        objective.PreReqObjectives.Add(Objectives.First(x => x.ObjectiveID == id)); // should always be a match, error if not
+                    else
+                        objective.PreReqObjectives.Add(ObjectivesOpFor.First(x => x.ObjectiveID == id)); // should always be a match, error if not
+                }
+            }
         }
 
         #endregion

@@ -10,7 +10,7 @@
         public string ControlCondition { get; set; }
         public float? ControlValue { get; set; }
         public float? CValue { get; set; }
-        public string Factors { get; set; }
+        public List<Computation> Factors { get; set; } = new List<Computation>();
         public GlobalValue GlobalValue { get; set; }
         public int Id { get; set; }
         public bool? IsNot { get; set; }
@@ -46,7 +46,7 @@
                 ControlCondition = ControlCondition,
                 ControlValue = ControlValue,
                 CValue = CValue,
-                Factors = Factors,
+                Factors = Factors.Select (x => x.Clone()).ToList(),
                 GlobalValue = GlobalValue,
                 Id = Id,
                 IsNot = IsNot,
