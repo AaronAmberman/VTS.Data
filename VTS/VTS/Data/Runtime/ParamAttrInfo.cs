@@ -26,7 +26,8 @@
             return new ParamAttrInfo
             {
                 Data = Data,
-                Type = Type
+                Type = Type,
+                Parent = Parent
             };
         }
 

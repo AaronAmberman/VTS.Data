@@ -636,7 +636,8 @@ namespace VTS.Data.Runtime
                 groupGrouping.Settings = new UnitGroupSettings
                 {
                     Name = ugs.Name, // Alpha_SETTINGS, Bravo_SETTINGS, etc.
-                    SyncAltSpawns = ugs.SyncAltSpawns
+                    SyncAltSpawns = ugs.SyncAltSpawns,
+                    Parent = groupGrouping
                 };
             }
 
@@ -947,6 +948,11 @@ namespace VTS.Data.Runtime
                         objective.PreReqObjectives.Add(ObjectivesOpFor.First(x => x.ObjectiveID == id)); // should always be a match, error if not
                 }
             }
+        }
+
+        public bool Save()
+        {
+            return true;
         }
 
         #endregion

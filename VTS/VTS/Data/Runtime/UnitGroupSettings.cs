@@ -8,6 +8,8 @@
         public string Name { get; set; }
         public string SyncAltSpawns { get; set; }
 
+        public UnitGroupGrouping Parent { get; set; }
+
         #endregion
 
         #region Methods

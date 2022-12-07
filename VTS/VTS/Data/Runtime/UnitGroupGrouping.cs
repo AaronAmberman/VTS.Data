@@ -28,7 +28,8 @@
             {
                 Name = Name,
                 Settings = Settings.Clone(),
-                Units = Units.Select(x => x.Clone()).ToList()
+                Units = Units.Select(x => x.Clone()).ToList(),
+                Parent = Parent
             };
         }
 

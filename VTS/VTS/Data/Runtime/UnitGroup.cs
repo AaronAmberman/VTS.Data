@@ -77,6 +77,7 @@
                 Xray = Xray.Clone(),
                 Yankee = Yankee.Clone(),
                 Zulu = Zulu.Clone(),
+                Parent = Parent
             };
         }
 
