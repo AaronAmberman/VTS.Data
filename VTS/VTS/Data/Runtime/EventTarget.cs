@@ -8,8 +8,8 @@
         public string EventName { get; set; }
         public string MethodName { get; set; }
         public List<ParamInfo> ParamInfos { get; set; } = new List<ParamInfo>();
-        //public int TargetId { get; set; }
-        public UnitSpawner Target { get; set; } // UnitSpawner.UnitInstanceId is TargetId when making Abstraction equivalent 
+        // this could be a UnitSpawner, a UitGroup, a TriggerEvent, a System value, ?
+        public object Target { get; set; } 
         public string TargetType { get; set; }
 
         public object Parent { get; set; }
@@ -32,8 +32,7 @@
                 EventName = EventName,
                 MethodName = MethodName,
                 ParamInfos = ParamInfos.Select(x => x.Clone()).ToList(),
-                //TargetId = TargetId,
-                Target = Target.Clone(),
+                Target = Target is ICloneable cloneable ? cloneable.Clone() : Target, // prefer clone, else just mae reference
                 TargetType = TargetType,
                 Parent = Parent
             };

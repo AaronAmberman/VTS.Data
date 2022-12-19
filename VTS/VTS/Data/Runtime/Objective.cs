@@ -16,7 +16,7 @@
         public bool Required { get; set; }
         public List<Objective> PreReqObjectives { get; set; } = new List<Objective>();
         public string StartMode { get; set; }
-        public Waypoint Waypoint { get; set; }
+        public object Waypoint { get; set; }
         public EventInfo CompleteEvent { get; set; }
         public EventInfo FailEvent { get; set; }
         public EventInfo StartEvent { get; set; }
@@ -49,7 +49,7 @@
                 Required = Required,
                 PreReqObjectives = PreReqObjectives,
                 StartMode = StartMode,
-                Waypoint = Waypoint,
+                Waypoint = Waypoint is ICloneable cloneable ? cloneable.Clone() : Waypoint, // prefer clone, else just mae reference
                 CompleteEvent = CompleteEvent.Clone(),
                 FailEvent = FailEvent.Clone(),
                 StartEvent = StartEvent.Clone(),

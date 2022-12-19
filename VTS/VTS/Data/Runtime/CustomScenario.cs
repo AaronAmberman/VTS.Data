@@ -357,11 +357,11 @@ namespace VTS.Data.Runtime
                         Parent = unit
                     };
 
-                    if (us.UnitFields.Waypoint != "null")
+                    if (us.UnitFields.Waypoint != null && us.UnitFields.Waypoint != "null")
                     {
                         int id = Convert.ToInt32(us.UnitFields.Waypoint);
 
-                        unit.UnitFields.Waypoint = Waypoints.First(w => w.Id == id);
+                        unitFields.Waypoint = Waypoints.First(w => w.Id == id);
                     }
 
                     unit.UnitFields = unitFields;
@@ -385,6 +385,8 @@ namespace VTS.Data.Runtime
                             string[] indexUnit = str.Split(':');
                             int index = Convert.ToInt32(indexUnit[0]);
                             int unitId = Convert.ToInt32(indexUnit[1]);
+
+                            if (unitId == -1) continue; // move on
 
                             // there should be a match so do not use FirstOrDefault, if there is not
                             // match then there has been some kind of error processing the data
@@ -467,6 +469,70 @@ namespace VTS.Data.Runtime
                     Conditionals.Add(ReadConditional(c, customScenario));
                 }
 
+                foreach (Abstractions.TriggerEvent te in customScenario.TriggerEvents)
+                {
+                    TriggerEvent triggerEvent = new TriggerEvent
+                    {
+                        Enabled = te.Enabled,
+                        EventName = te.EventName,
+                        Id = te.Id,
+                        ProxyMode = te.ProxyMode,
+                        Radius = te.Radius,
+                        SphericalRadius = te.SphericalRadius,
+                        TriggerMode = te.TriggerMode,
+                        TriggerType = te.TriggerType,
+                        Parent = this
+                    };
+
+                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent);
+
+                    if (te.Conditional.HasValue)
+                    {
+                        triggerEvent.Conditional = Conditionals.First(x => x.Id == te.Conditional.Value);
+                    }
+
+                    if (te.Waypoint.HasValue)
+                    {
+                        triggerEvent.Waypoint = Waypoints.First(x => x.Id == te.Waypoint.Value);
+                    }
+
+                    TriggerEvents.Add(triggerEvent);
+                }
+
+                foreach (Abstractions.Sequence s in customScenario.EventSequences)
+                {
+                    Sequence sequence = new Sequence
+                    {
+                        Id = s.Id,
+                        SequenceName = s.SequenceName,
+                        StartImmediately = s.StartImmediately,
+                        WhileLoop = s.WhileLoop,
+                        Parent = this
+                    };
+
+                    foreach (Abstractions.Event e in s.Events)
+                    {
+                        Event @event = new Event
+                        {
+                            Delay = e.Delay,
+                            NodeName = e.NodeName,
+                            Parent = sequence
+                        };
+
+                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence);
+                        @event.Conditional = Conditionals.First(x => x.Id == e.Conditional); // should always be a match, error if not
+
+                        if (e.ExitConditional.HasValue)
+                        {
+                            @event.ExitConditional = Conditionals.First(x => x.Id == e.ExitConditional.Value); // should always be a match, error if not
+                        }
+
+                        sequence.Events.Add(@event);
+                    }
+
+                    EventSequences.Add(sequence);
+                }
+
                 foreach (Abstractions.ConditionalAction ca in customScenario.ConditionalActions)
                 {
                     ConditionalAction conditionalAction = new ConditionalAction
@@ -506,40 +572,6 @@ namespace VTS.Data.Runtime
                     conditionalAction.BaseBlock = baseBlock;
 
                     ConditionalActions.Add(conditionalAction);
-                }
-
-                foreach (Abstractions.Sequence s in customScenario.EventSequences)
-                {
-                    Sequence sequence = new Sequence
-                    {
-                        Id = s.Id,
-                        SequenceName = s.SequenceName,
-                        StartImmediately = s.StartImmediately,
-                        WhileLoop = s.WhileLoop,
-                        Parent = this
-                    };
-
-                    foreach (Abstractions.Event e in s.Events)
-                    {
-                        Event @event = new Event
-                        {
-                            Delay = e.Delay,
-                            NodeName = e.NodeName,
-                            Parent = sequence
-                        };
-
-                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence);
-                        @event.Conditional = Conditionals.First(x => x.Id == e.Conditional); // should always be a match, error if not
-
-                        if (e.ExitConditional.HasValue)
-                        {
-                            @event.ExitConditional = Conditionals.First(x => x.Id == e.ExitConditional.Value); // should always be a match, error if not
-                        }
-
-                        sequence.Events.Add(@event);
-                    }
-
-                    EventSequences.Add(sequence);
                 }
 
                 foreach (Abstractions.Objective o in customScenario.Objectives)
@@ -596,36 +628,6 @@ namespace VTS.Data.Runtime
 
                     TimedEventGroups.Add(timedEventGroup);
                 }
-
-                foreach (Abstractions.TriggerEvent te in customScenario.TriggerEvents)
-                {
-                    TriggerEvent triggerEvent = new TriggerEvent
-                    {
-                        Enabled = te.Enabled,
-                        EventName = te.EventName,
-                        Id = te.Id,
-                        ProxyMode = te.ProxyMode,
-                        Radius = te.Radius,
-                        SphericalRadius = te.SphericalRadius,
-                        TriggerMode = te.TriggerMode,
-                        TriggerType = te.TriggerType,
-                        Parent = this
-                    };
-
-                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent);
-
-                    if (te.Conditional.HasValue)
-                    {
-                        triggerEvent.Conditional = Conditionals.First(x => x.Id == te.Conditional.Value);
-                    }
-
-                    if (te.Waypoint.HasValue)
-                    {
-                        triggerEvent.Waypoint = Waypoints.First(x => x.Id == te.Waypoint.Value);
-                    }
-
-                    TriggerEvents.Add(triggerEvent);
-                }          
             }
             catch (Exception ex)
             {
@@ -652,49 +654,52 @@ namespace VTS.Data.Runtime
                 };
             }
 
-            string[] unitsIds = groupUnits.Split(';', StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string unitId in unitsIds)
+            if (!string.IsNullOrWhiteSpace(groupUnits))
             {
-                int id = Convert.ToInt32(unitId);
+                string[] unitsIds = groupUnits.Split(';', StringSplitOptions.RemoveEmptyEntries);
 
-                UnitSpawner unit = Units.First(u => u.UnitInstanceId == id); // should always be a match, error if not
-
-                /*
-                 * Note: there seems to be an issue with VTOL VR for unit groups. Sometimes units are repeated
-                 * within the same group and will often times appear in multiple groups incorrectly. Units can
-                 * only be assigned to one group. Validate both of these and throw warning out to Debug console.
-                 * Also, put data in the correct location based on UnitSpawner.UnitFields.UnitGroup data.
-                 */
-
-                // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
-                if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != "null")
+                foreach (string unitId in unitsIds)
                 {
-                    string[] groupData = unit.UnitFields.UnitGroup.Split(':');
+                    int id = Convert.ToInt32(unitId);
 
-                    // should match "enemy" or "allied"
-                    if (groupData[0].Equals(ugs.Name, StringComparison.OrdinalIgnoreCase))
+                    UnitSpawner unit = Units.First(u => u.UnitInstanceId == id); // should always be a match, error if not
+
+                    /*
+                     * Note: there seems to be an issue with VTOL VR for unit groups. Sometimes units are repeated
+                     * within the same group and will often times appear in multiple groups incorrectly. Units can
+                     * only be assigned to one group. Validate both of these and throw warning out to Debug console.
+                     * Also, put data in the correct location based on UnitSpawner.UnitFields.UnitGroup data.
+                     */
+
+                    // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
+                    if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != "null")
                     {
-                        if (groupData[1] != group)
+                        string[] groupData = unit.UnitFields.UnitGroup.Split(':');
+
+                        // should match "enemy" or "allied"
+                        if (groupData[0].Equals(ugs.Name, StringComparison.OrdinalIgnoreCase))
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+                            if (groupData[1] != group)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct larger group of groups. Current group: {ugs.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
 
                             continue;
                         }
                     }
+
+                    // check duplicity, should be ok to check the instance because all instances come from the Units collection
+                    if (groupGrouping.Units.Contains(unit))
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
                     else
-                    {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct larger group of groups. Current group: {ugs.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
-
-                        continue;
-                    }
+                        groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
                 }
-
-                // check duplicity, should be ok to check the instance because all instances come from the Units collection
-                if (groupGrouping.Units.Contains(unit))
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
-                else
-                    groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
             }
 
             return groupGrouping;
@@ -727,8 +732,17 @@ namespace VTS.Data.Runtime
                 Parent = parent
             };
 
-            // UnitSpawner.UnitInstanceId is TargetId when making Abstraction equivalent 
-            eventTarget.Target = Units.First(u => u.UnitInstanceId == et.TargetId); // should always be a match, error if not
+            if (et.TargetType == "Unit")
+                eventTarget.Target = Units.First(u => u.UnitInstanceId == et.TargetId); // should always be a match, error if not
+            else if (et.TargetType == "UnitGroup")
+                eventTarget.Target = et.TargetId; // just box the int that represents the group because I am not sure how these map
+            else if (et.TargetType == "System")
+                eventTarget.Target = et.TargetId; // just box up the 0 as I don't believe it is used for system
+            else if (et.TargetType == "Event_Sequences")
+                eventTarget.Target = EventSequences.First(es => es.Id == et.TargetId); // should always be a match, error if not
+            else if (et.TargetType == "Trigger_Events")
+                eventTarget.Target = TriggerEvents.First(te => te.Id == et.TargetId); // should always be a match, error if not
+            /// more?
 
             foreach (Abstractions.ParamInfo pi in et.ParamInfos)
             {
@@ -879,9 +893,18 @@ namespace VTS.Data.Runtime
 
             if (o.Waypoint != "null")
             {
-                id = Convert.ToInt32(o.Waypoint);
+                if (o.Waypoint.StartsWith("unit:", StringComparison.OrdinalIgnoreCase))
+                {
+                    id = Convert.ToInt32(o.Waypoint.Replace("unit:", ""));
 
-                objective.Waypoint = Waypoints.First(x => x.Id == id); // should always be a match, error if not
+                    objective.Waypoint = Units.First(x => x.UnitInstanceId == id); // should always be a match, error if not
+                }
+                else
+                {
+                    id = Convert.ToInt32(o.Waypoint);
+
+                    objective.Waypoint = Waypoints.First(x => x.Id == id); // should always be a match, error if not
+                }
             }
 
             ObjectiveFields objectiveFields = new ObjectiveFields
@@ -954,9 +977,9 @@ namespace VTS.Data.Runtime
                     int id = Convert.ToInt32(s);
 
                     if (opFor)
-                        objective.PreReqObjectives.Add(Objectives.First(x => x.ObjectiveID == id)); // should always be a match, error if not
-                    else
                         objective.PreReqObjectives.Add(ObjectivesOpFor.First(x => x.ObjectiveID == id)); // should always be a match, error if not
+                    else
+                        objective.PreReqObjectives.Add(Objectives.First(x => x.ObjectiveID == id)); // should always be a match, error if not
                 }
             }
         }
