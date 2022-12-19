@@ -9,6 +9,7 @@
         public int Id { get; set; }
         public string SequenceName { get; set; }
         public bool StartImmediately { get; set; }
+        public bool WhileLoop { get; set; }
 
         public CustomScenario Parent { get; set; }
 
@@ -31,6 +32,7 @@
                 Id = Id,
                 SequenceName = SequenceName,
                 StartImmediately = StartImmediately,
+                WhileLoop = WhileLoop,
                 Parent = Parent
             };
         }

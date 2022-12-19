@@ -23,7 +23,10 @@ namespace VTS.Data.Runtime
         public string EnvironmentName { get; set; }
         public bool ForceEquips { get; set; }
         public string ForcedEquips { get; set; }
+        public float FuelDrainMultiplier { get; set; }
         public string GameVersion { get; set; }
+        public bool InfiniteAmmo { get; set; }
+        public float InfiniteAmmoReloadDelay { get; set; }
         public bool IsTraining { get; set; }
         public string MapId { get; set; }
         public bool Multiplayer { get; set; }
@@ -121,7 +124,10 @@ namespace VTS.Data.Runtime
                 EnvironmentName = EnvironmentName,
                 ForceEquips = ForceEquips,
                 ForcedEquips = ForcedEquips,
+                FuelDrainMultiplier = FuelDrainMultiplier,
                 GameVersion = GameVersion,
+                InfiniteAmmo = InfiniteAmmo,
+                InfiniteAmmoReloadDelay = InfiniteAmmoReloadDelay,
                 IsTraining = IsTraining,
                 MapId = MapId,
                 Multiplayer = Multiplayer,
@@ -177,7 +183,10 @@ namespace VTS.Data.Runtime
                 EnvironmentName = customScenario.EnvironmentName;
                 ForceEquips = customScenario.ForceEquips;
                 ForcedEquips = customScenario.ForcedEquips;
+                FuelDrainMultiplier = customScenario.FuelDrainMultiplier;
                 GameVersion = customScenario.GameVersion;
+                InfiniteAmmo = customScenario.InfiniteAmmo;
+                InfiniteAmmoReloadDelay = customScenario.InfiniteAmmoReloadDelay;
                 IsTraining = customScenario.IsTraining;
                 MapId = customScenario.MapId;
                 Multiplayer = customScenario.Multiplayer;
@@ -338,6 +347,7 @@ namespace VTS.Data.Runtime
                         RadarUnits = us.UnitFields.RadarUnits,
                         ReceiveFriendlyDamage = us.UnitFields.ReceiveFriendlyDamage,
                         ReloadTime = us.UnitFields.ReloadTime,
+                        Respawnable = us.UnitFields.Respawnable,
                         RippleRate = us.UnitFields.RippleRate,
                         SpawnOnStart = us.UnitFields.SpawnOnStart,
                         StartMode = us.UnitFields.StartMode,
@@ -505,6 +515,7 @@ namespace VTS.Data.Runtime
                         Id = s.Id,
                         SequenceName = s.SequenceName,
                         StartImmediately = s.StartImmediately,
+                        WhileLoop = s.WhileLoop,
                         Parent = this
                     };
 

@@ -19,7 +19,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -30,7 +30,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -41,7 +41,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "awacsVoiceProfile", "commsEnabled", "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "awacsVoiceProfile", "commsEnabled", "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -52,7 +52,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -63,7 +63,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -74,7 +74,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "hullNumber", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "hullNumber", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -85,7 +85,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "hullNumber", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "carrierSpawns"
+                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "hullNumber", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "carrierSpawns", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -96,7 +96,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "radarUnits", "allowReload", "reloadTime", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "radarUnits", "allowReload", "reloadTime", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -107,7 +107,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -118,7 +118,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "combatTarget", "receiveFriendlyDamage"
+                    "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "combatTarget", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -129,7 +129,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "stopToEngage", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "stopToEngage", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -140,7 +140,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -151,7 +151,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "defaultShotsPerSalvo", "rippleRate", "allowReload", "reloadTime", "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "defaultShotsPerSalvo", "rippleRate", "allowReload", "reloadTime", "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -162,7 +162,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -173,7 +173,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "radarUnits", "allowReload", "reloadTime", "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "radarUnits", "allowReload", "reloadTime", "unitGroup", "moveSpeed", "behavior", "defaultPath", "waypoint", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -206,7 +206,7 @@ namespace VTS.Data.Runtime
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage"
+                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
                 }
             }
         };
@@ -241,6 +241,7 @@ namespace VTS.Data.Runtime
         public int RippleRate { get; set; }
         public bool ReceiveFriendlyDamage { get; set; }
         public int ReloadTime { get; set; }
+        public bool Respawnable { get; set; }
         public object ReturnToBaseDestination { get; set; } // Value will be either "", map:# (this is a base), unit:# (this will be a unit)
         public bool SpawnOnStart { get; set; }
         public string StartMode { get; set; }
@@ -293,6 +294,7 @@ namespace VTS.Data.Runtime
                 ParkedStartMode = ParkedStartMode,
                 PlayerCommandsMode = PlayerCommandsMode,
                 RadarUnits = RadarUnits,
+                Respawnable = Respawnable,
                 RippleRate = RippleRate,
                 ReceiveFriendlyDamage = ReceiveFriendlyDamage,
                 ReloadTime = ReloadTime,

@@ -9,6 +9,7 @@
         public int Id { get; set; }
         public string SequenceName { get; set; }
         public bool StartImmediately { get; set; }
+        public bool WhileLoop { get; set; }
 
         #endregion
 
@@ -28,7 +29,8 @@
                 Events = Events.Select(x => x.Clone()).ToList(),
                 Id = Id,
                 SequenceName = SequenceName,
-                StartImmediately = StartImmediately
+                StartImmediately = StartImmediately,
+                WhileLoop = WhileLoop
             };
         }
 

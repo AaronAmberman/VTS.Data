@@ -20,7 +20,10 @@ namespace VTS.Data.Abstractions
         public string EnvironmentName { get; set; }
         public bool ForceEquips { get; set; }
         public string ForcedEquips { get; set; }
+        public float FuelDrainMultiplier { get; set; }
         public string GameVersion { get; set; }
+        public bool InfiniteAmmo { get; set; }
+        public float InfiniteAmmoReloadDelay { get; set; }
         public bool IsTraining { get; set; }
         public string MapId { get; set; }
         public bool Multiplayer { get; set; }
@@ -81,7 +84,10 @@ namespace VTS.Data.Abstractions
                 EnvironmentName = EnvironmentName,
                 ForceEquips = ForceEquips,
                 ForcedEquips = ForcedEquips,
+                FuelDrainMultiplier = FuelDrainMultiplier,
                 GameVersion = GameVersion,
+                InfiniteAmmo = InfiniteAmmo,
+                InfiniteAmmoReloadDelay = InfiniteAmmoReloadDelay,
                 IsTraining = IsTraining,
                 MapId = MapId,
                 Multiplayer = Multiplayer,
@@ -156,6 +162,12 @@ namespace VTS.Data.Abstractions
                     scenario.ReturnToBaseWaypointId = property.Value;
                 if (property.Name == "refuelWptID")
                     scenario.RefuelWaypointId = property.Value;
+                if (property.Name == "infiniteAmmo")
+                    scenario.InfiniteAmmo = Convert.ToBoolean(property.Value);
+                if (property.Name == "infAmmoReloadDelay")
+                    scenario.InfiniteAmmoReloadDelay = Convert.ToSingle(property.Value);
+                if (property.Name == "fuelDrainMult")
+                    scenario.FuelDrainMultiplier = Convert.ToSingle(property.Value);
                 if (property.Name == "envName")
                     scenario.EnvironmentName = property.Value;
                 if (property.Name == "selectableEnv")
@@ -283,6 +295,8 @@ namespace VTS.Data.Abstractions
                         uf.DefaultShotsPerSalvo = Convert.ToInt32(ufProperty.Value);
                     if (ufProperty.Name == "rippleRate")
                         uf.RippleRate = Convert.ToInt32(ufProperty.Value);
+                    if (ufProperty.Name == "respawnable")
+                        uf.Respawnable = Convert.ToBoolean(ufProperty.Value);
                 }
 
                 unitSpawner.UnitFields = uf;
@@ -730,6 +744,8 @@ namespace VTS.Data.Abstractions
                         sequence.SequenceName = property.Value;
                     if (property.Name == "startImmediately")
                         sequence.StartImmediately = Convert.ToBoolean(property.Value);
+                    if (property.Name == "whileLoop")
+                        sequence.WhileLoop = Convert.ToBoolean(property.Value);
                 }
 
                 foreach (VtsObject e in es.Children)
