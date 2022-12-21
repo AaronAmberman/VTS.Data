@@ -1062,7 +1062,7 @@ namespace VTS.Data.Abstractions
                         if (property.Name == "successConditional")
                             objectiveFields.SuccessConditional = Convert.ToInt32(property.Value);
                         if (property.Name == "failConditional")
-                            objectiveFields.FailConditional = Convert.ToInt32(property.Value);
+                            objectiveFields.FailConditional = property.Value == "null" ? null : Convert.ToInt32(property.Value);
                         if (property.Name == "targets")
                             objectiveFields.Targets = property.Value;
                         if (property.Name == "minRequired")

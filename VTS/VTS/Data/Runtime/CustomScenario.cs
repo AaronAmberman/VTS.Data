@@ -417,28 +417,46 @@ namespace VTS.Data.Runtime
                         if (u.UnitFields.ReturnToBaseDestination.StartsWith("map")) // BaseInfo object
                         {
                             string[] values = u.UnitFields.ReturnToBaseDestination.Split(':');
-                            int id = Convert.ToInt32(values[1]);
 
-                            // there should be a match so do not use FirstOrDefault, if there is not
-                            // match then there has been some kind of error processing the data
-                            BaseInfo rtb = Bases.FirstOrDefault(a => a.Id == id);
+                            #region Id
 
-                            if (rtb == null)
+                            //int id = Convert.ToInt32(values[1]);
+
+                            //BaseInfo rtb = Bases.FirstOrDefault(a => a.Id == id);
+
+                            //if (rtb == null)
+                            //{
+                            //    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Bases.");
+                            //}
+                            //else
+                            //{
+                            //    unit.UnitFields.ReturnToBaseDestination = rtb;
+                            //}
+
+                            #endregion
+
+                            #region Index
+
+                            // base references seem to be index based not id based
+
+                            int index = Convert.ToInt32(values[1]);
+
+                            if (index > Bases.Count)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Bases.");
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the RTB destination {index} on unit {u.UnitInstanceId} could not be found in the list of Bases as the index was greater than the number of bases.");
                             }
                             else
                             {
-                                unit.UnitFields.ReturnToBaseDestination = rtb;
-                            }                            
+                                unit.UnitFields.ReturnToBaseDestination = Bases[index];
+                            }
+
+                            #endregion
                         }
                         else if (u.UnitFields.ReturnToBaseDestination.StartsWith("unit")) // UnitSpawner object
                         {
                             string[] values = u.UnitFields.ReturnToBaseDestination.Split(':');
                             int id = Convert.ToInt32(values[1]);
 
-                            // there should be a match so do not use FirstOrDefault, if there is not
-                            // match then there has been some kind of error processing the data
                             UnitSpawner rtb = Units.FirstOrDefault(theUnit => theUnit.UnitInstanceId == id);
 
                             if (rtb == null)
@@ -545,6 +563,33 @@ namespace VTS.Data.Runtime
                     }
 
                     TriggerEvents.Add(triggerEvent);
+                }
+
+                // loop through a second time in case trigger events reference other trigger events
+                for (int i = 0; i < TriggerEvents.Count; i++)
+                {
+                    TriggerEvent triggerEvent = TriggerEvents[i];
+                    Abstractions.TriggerEvent te = customScenario.TriggerEvents[i];
+
+                    for (int j = 0; j < triggerEvent.EventInfo.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = triggerEvent.EventInfo.EventTargets[j];
+                        Abstractions.EventTarget et = te.EventInfo.EventTargets[j];
+
+                        if (eventTarget.TargetType == "Trigger_Events")
+                        {
+                            TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+
+                            if (trigEve == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                            }
+                            else
+                            {
+                                eventTarget.Target = trigEve;
+                            }
+                        }
+                    }
                 }
 
                 foreach (Abstractions.Sequence s in customScenario.EventSequences)
@@ -751,18 +796,18 @@ namespace VTS.Data.Runtime
                         string[] groupData = unit.UnitFields.UnitGroup.Split(':');
 
                         // should match "enemy" or "allied"
-                        if (groupData[0].Equals(ugs.Name, StringComparison.OrdinalIgnoreCase))
+                        if (groupData[0].Equals(ug.Name, StringComparison.OrdinalIgnoreCase))
                         {
                             if (groupData[1] != group)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
 
                                 continue;
                             }
                         }
                         else
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit is not assigned to the correct larger group of groups. Current group: {ugs.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
 
                             continue;
                         }
@@ -832,19 +877,20 @@ namespace VTS.Data.Runtime
                     eventTarget.Target = sequence;
                 }
             }
-            else if (et.TargetType == "Trigger_Events")
-            {
-                TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+            // references to other trigger events must be done in an outer loop because the order is not guaranteed
+            //else if (et.TargetType == "Trigger_Events")
+            //{
+            //    TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
 
-                if (triggerEvent == null)
-                {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
-                }
-                else
-                {
-                    eventTarget.Target = triggerEvent;
-                }
-            }
+            //    if (triggerEvent == null)
+            //    {
+            //        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+            //    }
+            //    else
+            //    {
+            //        eventTarget.Target = triggerEvent;
+            //    }
+            //}
             else if (et.TargetType == "UnitGroup")
                 eventTarget.Target = et.TargetId; // just box the int that represents the group because I am not sure how these map
             else if (et.TargetType == "System")
