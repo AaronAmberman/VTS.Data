@@ -6,6 +6,12 @@
         #region Properties
 
         /// <summary>
+        /// Gets or sets whether or not to output the conversion time for the custom scenario
+        /// when converting between Abstractions.CustomScenario and Runtime.CustomScenario.
+        /// </summary>
+        public static bool OutputCustomScenarioConversionTime { get; set; }
+
+        /// <summary>
         /// Gets or sets whether or not to output the read and write times for the various 
         /// readers and writers within this API.
         /// </summary>

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using VTS.Collections;
+using VTS.Data.Diagnostics;
 
 namespace VTS.Data.Runtime
 {
@@ -195,6 +196,9 @@ namespace VTS.Data.Runtime
         {
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
                 AllowedEquips = customScenario.AllowedEquips;
                 BaseBudget = customScenario.BaseBudget;
                 CampaignId = customScenario.CampaignId;
@@ -760,6 +764,11 @@ namespace VTS.Data.Runtime
 
                     TimedEventGroups.Add(timedEventGroup);
                 }
+
+                sw.Stop();
+
+                if (DiagnosticOptions.OutputCustomScenarioConversionTime)
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario conversion duration for VTS.Data.Abstractions.CustomScenario:{sw.Elapsed}");
             }
             catch (Exception ex)
             {
