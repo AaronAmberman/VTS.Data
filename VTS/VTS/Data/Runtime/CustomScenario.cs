@@ -357,11 +357,20 @@ namespace VTS.Data.Runtime
                         Parent = unit
                     };
 
-                    if (us.UnitFields.Waypoint != null && us.UnitFields.Waypoint != "null")
+                    if (!string.IsNullOrWhiteSpace(us.UnitFields.Waypoint) && us.UnitFields.Waypoint != "null")
                     {
                         int id = Convert.ToInt32(us.UnitFields.Waypoint);
 
-                        unitFields.Waypoint = Waypoints.First(w => w.Id == id);
+                        Waypoint match = Waypoints.FirstOrDefault(w => w.Id == id);
+                        
+                        if (match == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: waypoint {id} referenced on unit [unitInstanceID:{us.UnitInstanceId}] could not be found by id. No matching waypoint in the Waypoints collection.");
+                        }
+                        else
+                        {
+                            unitFields.Waypoint = match;
+                        }
                     }
 
                     unit.UnitFields = unitFields;
@@ -390,9 +399,16 @@ namespace VTS.Data.Runtime
 
                             // there should be a match so do not use FirstOrDefault, if there is not
                             // match then there has been some kind of error processing the data
-                            UnitSpawner carrierSpawn = Units.First(theUnit => theUnit.UnitInstanceId == unitId); 
+                            UnitSpawner carrierSpawn = Units.FirstOrDefault(theUnit => theUnit.UnitInstanceId == unitId); 
 
-                            unit.UnitFields.CarrierSpawns.Add(new Tuple<int, UnitSpawner>(index, carrierSpawn));
+                            if (carrierSpawn == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the carrier unit {u.UnitInstanceId} referenced unit {unitId} and that unit could not be found in the collection of Units.");
+                            }
+                            else
+                            {
+                                unit.UnitFields.CarrierSpawns.Add(new Tuple<int, UnitSpawner>(index, carrierSpawn));
+                            }
                         }
                     }
 
@@ -405,9 +421,16 @@ namespace VTS.Data.Runtime
 
                             // there should be a match so do not use FirstOrDefault, if there is not
                             // match then there has been some kind of error processing the data
-                            BaseInfo rtb = Bases.First(a => a.Id == id);
+                            BaseInfo rtb = Bases.FirstOrDefault(a => a.Id == id);
 
-                            unit.UnitFields.ReturnToBaseDestination = rtb;
+                            if (rtb == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Bases.");
+                            }
+                            else
+                            {
+                                unit.UnitFields.ReturnToBaseDestination = rtb;
+                            }                            
                         }
                         else if (u.UnitFields.ReturnToBaseDestination.StartsWith("unit")) // UnitSpawner object
                         {
@@ -416,9 +439,16 @@ namespace VTS.Data.Runtime
 
                             // there should be a match so do not use FirstOrDefault, if there is not
                             // match then there has been some kind of error processing the data
-                            UnitSpawner rtb = Units.First(theUnit => theUnit.UnitInstanceId == id);
+                            UnitSpawner rtb = Units.FirstOrDefault(theUnit => theUnit.UnitInstanceId == id);
 
-                            unit.UnitFields.ReturnToBaseDestination = rtb;
+                            if (rtb == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Units.");
+                            }
+                            else
+                            {
+                                unit.UnitFields.ReturnToBaseDestination = rtb;
+                            }
                         }
                     }
                 }
@@ -488,12 +518,30 @@ namespace VTS.Data.Runtime
 
                     if (te.Conditional.HasValue)
                     {
-                        triggerEvent.Conditional = Conditionals.First(x => x.Id == te.Conditional.Value);
+                        Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == te.Conditional.Value);
+
+                        if (conditional == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references conditional {te.Conditional.Value} and that conditional could not be found in the list of Conditionals.");
+                        }
+                        else
+                        {
+                            triggerEvent.Conditional = conditional;
+                        }
                     }
 
                     if (te.Waypoint.HasValue)
                     {
-                        triggerEvent.Waypoint = Waypoints.First(x => x.Id == te.Waypoint.Value);
+                        Waypoint waypoint = Waypoints.FirstOrDefault(x => x.Id == te.Waypoint.Value);
+
+                        if (waypoint == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references waypoint {te.Waypoint.Value} and that waypoint could not be found in the list of Waypoints.");
+                        }
+                        else
+                        {
+                            triggerEvent.Waypoint = waypoint;
+                        }
                     }
 
                     TriggerEvents.Add(triggerEvent);
@@ -520,11 +568,30 @@ namespace VTS.Data.Runtime
                         };
 
                         @event.EventInfo = ReadEventInfo(e.EventInfo, sequence);
-                        @event.Conditional = Conditionals.First(x => x.Id == e.Conditional); // should always be a match, error if not
+
+                        Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.Conditional);
+
+                        if (conditional == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional {e.Conditional} and that conditional could not be found in the list of Conditionals.");
+                        }
+                        else
+                        {
+                            @event.Conditional = conditional;
+                        }
 
                         if (e.ExitConditional.HasValue)
                         {
-                            @event.ExitConditional = Conditionals.First(x => x.Id == e.ExitConditional.Value); // should always be a match, error if not
+                            conditional = Conditionals.FirstOrDefault(x => x.Id == e.ExitConditional.Value);
+
+                            if (conditional == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional {e.Conditional} and that exit conditional could not be found in the list of Conditionals.");
+                            }
+                            else
+                            {
+                                @event.ExitConditional = conditional;
+                            }
                         }
 
                         sequence.Events.Add(@event);
@@ -662,7 +729,14 @@ namespace VTS.Data.Runtime
                 {
                     int id = Convert.ToInt32(unitId);
 
-                    UnitSpawner unit = Units.First(u => u.UnitInstanceId == id); // should always be a match, error if not
+                    UnitSpawner unit = Units.FirstOrDefault(u => u.UnitInstanceId == id);
+
+                    if (unit == null)
+                    {
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit group {group} references unit {unitId} and that unit could not be found in the list of Units.");
+
+                        continue; // move on as no match was found
+                    }
 
                     /*
                      * Note: there seems to be an issue with VTOL VR for unit groups. Sometimes units are repeated
@@ -681,14 +755,14 @@ namespace VTS.Data.Runtime
                         {
                             if (groupData[1] != group)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
 
                                 continue;
                             }
                         }
                         else
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: The unit is not assigned to the correct larger group of groups. Current group: {ugs.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit is not assigned to the correct larger group of groups. Current group: {ugs.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
 
                             continue;
                         }
@@ -696,7 +770,7 @@ namespace VTS.Data.Runtime
 
                     // check duplicity, should be ok to check the instance because all instances come from the Units collection
                     if (groupGrouping.Units.Contains(unit))
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data WARNING: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
                     else
                         groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
                 }
@@ -733,15 +807,48 @@ namespace VTS.Data.Runtime
             };
 
             if (et.TargetType == "Unit")
-                eventTarget.Target = Units.First(u => u.UnitInstanceId == et.TargetId); // should always be a match, error if not
+            {
+                UnitSpawner unit = Units.FirstOrDefault(u => u.UnitInstanceId == et.TargetId);
+
+                if (unit == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references unit {et.TargetId} and that unit could not be found in the list of Units.");
+                }
+                else
+                {
+                    eventTarget.Target = unit;
+                }
+            }
+            else if (et.TargetType == "Event_Sequences")
+            {
+                Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId); ;
+
+                if (sequence == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+                }
+                else
+                {
+                    eventTarget.Target = sequence;
+                }
+            }
+            else if (et.TargetType == "Trigger_Events")
+            {
+                TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+
+                if (triggerEvent == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                }
+                else
+                {
+                    eventTarget.Target = triggerEvent;
+                }
+            }
             else if (et.TargetType == "UnitGroup")
                 eventTarget.Target = et.TargetId; // just box the int that represents the group because I am not sure how these map
             else if (et.TargetType == "System")
                 eventTarget.Target = et.TargetId; // just box up the 0 as I don't believe it is used for system
-            else if (et.TargetType == "Event_Sequences")
-                eventTarget.Target = EventSequences.First(es => es.Id == et.TargetId); // should always be a match, error if not
-            else if (et.TargetType == "Trigger_Events")
-                eventTarget.Target = TriggerEvents.First(te => te.Id == et.TargetId); // should always be a match, error if not
             /// more?
 
             foreach (Abstractions.ParamInfo pi in et.ParamInfos)
@@ -810,7 +917,16 @@ namespace VTS.Data.Runtime
                 {
                     if (comp.Type == "SCCStaticObject")
                     {
-                        computation.ObjectReference = StaticObjects.First(x => x.Id == comp.ObjectReference.Value); // should always be a match, error if not
+                        StaticObject staticObject = StaticObjects.FirstOrDefault(x => x.Id == comp.ObjectReference.Value);
+
+                        if (staticObject == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references static object {comp.ObjectReference.Value} and that static object could not be found in the list of StaticObjects.");
+                        }
+                        else
+                        {
+                            computation.ObjectReference = staticObject;
+                        }
                     }
                     // todo : identify if there can be other object types
                     else
@@ -821,12 +937,30 @@ namespace VTS.Data.Runtime
 
                 if (comp.GlobalValue.HasValue)
                 {
-                    computation.GlobalValue = GlobalValues.First(x => x.Index == comp.GlobalValue); // should always be a match, error if not
+                    GlobalValue globalValue = GlobalValues.FirstOrDefault(x => x.Index == comp.GlobalValue);
+
+                    if (globalValue == null)
+                    {
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references global value {comp.GlobalValue} and that global value could not be found in the list of GlobalValues.");
+                    }
+                    else
+                    {
+                        computation.GlobalValue = globalValue;
+                    }
                 }
 
                 if (comp.Unit.HasValue)
                 {
-                    computation.Unit = Units.First(x => x.UnitInstanceId == comp.Unit);  // should always be a match, error if not
+                    UnitSpawner unit = Units.FirstOrDefault(x => x.UnitInstanceId == comp.Unit);
+
+                    if (unit == null)
+                    {
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {comp.Unit} and that unit could not be found in the list of Units.");
+                    }
+                    else
+                    {
+                        computation.Unit = unit;
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(comp.UnitList))
@@ -837,7 +971,16 @@ namespace VTS.Data.Runtime
                     {
                         int id = Convert.ToInt32(unit);
 
-                        computation.UnitList.Add(Units.First(x => x.UnitInstanceId == id)); // should always be a match, error if not
+                        UnitSpawner u = Units.FirstOrDefault(x => x.UnitInstanceId == id);
+
+                        if (u == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {id} in the unit list {comp.UnitList} and that unit could not be found in the list of Units.");
+                        }
+                        else
+                        {
+                            computation.UnitList.Add(u);
+                        }
                     }
                 }
 
@@ -849,19 +992,26 @@ namespace VTS.Data.Runtime
             for (int i = 0; i < conditional.Computations.Count; i++)
             {
                 Computation computation = conditional.Computations[i];
-                Abstractions.Computation con = c.Computations[i];
+                Abstractions.Computation com = c.Computations[i];
 
-                if (!string.IsNullOrWhiteSpace(con.Factors))
+                if (!string.IsNullOrWhiteSpace(com.Factors))
                 {
-                    string[] comps = con.Factors.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                    string[] comps = com.Factors.Split(';', StringSplitOptions.RemoveEmptyEntries);
 
                     foreach (string factor in comps)
                     {
                         int id = Convert.ToInt32(factor);
 
-                        Computation item = conditional.Computations.First(x => x.Id == id); // should always be a match, error if not
+                        Computation item = conditional.Computations.FirstOrDefault(x => x.Id == id);
 
-                        computation.Factors.Add(item);
+                        if (item == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: computation {com.Id} references other computations in its factors property. Computation {id} in the factors list could not be found in the list of compuations for conditional {conditional.Id}.");
+                        }
+                        else
+                        {
+                            computation.Factors.Add(item);
+                        }
                     }
                 }
             }
@@ -897,13 +1047,31 @@ namespace VTS.Data.Runtime
                 {
                     id = Convert.ToInt32(o.Waypoint.Replace("unit:", ""));
 
-                    objective.Waypoint = Units.First(x => x.UnitInstanceId == id); // should always be a match, error if not
+                    UnitSpawner unit = Units.FirstOrDefault(x => x.UnitInstanceId == id);
+
+                    if (unit == null)
+                    {
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references unit {id} as a waypoint. The unit could not be found in the list of Units.");
+                    }
+                    else
+                    {
+                        objective.Waypoint = unit;
+                    }
                 }
                 else
                 {
                     id = Convert.ToInt32(o.Waypoint);
 
-                    objective.Waypoint = Waypoints.First(x => x.Id == id); // should always be a match, error if not
+                    Waypoint waypoint = Waypoints.FirstOrDefault(x => x.Id == id);
+
+                    if (waypoint == null)
+                    {
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references waypoint {id} as a waypoint. The waypoint could not be found in the list of Waypoints.");
+                    }
+                    else
+                    {
+                        objective.Waypoint = waypoint;
+                    }
                 }
             }
 
@@ -923,27 +1091,72 @@ namespace VTS.Data.Runtime
 
             if (o.Fields.FailConditional.HasValue)
             {
-                objectiveFields.FailConditional = Conditionals.First(x => x.Id == o.Fields.FailConditional.Value); // should always be a match, error if not
+                Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == o.Fields.FailConditional.Value);
+
+                if (conditional == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a fail conditional {o.Fields.FailConditional.Value} and that conditional could not be found in the list of Conditionals.");
+                }
+                else
+                {
+                    objectiveFields.FailConditional = conditional;
+                }
             }
 
             if (o.Fields.SuccessConditional.HasValue)
             {
-                objectiveFields.SuccessConditional = Conditionals.First(x => x.Id == o.Fields.SuccessConditional.Value); // should always be a match, error if not
+                Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == o.Fields.SuccessConditional.Value);
+
+                if (conditional == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a success conditional {o.Fields.SuccessConditional.Value} and that conditional could not be found in the list of Conditionals.");
+                }
+                else
+                {
+                    objectiveFields.SuccessConditional = conditional;
+                }
             }
 
             if (o.Fields.DropoffRallyPoint.HasValue)
             {
-                objectiveFields.DropoffRallyPoint = Waypoints.First(x => x.Id == o.Fields.DropoffRallyPoint.Value); // should always be a match, error if not
+                Waypoint waypoint = Waypoints.FirstOrDefault(x => x.Id == o.Fields.DropoffRallyPoint.Value);
+
+                if (waypoint == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a drop off rally point waypoint {o.Fields.DropoffRallyPoint.Value} and that waypoint could not be found in the list of Waypoints.");
+                }
+                else
+                {
+                    objectiveFields.DropoffRallyPoint = waypoint;
+                }
             }            
 
             if (o.Fields.Target.HasValue)
             {
-                objectiveFields.Target = Units.First(x => x.UnitInstanceId == o.Fields.Target.Value); // should always be a match, error if not
+                UnitSpawner unit = Units.FirstOrDefault(x => x.UnitInstanceId == o.Fields.Target.Value);
+
+                if (unit == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target {o.Fields.Target.Value} and that unit could not be found in the list of Units.");
+                }
+                else
+                {
+                    objectiveFields.Target = unit;
+                }
             }
 
             if (o.Fields.TargetUnit.HasValue)
             {
-                objectiveFields.TargetUnit = Units.First(x => x.UnitInstanceId == o.Fields.TargetUnit.Value); // should always be a match, error if not
+                UnitSpawner unit = Units.FirstOrDefault(x => x.UnitInstanceId == o.Fields.TargetUnit.Value);
+
+                if (unit == null)
+                {
+                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target unit {o.Fields.TargetUnit.Value} and that unit could not be found in the list of Units.");
+                }
+                else
+                {
+                    objectiveFields.TargetUnit = unit;
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(o.Fields.Targets))
@@ -954,7 +1167,16 @@ namespace VTS.Data.Runtime
                 {
                     id = Convert.ToInt32(unit);
 
-                    objectiveFields.Targets.Add(Units.First(x => x.UnitInstanceId == id)); // should always be a match, error if not
+                    UnitSpawner u = Units.FirstOrDefault(x => x.UnitInstanceId == id);
+
+                    if (u == null)
+                    {
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference in targets {o.Fields.Targets} and that unit could not be found in the list of Units.");
+                    }
+                    else
+                    {
+                        objectiveFields.Targets.Add(u);
+                    }
                 }
             }
 
@@ -977,9 +1199,31 @@ namespace VTS.Data.Runtime
                     int id = Convert.ToInt32(s);
 
                     if (opFor)
-                        objective.PreReqObjectives.Add(ObjectivesOpFor.First(x => x.ObjectiveID == id)); // should always be a match, error if not
+                    {
+                        Objective match = ObjectivesOpFor.FirstOrDefault(x => x.ObjectiveID == id);
+
+                        if (match == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of ObjectivesOpFor.");
+                        }
+                        else
+                        {
+                            objective.PreReqObjectives.Add(match);
+                        }
+                    }
                     else
-                        objective.PreReqObjectives.Add(Objectives.First(x => x.ObjectiveID == id)); // should always be a match, error if not
+                    {
+                        Objective match = Objectives.FirstOrDefault(x => x.ObjectiveID == id);
+
+                        if (match == null)
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of Objectives.");
+                        }
+                        else
+                        {
+                            objective.PreReqObjectives.Add(match);
+                        }
+                    }
                 }
             }
         }
