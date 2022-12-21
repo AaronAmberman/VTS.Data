@@ -114,7 +114,7 @@ namespace VTS.Data.Runtime
         /// <returns>A cloned CustomScenario object.</returns>
         public CustomScenario Clone()
         {
-            return new CustomScenario
+            CustomScenario cs = new CustomScenario
             {
                 AllowedEquips = AllowedEquips,
                 BaseBudget = BaseBudget,
@@ -160,6 +160,26 @@ namespace VTS.Data.Runtime
                 HasError = HasError,
                 File = File
             };
+
+            // update parent references on top level objects
+            foreach (BaseInfo baseInfo in Bases) baseInfo.Parent = cs;
+            foreach (BriefingNote briefingNote in BriefingNotes) briefingNote.Parent = cs;
+            foreach (ConditionalAction conditionalAction in ConditionalActions) conditionalAction.Parent = cs;
+            foreach (Conditional conditional in Conditionals) conditional.Parent = cs;
+            foreach (Sequence sequence in EventSequences) sequence.Parent = cs;
+            foreach (GlobalValue globalValue in GlobalValues) globalValue.Parent = cs;
+            foreach (Objective objective in Objectives) objective.Parent = cs;
+            foreach (Objective objective in ObjectivesOpFor) objective.Parent = cs;
+            foreach (Path path in Paths) path.Parent = cs;
+            foreach (Resource resource in ResourceManifest) resource.Parent = cs;
+            foreach (StaticObject staticObject in StaticObjects) staticObject.Parent = cs;
+            foreach (TimedEventGroup timedEventGroup in TimedEventGroups) timedEventGroup.Parent = cs;
+            foreach (TriggerEvent triggerEvent in TriggerEvents) triggerEvent.Parent = cs;
+            foreach (UnitGroup unitGroupGrouping in UnitGroups) unitGroupGrouping.Parent = cs;
+            foreach (UnitSpawner unitSpawner in Units) unitSpawner.Parent = cs;
+            foreach (Waypoint waypoint in Waypoints) waypoint.Parent = cs;
+
+            return cs;
         }
 
         private void Initialize()
@@ -846,7 +866,6 @@ namespace VTS.Data.Runtime
             {
                 EventName = et.EventName,
                 MethodName = et.MethodName,
-                //TargetId = et.TargetId,
                 TargetType = et.TargetType,
                 Parent = parent
             };
