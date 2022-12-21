@@ -44,12 +44,26 @@
 
         /// <summary>Returns a string representation of the object.</summary>
         /// <param name="format">The format to use for X, Y and Z.</param>
-        /// <returns>A string representing the object with the specified format for each number.</returns>
+        /// <returns>A string representing the object with the specified format for X, Y and Z.</returns>
         public string ToString(string format)
         {
             string x = X.ToString(format);
             string y = Y.ToString(format);
             string z = Z.ToString(format);
+
+            return $"({x}, {y}, {z})";
+        }
+
+        /// <summary>Returns a string representation of the object.</summary>
+        /// <param name="xFormat">The X format.</param>
+        /// <param name="yFormat">The Y format.</param>
+        /// <param name="zFormat">The Z format.</param>
+        /// <returns>A string representing the object with the specified format for each number.</returns>
+        public string ToString(string xFormat, string yFormat, string zFormat)
+        {
+            string x = X.ToString(xFormat);
+            string y = Y.ToString(yFormat);
+            string z = Z.ToString(zFormat);
 
             return $"({x}, {y}, {z})";
         }

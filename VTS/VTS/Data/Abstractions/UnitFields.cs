@@ -74,7 +74,7 @@ namespace VTS.Data.Abstractions
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "hullNumber", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
+                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "hullNumber", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "carrierSpawns", "respawnable"
                 }
             },
             new UnitUnitFieldGrouping
@@ -202,11 +202,22 @@ namespace VTS.Data.Abstractions
             {
                 Units = new List<string>
                 {
-                    "DroneCarrier", "DroneGunBoat", "DroneGunBoatRocket", "DroneMissileCruiser", "EnemyCarrier", "ESuperMissileCruiser", "MineBoat"
+                    "DroneCarrier", "DroneGunBoat", "DroneGunBoatRocket", "DroneMissileCruiser", "ESuperMissileCruiser", "MineBoat"
                 },
                 UnitFields = new List<string>
                 {
                     "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
+                }
+            },
+            new UnitUnitFieldGrouping
+            {
+                Units = new List<string>
+                {
+                    "EnemyCarrier"
+                },
+                UnitFields = new List<string>
+                {
+                    "unitGroup", "defaultBehavior", "defaultWaypoint", "defaultPath", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable", "carrierSpawns"
                 }
             }
         };

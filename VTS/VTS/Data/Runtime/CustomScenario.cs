@@ -20,8 +20,8 @@ namespace VTS.Data.Runtime
         public int BaseBudget { get; set; }
         public string CampaignId { get; set; }
         public int CampaignOrderIndex { get; set; }
-        public bool EquipsConfigurable { get; set; }
         public string EnvironmentName { get; set; }
+        public bool EquipsConfigurable { get; set; }
         public bool ForceEquips { get; set; }
         public string ForcedEquips { get; set; }
         public float FuelDrainMultiplier { get; set; }
@@ -34,8 +34,8 @@ namespace VTS.Data.Runtime
         public int NormalForcedFuel { get; set; }
         public int QuickSaveLimit { get; set; }
         public string QuickSaveMode { get; set; }
-        public string RefuelWaypointId { get; set; }
-        public string ReturnToBaseWaypointId { get; set; }
+        public object RefuelWaypoint { get; set; } // could be a waypoint or unit?
+        public object ReturnToBaseWaypoint { get; set; }  // could be a waypoint or unit?
         public string ScenarioId { get; set; }
         public string ScenarioName { get; set; }
         public string ScenarioDescription { get; set; }
@@ -135,8 +135,8 @@ namespace VTS.Data.Runtime
                 NormalForcedFuel = NormalForcedFuel,
                 QuickSaveLimit = QuickSaveLimit,
                 QuickSaveMode = QuickSaveMode,
-                RefuelWaypointId = RefuelWaypointId,
-                ReturnToBaseWaypointId = ReturnToBaseWaypointId,
+                RefuelWaypoint = RefuelWaypoint is ICloneable cloneable ? cloneable.Clone() : RefuelWaypoint, // prefer clone
+                ReturnToBaseWaypoint = ReturnToBaseWaypoint is ICloneable cloneable1 ? cloneable1.Clone() : ReturnToBaseWaypoint, // prefer clone
                 ScenarioId = ScenarioId,
                 ScenarioName = ScenarioName,
                 ScenarioDescription = ScenarioDescription,
@@ -163,6 +163,32 @@ namespace VTS.Data.Runtime
             };
 
             // update parent references on top level objects
+            if (ReturnToBaseWaypoint != null)
+            {
+                if (ReturnToBaseWaypoint is UnitSpawner unitSpawner)
+                {
+                    unitSpawner.Parent = cs;
+                }
+
+                if (ReturnToBaseWaypoint is Waypoint waypoint)
+                {
+                    waypoint.Parent = cs;
+                }
+            }
+
+            if (RefuelWaypoint != null)
+            {
+                if (RefuelWaypoint is UnitSpawner unitSpawner)
+                {
+                    unitSpawner.Parent = cs;
+                }
+
+                if (RefuelWaypoint is Waypoint waypoint)
+                {
+                    waypoint.Parent = cs;
+                }
+            }
+
             foreach (BaseInfo baseInfo in Bases) baseInfo.Parent = cs;
             foreach (BriefingNote briefingNote in BriefingNotes) briefingNote.Parent = cs;
             foreach (ConditionalAction conditionalAction in ConditionalActions) conditionalAction.Parent = cs;
@@ -217,8 +243,6 @@ namespace VTS.Data.Runtime
                 NormalForcedFuel = customScenario.NormalForcedFuel;
                 QuickSaveLimit = customScenario.QuickSaveLimit;
                 QuickSaveMode = customScenario.QuickSaveMode;
-                RefuelWaypointId = customScenario.RefuelWaypointId;
-                ReturnToBaseWaypointId = customScenario.ReturnToBaseWaypointId;
                 ScenarioId = customScenario.ScenarioId;
                 ScenarioName = customScenario.ScenarioName;
                 ScenarioDescription = customScenario.ScenarioDescription;
@@ -490,6 +514,83 @@ namespace VTS.Data.Runtime
                             else
                             {
                                 unit.UnitFields.ReturnToBaseDestination = rtb;
+                            }
+                        }
+                    }
+                }
+
+                // see if we need to set the ReturnToBaseWaypoint
+                if (!string.IsNullOrWhiteSpace(customScenario.ReturnToBaseWaypointId))
+                {
+                    string[] data = customScenario.ReturnToBaseWaypointId.Split(':');
+
+                    if (data.Length > 0)
+                    {
+                        int id = Convert.ToInt32(data[1]);
+
+                        if (data[0] == "unit")
+                        {
+                            UnitSpawner match = Units.FirstOrDefault(w => w.UnitInstanceId == id);
+
+                            if (match == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Units.");
+                            }
+                            else
+                            {
+                                ReturnToBaseWaypoint = match;
+                            }
+                        }
+                        else if (data[0] == "wpt")
+                        {
+                            Waypoint match = Waypoints.FirstOrDefault(w => w.Id == id);
+
+                            if (match == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
+                            }
+                            else
+                            {
+                                ReturnToBaseWaypoint = match;
+                            }
+                        }
+                    }
+                }
+
+                // see if we need to set the RefuelWaypoint
+                if (!string.IsNullOrWhiteSpace(customScenario.RefuelWaypointId))
+                {
+                    string[] data = customScenario.RefuelWaypointId.Split(':');
+
+                    if (data.Length > 0)
+                    {
+                        int id = Convert.ToInt32(data[1]);
+
+                        if (data[0] == "unit")
+                        {
+                            UnitSpawner match = Units.FirstOrDefault(w => w.UnitInstanceId == id);
+
+                            if (match == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the refuelWptID {customScenario.RefuelWaypointId} could not be found in the list of Units.");
+                            }
+                            else
+                            {
+                                RefuelWaypoint = match;
+                            }
+
+                        }
+                        else if (data[0] == "wpt")
+                        {
+                            Waypoint match = Waypoints.FirstOrDefault(w => w.Id == id);
+
+                            if (match == null)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the refuelWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
+                            }
+                            else
+                            {
+                                RefuelWaypoint = match;
                             }
                         }
                     }
@@ -1304,7 +1405,258 @@ namespace VTS.Data.Runtime
 
         public bool Save()
         {
-            return true;
+            try
+            {
+                // we will create a new custom scenario object and not overwrite the original we have at the class level
+                Abstractions.CustomScenario cs = new Abstractions.CustomScenario
+                {
+                    AllowedEquips = AllowedEquips,
+                    BaseBudget = BaseBudget,
+                    CampaignId = CampaignId,
+                    CampaignOrderIndex = CampaignOrderIndex,
+                    EnvironmentName = EnvironmentName,
+                    EquipsConfigurable = EquipsConfigurable,
+                    ForcedEquips = ForcedEquips,
+                    ForceEquips = ForceEquips,
+                    FuelDrainMultiplier = FuelDrainMultiplier,
+                    GameVersion = GameVersion,
+                    InfiniteAmmo = InfiniteAmmo,
+                    InfiniteAmmoReloadDelay = InfiniteAmmoReloadDelay,
+                    IsTraining = IsTraining,
+                    MapId = MapId,
+                    Multiplayer = Multiplayer,
+                    NormalForcedFuel = NormalForcedFuel,
+                    QuickSaveLimit = QuickSaveLimit,
+                    QuickSaveMode = QuickSaveMode,
+                    ScenarioDescription = ScenarioDescription,
+                    ScenarioId = ScenarioId,
+                    ScenarioName = ScenarioName,
+                    SelectableEnvironment = SelectableEnvironment,
+                    Vehicle = Vehicle,
+                    File = File,
+                    HasError = HasError
+                };
+
+                if (ReturnToBaseWaypoint != null)
+                {
+                    if (ReturnToBaseWaypoint is UnitSpawner unitSpawner)
+                    {
+                        cs.ReturnToBaseWaypointId = $"unit:{unitSpawner.UnitInstanceId}";
+                    }
+
+                    if (ReturnToBaseWaypoint is Waypoint waypoint)
+                    {
+                        cs.ReturnToBaseWaypointId = $"wpt:{waypoint.Id}";
+                    }
+                }
+
+                if (RefuelWaypoint != null)
+                {
+                    if (RefuelWaypoint is UnitSpawner unitSpawner)
+                    {
+                        cs.RefuelWaypointId = $"unit:{unitSpawner.UnitInstanceId}";
+                    }
+
+                    if (RefuelWaypoint is Waypoint waypoint)
+                    {
+                        cs.RefuelWaypointId = $"wpt:{waypoint.Id}";
+                    }
+                }
+
+                foreach (BaseInfo baseInfo in Bases)
+                {
+                    Abstractions.BaseInfo bi = new Abstractions.BaseInfo
+                    {
+                        Id = baseInfo.Id,
+                        BaseTeam = baseInfo.BaseTeam,
+                        OverrideBaseName = baseInfo.OverrideBaseName                        
+                    };
+
+                    cs.Bases.Add(bi);
+                }
+
+                foreach (BriefingNote briefingNote in BriefingNotes)
+                {
+                    Abstractions.BriefingNote bn = new Abstractions.BriefingNote
+                    {
+                        AudioClipPath = briefingNote.AudioClipPath,
+                        ImagePath = briefingNote.ImagePath,
+                        Text = briefingNote.Text
+                    };
+
+                    cs.BriefingNotes.Add(bn);
+                }
+
+                foreach (GlobalValue globalValue in GlobalValues)
+                {
+                    Abstractions.GlobalValue gv = new Abstractions.GlobalValue
+                    {
+                        Description = globalValue.Description,
+                        Index = globalValue.Index,
+                        Name = globalValue.Name,
+                        Value = globalValue.Value
+                    };
+
+                    cs.GlobalValues.Add(gv);
+                }
+
+                foreach (Path path in Paths)
+                {
+                    Abstractions.Path p = new Abstractions.Path
+                    {
+                        Id = path.Id,
+                        Loop = path.Loop,
+                        Name = path.Name,
+                        PathMode = path.PathMode,
+                        Points = path.Points
+                    };
+
+                    cs.Paths.Add(p);
+                }
+
+                foreach (Resource resource in ResourceManifest)
+                {
+                    Abstractions.Resource r = new Abstractions.Resource
+                    {
+                        Index = resource.Index,
+                        Path = resource.Path
+                    };
+
+                    cs.ResourceManifest.Add(r);
+                }
+
+                foreach (StaticObject staticObject in StaticObjects)
+                {
+                    Abstractions.StaticObject so = new Abstractions.StaticObject
+                    {
+                        GlobalPosition = staticObject.GlobalPosition,
+                        Id = staticObject.Id,
+                        PrefabId = staticObject.PrefabId,
+                        Rotation = staticObject.Rotation
+                    };
+
+                    cs.StaticObjects.Add(so);
+                }
+
+                foreach (Waypoint waypoint in Waypoints)
+                {
+                    Abstractions.Waypoint wp = new Abstractions.Waypoint
+                    {
+                        GlobalPoint = waypoint.GlobalPoint,
+                        Id = waypoint.Id,
+                        Name = waypoint.Name
+                    };
+
+                    cs.Waypoints.Add(wp);
+                }
+
+                foreach (UnitSpawner unit in Units)
+                {
+                    Abstractions.UnitSpawner us = new Abstractions.UnitSpawner
+                    {
+                        EditorPlacementMode = unit.EditorPlacementMode,
+                        GlobalPosition = unit.GlobalPosition,
+                        LastValidPlacement = unit.LastValidPlacement,
+                        Rotation = unit.Rotation,
+                        SpawnChance = unit.SpawnChance,
+                        SpawnFlags = unit.SpawnFlags,
+                        UnitId = unit.UnitId,
+                        UnitInstanceId = unit.UnitInstanceId,
+                        UnitName = unit.UnitName
+                    };
+
+                    Abstractions.UnitFields uf = new Abstractions.UnitFields
+                    {
+                        AllowReload = unit.UnitFields.AllowReload,
+                        AutoRefuel = unit.UnitFields.AutoRefuel,
+                        AutoReturnToBase = unit.UnitFields.AutoReturnToBase,
+                        AwacsVoiceProfile = unit.UnitFields.AwacsVoiceProfile,
+                        Behavior = unit.UnitFields.Behavior,
+                        CombatTarget = unit.UnitFields.CombatTarget,
+                        CommsEnabled = unit.UnitFields.CommsEnabled,
+                        DefaultBehavior = unit.UnitFields.DefaultBehavior,
+                        DefaultNavSpeed = unit.UnitFields.DefaultNavSpeed,
+                        DefaultOrbitPoint = unit.UnitFields.DefaultOrbitPoint,
+                        DefaultPath = unit.UnitFields.DefaultPath,
+                        DefaultRadarEnabled = unit.UnitFields.DefaultRadarEnabled,
+                        DefaultShotsPerSalvo = unit.UnitFields.DefaultShotsPerSalvo,
+                        DefaultWaypoint = unit.UnitFields.DefaultWaypoint,
+                        DetectionMode = unit.UnitFields.DetectionMode,
+                        EngageEnemies = unit.UnitFields.EngageEnemies,
+                        Equips = unit.UnitFields.Equips,
+                        Fuel = unit.UnitFields.Fuel,
+                        HullNumber = unit.UnitFields.HullNumber,
+                        InitialSpeed = unit.UnitFields.InitialSpeed,
+                        Invincible = unit.UnitFields.Invincible,
+                        MoveSpeed = unit.UnitFields.MoveSpeed,
+                        OrbitAltitude = unit.UnitFields.OrbitAltitude,
+                        ParkedStartMode = unit.UnitFields.ParkedStartMode,
+                        PlayerCommandsMode = unit.UnitFields.PlayerCommandsMode,
+                        RadarUnits = unit.UnitFields.RadarUnits,
+                        ReceiveFriendlyDamage = unit.UnitFields.ReceiveFriendlyDamage,
+                        ReloadTime = unit.UnitFields.ReloadTime,
+                        Respawnable = unit.UnitFields.Respawnable,
+                        RippleRate = unit.UnitFields.RippleRate,
+                        SpawnOnStart = unit.UnitFields.SpawnOnStart,
+                        StartMode = unit.UnitFields.StartMode,
+                        StopToEngage = unit.UnitFields.StopToEngage,
+                        UnitGroup = unit.UnitFields.UnitGroup,
+                        VoiceProfile = unit.UnitFields.VoiceProfile,
+                    };
+
+                    List<string> unitFieldProperties = UnitFields.GetUnitFieldsForUnitType(unit.UnitId);
+
+                    if (unitFieldProperties.Contains("waypoint"))
+                    {
+                        if (unit.UnitFields.Waypoint == null)
+                        {
+                            uf.Waypoint = "null";
+                        }
+                        else
+                        {
+                            uf.Waypoint = unit.UnitFields.Waypoint.Id.ToString();
+                        }
+                    }
+                    else if (unitFieldProperties.Contains("carrierSpawns"))
+                    {
+                        // do I do something to ensure the correct number of units in the property based on ship type?
+                        //if (unit.UnitId == "EscortCruiser") // 1 unit
+                        //{
+
+                        //}
+                        //else if (unit.UnitId == "AlliedAAShip") // 6 units
+                        //{
+
+                        //}
+                        //else if (unit.UnitId == "AlliedCarrier") // 9 units
+                        //{
+
+                        //}
+                        //else if (unit.UnitId == "EnemyCarrier") // 10 units
+                        //{
+
+                        //}
+
+                        List<string> unitsOnCarrier = unit.UnitFields.CarrierSpawns.Select(x => $"{x.Item1}:{x.Item2.UnitInstanceId}").ToList();
+                        
+                        uf.CarrierSpawns = string.Join(';', unitsOnCarrier) + ";";
+                    }
+
+                    us.UnitFields = uf;
+
+                    cs.Units.Add(us);
+                }
+
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An exception occurred attempting to save the custom scenario.{Environment.NewLine}{ex}");
+
+                return false;
+            }
         }
 
         #endregion

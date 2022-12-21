@@ -1268,7 +1268,7 @@ namespace VTS.Data.Abstractions
                     if (property == "defaultOrbitPoint")
                         unitFields.Properties.Add(new VtsProperty { Name = "defaultOrbitPoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultOrbitPoint) ? "null" : unitSpawner.UnitFields.DefaultOrbitPoint, IndentDepth = 4 });
                     if (property == "orbitAltitude")
-                        // this might need some kinf of special formatting for a decimal number, we shall see
+                        // this might need some kind of special formatting for a decimal number, we shall see
                         unitFields.Properties.Add(new VtsProperty { Name = "orbitAltitude", Value = unitSpawner.UnitFields.OrbitAltitude.ToString(), IndentDepth = 4 });
                     if (property == "fuel")
                         unitFields.Properties.Add(new VtsProperty { Name = "fuel", Value = unitSpawner.UnitFields.Fuel.ToString(), IndentDepth = 4 });
