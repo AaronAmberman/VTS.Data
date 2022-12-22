@@ -8,6 +8,8 @@ namespace VTS.Data.Runtime
     [DebuggerDisplay("VTS File:{File} (HasError:{HasError})")]
     public class CustomScenario : ICloneable
     {
+        // todo : map weapon types for all aircraft
+
         #region Fields
 
         private Abstractions.CustomScenario customScenario;
@@ -34,8 +36,8 @@ namespace VTS.Data.Runtime
         public int NormalForcedFuel { get; set; }
         public int QuickSaveLimit { get; set; }
         public string QuickSaveMode { get; set; }
-        public object RefuelWaypoint { get; set; } // could be a waypoint or unit?
-        public object ReturnToBaseWaypoint { get; set; }  // could be a waypoint or unit?
+        public object RefuelWaypoint { get; set; }
+        public object ReturnToBaseWaypoint { get; set; }
         public string ScenarioId { get; set; }
         public string ScenarioName { get; set; }
         public string ScenarioDescription { get; set; }
