@@ -900,56 +900,59 @@ namespace VTS.Data.Runtime
                 };
             }
 
-            string[] unitsIds = groupUnits.Split(';', StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string unitId in unitsIds)
+            if (!string.IsNullOrWhiteSpace(groupUnits))
             {
-                int id = Convert.ToInt32(unitId);
+                string[] unitsIds = groupUnits.Split(';', StringSplitOptions.RemoveEmptyEntries);
 
-                UnitSpawner unit = Units.FirstOrDefault(u => u.UnitInstanceId == id);
-
-                if (unit == null)
+                foreach (string unitId in unitsIds)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit group {group} references unit {unitId} and that unit could not be found in the list of Units.");
+                    int id = Convert.ToInt32(unitId);
 
-                    continue; // move on as no match was found
-                }
+                    UnitSpawner unit = Units.FirstOrDefault(u => u.UnitInstanceId == id);
 
-                /*
-                 * Note: there seems to be an issue with VTOL VR for unit groups. Sometimes units are repeated
-                 * within the same group and will often times appear in multiple groups incorrectly. Units can
-                 * only be assigned to one group. Validate both of these and throw warning out to Debug console.
-                 * Also, put data in the correct location based on UnitSpawner.UnitFields.UnitGroup data.
-                 */
-
-                // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
-                if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != "null")
-                {
-                    string[] groupData = unit.UnitFields.UnitGroup.Split(':');
-
-                    // should match "enemy" or "allied"
-                    if (groupData[0].Equals(ug.Name, StringComparison.OrdinalIgnoreCase))
+                    if (unit == null)
                     {
-                        if (groupData[1] != group)
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit group {group} references unit {unitId} and that unit could not be found in the list of Units.");
+
+                        continue; // move on as no match was found
+                    }
+
+                    /*
+                     * Note: there seems to be an issue with VTOL VR for unit groups. Sometimes units are repeated
+                     * within the same group and will often times appear in multiple groups incorrectly. Units can
+                     * only be assigned to one group. Validate both of these and throw warning out to Debug console.
+                     * Also, put data in the correct location based on UnitSpawner.UnitFields.UnitGroup data.
+                     */
+
+                    // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
+                    if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != "null")
+                    {
+                        string[] groupData = unit.UnitFields.UnitGroup.Split(':');
+
+                        // should match "enemy" or "allied"
+                        if (groupData[0].Equals(ug.Name, StringComparison.OrdinalIgnoreCase))
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+                            if (groupData[1] != group)
+                            {
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
 
                             continue;
                         }
                     }
+
+                    // check duplicity, should be ok to check the instance because all instances come from the Units collection
+                    if (groupGrouping.Units.Contains(unit))
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
                     else
-                    {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
-
-                        continue;
-                    }
+                        groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
                 }
-
-                // check duplicity, should be ok to check the instance because all instances come from the Units collection
-                if (groupGrouping.Units.Contains(unit))
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
-                else
-                    groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
             }
 
             return groupGrouping;
