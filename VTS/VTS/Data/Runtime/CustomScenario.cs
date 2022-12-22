@@ -9,6 +9,7 @@ namespace VTS.Data.Runtime
     public class CustomScenario : ICloneable
     {
         // todo : map weapon types for all aircraft
+        // todo : add Action<string> property where we can push warnings to so they the consuming application may do something with them
 
         #region Fields
 
@@ -936,14 +937,14 @@ namespace VTS.Data.Runtime
                         {
                             if (groupData[1] != group)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
 
                                 continue;
                             }
                         }
                         else
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: The unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
+                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
 
                             continue;
                         }
@@ -951,7 +952,7 @@ namespace VTS.Data.Runtime
 
                     // check duplicity, should be ok to check the instance because all instances come from the Units collection
                     if (groupGrouping.Units.Contains(unit))
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: Unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
+                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
                     else
                         groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
                 }
