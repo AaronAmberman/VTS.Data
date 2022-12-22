@@ -1,7 +1,10 @@
 # VTS
 An API that contains a VTS mission file reader and writer for VTOL VR as well as data abstractions for runtime management of data.
 
-The base namespace contains a KeywordStrings class and all the various keyword strings for the VTS file were moved there for easy management and access.
+The base namespace contains a KeywordStrings class and all the various keyword strings for the VTS file were moved there for easy management and access. *Note: not 100% of strings exist in this file but all major strings used by the *Raw* namespace exist. In the future 100% of all strings that come the VTS file will be moved into here.*
+
+
+
 
 ## VTS.Data.Raw
 This namespace contains classes that enable the reader and writer to do their work reading and writing VTS files.
@@ -21,8 +24,12 @@ Represents any property on any object type from within the VTS file.
 ### VtsFileLineData
 Helps manage and identify data in a line of text in the VTS file. Powers the reader in scrapping data from the VTS file to transcribe it to VTS objects.
 
+
 ## Objects
 All objects (UnitSpawner, UnitFields, CONDITIONAL, EventInfo, etc.) will appear as children on the VtsCustomScenarioObject. Each object has properties that describe itself, children that are descendants of that object as well as a parent reference (this is not true for the VtsCustomScenarioObject as that is the root).
+
+
+
 
 ## VTS.File
 This namespace contains classes that can be used to read and write VTS files.
@@ -70,3 +77,34 @@ Any data or structure validation should occur before the writer is writing. Ther
 
 ### Writing Performance
 Writing VTS files is very fast.
+
+
+
+
+## VTS.Data.Abstractions
+This namespace contains types that attempt to add a data structure that is similar to the VTS file itself.
+
+For the most part these types should not be used directly in your code. These types are the middle layer between the VTS raw data objects and the runtime namespace objects.
+
+### CustomScenario 
+This cloneable type contains all the magic needed for this namespace. Not only is it the outer data container but it also houses all the read and write methods that convert these objects back to VTS objects so the reader and writer can properly interpret the data for file writing. See the static methods ReadVtsFile and WriteVtsFile for more information.
+
+All other types are cloneable data containers with the exception of UnitFields. This type contains mappings for unit types and unit field properties.
+
+
+
+
+## VTS.Data.Runtime
+This namespace contain types that attempt to add even more structure to the data by making object references instead of relying on id pointers and magic strings.
+
+### CustomScenario
+This cloneable type contains all the magic needed for this namespace. Not only is it the outer container but it also houses the read and save methods that interpret data from the *Abstractions* namespace.
+
+#### X,Y,Z Position Data Warning
+I could not quite get the string formatting to work correctly going from a string to a Single back to a string when interpretting the data and writing it again. So some of the positions have rounded data down to 3 decimal places, some don't. It is on the todo list but not letting good get in the way of progress and getting some work done on the [mission assistant](https://github.com/AaronAmberman/VTOLVR-MissionAssistant.git).
+
+*Note: you will notice a lot of duplicated types between the Abstraction namespace and the Runtime namespace. I thought this design would be better in terms of how I was trying to layer the data interpretation. Though I probably could have made the Runtime types inherit the Abstraction types if I would have made the Clone method virtual. Maybe something for the future but no real plans there.*
+
+
+## VTS.Data.Diagnostics
+This namespace that contain types that assist in outputting some additional data that is not apart of the data structures. 
