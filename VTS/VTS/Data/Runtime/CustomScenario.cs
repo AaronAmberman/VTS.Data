@@ -10,6 +10,7 @@ namespace VTS.Data.Runtime
     {
         // todo : map weapon types for all aircraft
         // todo : add Action<string> property where we can push warnings to so they the consuming application may do something with them
+        // todo: move ALL strings into the KeywordStrings file
 
         #region Fields
 
