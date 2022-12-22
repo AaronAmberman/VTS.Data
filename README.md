@@ -108,3 +108,12 @@ I could not quite get the string formatting to work correctly going from a strin
 
 ## VTS.Data.Diagnostics
 This namespace that contain types that assist in outputting some additional data that is not apart of the data structures. 
+
+
+
+
+# The Usage You Want
+![Usage](https://user-images.githubusercontent.com/23512394/209232581-20c02531-bb03-46ac-ab5b-a93a3a27ce43.png)
+
+Which will get you an an object that looks like this...
+![CustomScenario](https://user-images.githubusercontent.com/23512394/209232624-8bd12a19-af34-4db0-9e18-2127fa0f2a08.png)
