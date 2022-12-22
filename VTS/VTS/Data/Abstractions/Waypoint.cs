@@ -5,7 +5,7 @@
     {
         #region Properties
 
-        public ThreePointValue GlobalPoint { get; set; }
+        public string GlobalPoint { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
 
@@ -24,7 +24,7 @@
         {
             return new Waypoint
             {
-                GlobalPoint = GlobalPoint.Clone(),
+                GlobalPoint = GlobalPoint,
                 Id = Id,
                 Name = Name
             };

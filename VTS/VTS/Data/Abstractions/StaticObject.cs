@@ -7,8 +7,8 @@
 
         public string PrefabId { get; set; }
         public int Id { get; set; }
-        public ThreePointValue GlobalPosition { get; set; }
-        public ThreePointValue Rotation { get; set; }
+        public string GlobalPosition { get; set; }
+        public string Rotation { get; set; }
 
         #endregion
 
@@ -27,8 +27,8 @@
             {
                 PrefabId = PrefabId,
                 Id = Id,
-                GlobalPosition = GlobalPosition.Clone(),
-                Rotation = Rotation.Clone()
+                GlobalPosition = GlobalPosition,
+                Rotation = Rotation
             };
         }
 

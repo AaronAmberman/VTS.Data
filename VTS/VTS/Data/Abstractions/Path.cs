@@ -9,7 +9,7 @@
         public string Name { get; set; }
         public bool Loop { get; set; }
         public string PathMode { get; set; }
-        public List<ThreePointValue> Points { get; set; } = new List<ThreePointValue>();
+        public string Points { get; set; }
 
         #endregion
 
@@ -30,7 +30,7 @@
                 Name = Name,
                 Loop = Loop,
                 PathMode = PathMode,
-                Points = Points.Select(x => x.Clone()).ToList()
+                Points = Points
             };
         }
 

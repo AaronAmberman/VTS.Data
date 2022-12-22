@@ -302,9 +302,11 @@ namespace VTS.Data.Runtime
                         Parent = this
                     };
 
-                    foreach (ThreePointValue tpv in p.Points)
+                    string[] points = p.Points.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string point in points)
                     {
-                        path.Points.Add(tpv.Clone());
+                        path.Points.Add(ReadThreePointValue(point));
                     }
 
                     Paths.Add(path);
@@ -326,10 +328,10 @@ namespace VTS.Data.Runtime
                 {
                     StaticObject staticObject = new StaticObject
                     {
-                        GlobalPosition = so.GlobalPosition.Clone(),
+                        GlobalPosition = ReadThreePointValue(so.GlobalPosition),
                         Id = so.Id,
                         PrefabId = so.PrefabId,
-                        Rotation = so.Rotation.Clone(),
+                        Rotation = ReadThreePointValue(so.Rotation),
                         Parent = this
                     };
 
@@ -340,7 +342,7 @@ namespace VTS.Data.Runtime
                 {
                     Waypoint waypoint = new Waypoint
                     {
-                        GlobalPoint = w.GlobalPoint.Clone(),
+                        GlobalPoint = ReadThreePointValue(w.GlobalPoint),
                         Id = w.Id,
                         Name = w.Name,
                         Parent = this
@@ -354,9 +356,9 @@ namespace VTS.Data.Runtime
                     UnitSpawner unit = new UnitSpawner
                     {
                         EditorPlacementMode = us.EditorPlacementMode,
-                        GlobalPosition = us.GlobalPosition.Clone(),
-                        LastValidPlacement = us.LastValidPlacement.Clone(),
-                        Rotation = us.Rotation.Clone(),
+                        GlobalPosition = ReadThreePointValue(us.GlobalPosition),
+                        LastValidPlacement = ReadThreePointValue(us.LastValidPlacement),
+                        Rotation = ReadThreePointValue(us.Rotation),
                         SpawnChance = us.SpawnChance,
                         SpawnFlags = us.SpawnFlags,
                         UnitId = us.UnitId,
@@ -1062,7 +1064,7 @@ namespace VTS.Data.Runtime
             Conditional conditional = new Conditional
             {
                 Id = c.Id,
-                OutputNodePosition = c.OutputNodePosition.Clone(),
+                OutputNodePosition = ReadThreePointValue(c.OutputNodePosition),
                 Root = c.Root,
                 Parent = parent
             };
@@ -1081,7 +1083,7 @@ namespace VTS.Data.Runtime
                     MethodName = comp.MethodName,
                     MethodParameters = comp.MethodParameters,
                     Type = comp.Type,
-                    UiPosition = comp.UiPosition,
+                    UiPosition = ReadThreePointValue(comp.UiPosition),
                     UnitGroup = comp.UnitGroup,
                     VehicleControl = comp.VehicleControl,
                     Parent = conditional
@@ -1359,6 +1361,19 @@ namespace VTS.Data.Runtime
             return objective;
         }
 
+        private ThreePointValue ReadThreePointValue(string value)
+        {
+            value = value.Trim().Replace("(", "").Replace(")", "");
+            string[] values = value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+            return new ThreePointValue
+            {
+                X = Convert.ToSingle(values[0]),
+                Y = Convert.ToSingle(values[1]),
+                Z = Convert.ToSingle(values[2]),
+            };
+        }
+
         private void SetObjectivePreReqs(int index, bool opFor)
         {
             Objective objective = opFor ? ObjectivesOpFor[index] : Objectives[index];
@@ -1510,7 +1525,7 @@ namespace VTS.Data.Runtime
                         Loop = path.Loop,
                         Name = path.Name,
                         PathMode = path.PathMode,
-                        Points = path.Points
+                        Points = string.Join(';', path.Points.Select(x => x.ToString())) + ";"
                     };
 
                     cs.Paths.Add(p);
@@ -1531,10 +1546,10 @@ namespace VTS.Data.Runtime
                 {
                     Abstractions.StaticObject so = new Abstractions.StaticObject
                     {
-                        GlobalPosition = staticObject.GlobalPosition,
+                        GlobalPosition = staticObject.GlobalPosition.ToString(),
                         Id = staticObject.Id,
                         PrefabId = staticObject.PrefabId,
-                        Rotation = staticObject.Rotation
+                        Rotation = staticObject.Rotation.ToString()
                     };
 
                     cs.StaticObjects.Add(so);
@@ -1544,7 +1559,7 @@ namespace VTS.Data.Runtime
                 {
                     Abstractions.Waypoint wp = new Abstractions.Waypoint
                     {
-                        GlobalPoint = waypoint.GlobalPoint,
+                        GlobalPoint = waypoint.GlobalPoint.ToString(),
                         Id = waypoint.Id,
                         Name = waypoint.Name
                     };
@@ -1557,9 +1572,9 @@ namespace VTS.Data.Runtime
                     Abstractions.UnitSpawner us = new Abstractions.UnitSpawner
                     {
                         EditorPlacementMode = unit.EditorPlacementMode,
-                        GlobalPosition = unit.GlobalPosition,
-                        LastValidPlacement = unit.LastValidPlacement,
-                        Rotation = unit.Rotation,
+                        GlobalPosition = unit.GlobalPosition.ToString(),
+                        LastValidPlacement = unit.LastValidPlacement.ToString(),
+                        Rotation = unit.Rotation.ToString(),
                         SpawnChance = unit.SpawnChance,
                         SpawnFlags = unit.SpawnFlags,
                         UnitId = unit.UnitId,
@@ -1870,7 +1885,7 @@ namespace VTS.Data.Runtime
             Abstractions.Conditional con = new Abstractions.Conditional
             {
                 Id = conditional.Id,
-                OutputNodePosition = conditional.OutputNodePosition,
+                OutputNodePosition = conditional.OutputNodePosition.ToString(),
                 Root = conditional.Root
             };
 
@@ -1889,7 +1904,7 @@ namespace VTS.Data.Runtime
                     MethodName = computation.MethodName,
                     MethodParameters = computation.MethodParameters,
                     Type = computation.Type,
-                    UiPosition = computation.UiPosition,
+                    UiPosition = computation.UiPosition.ToString(),
                     Unit = computation.Unit?.UnitInstanceId,
                     UnitGroup = computation.UnitGroup,
                     VehicleControl = computation.VehicleControl

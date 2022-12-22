@@ -198,17 +198,17 @@ namespace VTS.Data.Abstractions
                     if (property.Name == "unitName")
                         unitSpawner.UnitName = property.Value;
                     if (property.Name == "globalPosition")
-                        unitSpawner.GlobalPosition = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                        unitSpawner.GlobalPosition = property.Value;
                     if (property.Name == "unitInstanceID")
                         unitSpawner.UnitInstanceId = Convert.ToInt32(property.Value);
                     if (property.Name == "unitID")
                         unitSpawner.UnitId = property.Value;
                     if (property.Name == "rotation")
-                        unitSpawner.Rotation = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                        unitSpawner.Rotation = property.Value;
                     if (property.Name == "spawnChance")
                         unitSpawner.SpawnChance = Convert.ToInt32(property.Value);
                     if (property.Name == "lastValidPlacement")
-                        unitSpawner.LastValidPlacement = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                        unitSpawner.LastValidPlacement = property.Value;
                     if (property.Name == "editorPlacementMode")
                         unitSpawner.EditorPlacementMode = property.Value;
                     if (property.Name == "spawnFlags")
@@ -334,17 +334,7 @@ namespace VTS.Data.Abstractions
                     if (property.Name == "loop")
                         p.Loop = Convert.ToBoolean(property.Value);
                     if (property.Name == "points")
-                    {
-                        string[] points = property.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
-                        List<ThreePointValue> pointValues = new List<ThreePointValue>();
-
-                        foreach (string point in points)
-                        {
-                            pointValues.Add(ReadThreePointValue(point.Replace("(", "").Replace(")", "")));
-                        }
-
-                        p.Points = pointValues;
-                    }
+                        p.Points = property.Value;
                     if (property.Name == "pathMode")
                         p.PathMode = property.Value;
                 }
@@ -379,7 +369,7 @@ namespace VTS.Data.Abstractions
                     if (property.Name == "name")
                         w.Name = property.Value;
                     if (property.Name == "globalPoint")
-                        w.GlobalPoint = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                        w.GlobalPoint = property.Value;
                 }
 
                 scenario.Waypoints.Add(w);
@@ -624,9 +614,9 @@ namespace VTS.Data.Abstractions
                     if (property.Name == "id")
                         staticObject.Id = Convert.ToInt32(property.Value);
                     if (property.Name == "globalPos")
-                        staticObject.GlobalPosition = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                        staticObject.GlobalPosition = property.Value;
                     if (property.Name == "rotation")
-                        staticObject.Rotation = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                        staticObject.Rotation = property.Value;
                 }
 
                 scenario.StaticObjects.Add(staticObject);
@@ -891,7 +881,7 @@ namespace VTS.Data.Abstractions
                 if (property.Name == "id")
                     conditional.Id = Convert.ToInt32(property.Value);
                 if (property.Name == "outputNodePos")
-                    conditional.OutputNodePosition = ReadThreePointValue(property.Value.Replace("(", "").Replace(")", ""));
+                    conditional.OutputNodePosition = property.Value;
                 if (property.Name == "root")
                     conditional.Root = Convert.ToInt32(property.Value);
             }
@@ -907,7 +897,7 @@ namespace VTS.Data.Abstractions
                     if (vtsProperty.Name == "type")
                         computation.Type = vtsProperty.Value;
                     if (vtsProperty.Name == "uiPos")
-                        computation.UiPosition = ReadThreePointValue(vtsProperty.Value.Replace("(", "").Replace(")", ""));
+                        computation.UiPosition = vtsProperty.Value;
                     if (vtsProperty.Name == "unitGroup")
                         computation.UnitGroup = vtsProperty.Value;
                     if (vtsProperty.Name == "methodName")
@@ -1096,18 +1086,6 @@ namespace VTS.Data.Abstractions
             }
 
             return objective;
-        }
-
-        private static ThreePointValue ReadThreePointValue(string value)
-        {
-            string[] values = value.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-            return new ThreePointValue
-            {
-                X = Convert.ToSingle(values[0]),
-                Y = Convert.ToSingle(values[1]),
-                Z = Convert.ToSingle(values[2]),
-            };
         }
 
         /// <summary>Reads the VTS file into a CustomScenario object.</summary>

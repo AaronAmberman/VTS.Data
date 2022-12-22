@@ -6,9 +6,9 @@
         #region Properties
 
         public string EditorPlacementMode { get; set; }
-        public ThreePointValue GlobalPosition { get; set; }
-        public ThreePointValue LastValidPlacement { get; set; }
-        public ThreePointValue Rotation { get; set; }
+        public string GlobalPosition { get; set; }
+        public string LastValidPlacement { get; set; }
+        public string Rotation { get; set; }
         public int SpawnChance { get; set; }
         public string SpawnFlags { get; set; }
         public UnitFields UnitFields { get; set; }
@@ -32,9 +32,9 @@
             return new UnitSpawner
             {
                 EditorPlacementMode = EditorPlacementMode,
-                GlobalPosition = GlobalPosition.Clone(),
-                LastValidPlacement = LastValidPlacement.Clone(),
-                Rotation = Rotation.Clone(),
+                GlobalPosition = GlobalPosition,
+                LastValidPlacement = LastValidPlacement,
+                Rotation = Rotation,
                 SpawnChance = SpawnChance,
                 SpawnFlags = SpawnFlags,
                 UnitFields = UnitFields.Clone(),

@@ -7,7 +7,7 @@
 
         public List<Computation> Computations { get; set; } = new List<Computation>();
         public int Id { get; set; }
-        public ThreePointValue OutputNodePosition { get; set; }
+        public string OutputNodePosition { get; set; }
         public int? Root { get; set; }
 
         #endregion
@@ -26,7 +26,7 @@
             return new Conditional
             {
                 Computations = Computations.Select(x => x.Clone()).ToList(),
-                OutputNodePosition = OutputNodePosition.Clone(),
+                OutputNodePosition = OutputNodePosition,
                 Id = Id,
                 Root = Root
             };

@@ -18,7 +18,7 @@
         public string MethodName { get; set; }
         public int? ObjectReference { get; set; }
         public string Type { get; set; }
-        public ThreePointValue UiPosition { get; set; }
+        public string UiPosition { get; set; }
         public int? Unit { get; set; }
         public string UnitGroup { get; set; }
         public string UnitList { get; set; }
@@ -52,7 +52,7 @@
                 MethodName = MethodName,
                 ObjectReference = ObjectReference,
                 Type = Type,
-                UiPosition = UiPosition.Clone(),
+                UiPosition = UiPosition,
                 Unit = Unit,
                 UnitGroup = UnitGroup,
                 UnitList = UnitList,
