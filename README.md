@@ -101,7 +101,7 @@ This namespace contain types that attempt to add even more structure to the data
 This cloneable type contains all the magic needed for this namespace. Not only is it the outer container but it also houses the read and save methods that interpret data from the *Abstractions* namespace.
 
 #### X,Y,Z Position Data Warning
-I could not quite get the string formatting to work correctly going from a string to a Single back to a string when interpretting the data and writing it again. So some of the positions have rounded data down to 3 decimal places, some don't. It is on the todo list but not letting good get in the way of progress and getting some work done on the [mission assistant](https://github.com/AaronAmberman/VTOLVR-MissionAssistant.git).
+I could not quite get the string formatting to work correctly going from a string to a Single back to a string when interpreting the data and writing it again. So some of the positions have rounded data down to 3 decimal places, some don't. It is on the todo list but not letting good get in the way of progress and getting some work done on the [mission assistant](https://github.com/AaronAmberman/VTOLVR-MissionAssistant.git).
 
 *Note: you will notice a lot of duplicated types between the Abstraction namespace and the Runtime namespace. I thought this design would be better in terms of how I was trying to layer the data interpretation. Though I probably could have made the Runtime types inherit the Abstraction types if I would have made the Clone method virtual. Maybe something for the future but no real plans there.*
 
@@ -117,3 +117,15 @@ This namespace that contain types that assist in outputting some additional data
 
 Which will get you an an object that looks like this...
 ![CustomScenario](https://user-images.githubusercontent.com/23512394/209232624-8bd12a19-af34-4db0-9e18-2127fa0f2a08.png)
+
+## Generated Warnings
+In the debug console you will notice some data warning that come from the API as well. There seems to be some bugs in VTOL VR when it comes to verifying the data being written to the VTS file. So I have added some validation checks to the code and spit out warnings. The types of warnings...
+
+1. VTS.Data.Runtime.CustomScenario No Matching Id Data Warning
+  1.1 This is generated when any construct attempts to reference another construct and that secondary construct could not be found. There are many situations in which this can occur.
+2. VTS.Data.Runtime.CustomScenario UnitGroup Data Warning
+  2.1 This occurs when one of 3 types of errors occurs reading unit group data.
+3. VTS.Data.Runtime.CustomScenario Data Conversion Warning
+  3.1 This occurs within this API when attempting to cast between expected types and the cast fails.
+  
+There are plans in the future to add the ability to push these warning to the consuming application so that they be logged...or whatever it is that the consuming application wishes to do with the warning. 
