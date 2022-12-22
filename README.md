@@ -84,7 +84,7 @@ Writing VTS files is very fast.
 ## VTS.Data.Abstractions
 This namespace contains types that attempt to add a data structure that is similar to the VTS file itself.
 
-For the most part these types should not be used directly in your code. These types are the middle layer between the VTS raw data objects and the runtime namespace objects.
+For the most part these types should not be used directly in your code. These types are the middle layer between the VTS raw data objects and the *Runtime* namespace objects.
 
 ### CustomScenario 
 This cloneable type contains all the magic needed for this namespace. Not only is it the outer data container but it also houses all the read and write methods that convert these objects back to VTS objects so the reader and writer can properly interpret the data for file writing. See the static methods ReadVtsFile and WriteVtsFile for more information.
