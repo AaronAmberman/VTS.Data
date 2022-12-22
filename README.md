@@ -123,10 +123,10 @@ Which will get you an an object that looks like this...
 In the debug console you will notice some data warning that come from the API as well. There seems to be some bugs in VTOL VR when it comes to verifying the data being written to the VTS file. So I have added some validation checks to the code and spit out warnings. The types of warnings...
 
 1. VTS.Data.Runtime.CustomScenario No Matching Id Data Warning
-  1.1 This is generated when any construct attempts to reference another construct and that secondary construct could not be found. There are many situations in which this can occur.
+   - This is generated when any construct attempts to reference another construct and that secondary construct could not be found. There are many situations in which this can occur.
 2. VTS.Data.Runtime.CustomScenario UnitGroup Data Warning
-  2.1 This occurs when one of 3 types of errors occurs reading unit group data.
+   - This occurs when one of 3 types of errors occurs reading unit group data.
 3. VTS.Data.Runtime.CustomScenario Data Conversion Warning
-  3.1 This occurs within this API when attempting to cast between expected types and the cast fails.
+   - This occurs within this API when attempting to cast between expected types and the cast fails.
   
 There are plans in the future to add the ability to push these warning to the consuming application so that they be logged...or whatever it is that the consuming application wishes to do with the warning. 
