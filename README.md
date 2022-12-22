@@ -125,7 +125,11 @@ In the debug console you will notice some data warning that come from the API as
 1. VTS.Data.Runtime.CustomScenario No Matching Id Data Warning
    - This is generated when any construct attempts to reference another construct and that secondary construct could not be found. There are many situations in which this can occur.
 2. VTS.Data.Runtime.CustomScenario UnitGroup Data Warning
-   - This occurs when one of 3 types of errors occurs reading unit group data.
+   - This occurs when one of 4 types of errors occurs reading unit group data.
+     - The unit group {group} references unit {unitId} and that unit could not be found in the list of Units 
+     - The unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {actual-group} but it is listed in {group} incorrectly.
+     - The unit {unitId} is not assigned to the correct larger group of groups. Current group: {larger-group}, listed group for unit: {group}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group.
+     - unit {unitName} (unitInstanceID) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}).
 3. VTS.Data.Runtime.CustomScenario Data Conversion Warning
    - This occurs within this API when attempting to cast between expected types and the cast fails.
   
