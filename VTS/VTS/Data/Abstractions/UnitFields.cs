@@ -317,7 +317,7 @@ namespace VTS.Data.Abstractions
             };
         }
 
-        public static List<string> GetUnitFieldsForUnitType(string unitType)
+        public static IReadOnlyList<string> GetUnitFieldsForUnitType(string unitType)
         {
             foreach (UnitUnitFieldGrouping unitUnitFieldGrouping in UnitAndUnitFieldsMap)
             {

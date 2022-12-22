@@ -1626,7 +1626,7 @@ namespace VTS.Data.Runtime
                         VoiceProfile = unit.UnitFields.VoiceProfile,
                     };
 
-                    List<string> unitFieldProperties = UnitFields.GetUnitFieldsForUnitType(unit.UnitId);
+                    IReadOnlyList<string> unitFieldProperties = Abstractions.UnitFields.GetUnitFieldsForUnitType(unit.UnitId);
 
                     if (unitFieldProperties.Contains("waypoint"))
                     {

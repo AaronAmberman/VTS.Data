@@ -1197,7 +1197,7 @@ namespace VTS.Data.Abstractions
                 // process unit fields
                 VtsObject unitFields = new VtsObject() { Name = KeywordStrings.UnitFields, IndentDepth = 3 };
 
-                List<string> propertiesForUnitFields = UnitFields.GetUnitFieldsForUnitType(unitSpawner.UnitId);
+                IReadOnlyList<string> propertiesForUnitFields = UnitFields.GetUnitFieldsForUnitType(unitSpawner.UnitId);
                 
                 foreach (string property in propertiesForUnitFields)
                 {
