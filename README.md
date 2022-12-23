@@ -101,7 +101,7 @@ This namespace contain types that attempt to add even more structure to the data
 This cloneable type contains all the magic needed for this namespace. Not only is it the outer container but it also houses the read and save methods that interpret data from the *Abstractions* namespace.
 
 #### X,Y,Z Position Data Warning
-I could not quite get the string formatting to work correctly going from a string to a Single back to a string when interpreting the data and writing it again. So some of the positions have rounded data down to 3 decimal places, some don't. It is on the todo list but not letting good get in the way of progress and getting some work done on the [mission assistant](https://github.com/AaronAmberman/VTOLVR-MissionAssistant.git).
+I could not quite get the string formatting to work correctly going from a string to a Single back to a string when interpreting the data and writing it again. So some of the positions have rounded data down to 3 decimal places, some don't. It is on the todo list but not letting perfect get in the way of good and getting some work done on the [mission assistant](https://github.com/AaronAmberman/VTOLVR-MissionAssistant.git).
 
 *Note: you will notice a lot of duplicated types between the Abstraction namespace and the Runtime namespace. I thought this design would be better in terms of how I was trying to layer the data interpretation. Though I probably could have made the Runtime types inherit the Abstraction types if I would have made the Clone method virtual. Maybe something for the future but no real plans there.*
 
