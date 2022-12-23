@@ -22,9 +22,6 @@ namespace VTS.File
             if (string.IsNullOrWhiteSpace(file))
                 throw new ArgumentNullException(nameof(file));
 
-            if (!System.IO.File.Exists(file))
-                throw new ArgumentException("File must exist!");
-
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
 

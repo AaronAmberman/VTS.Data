@@ -9,7 +9,6 @@ namespace VTS.Data.Runtime
     public class CustomScenario : ICloneable
     {
         // todo : map weapon types for all aircraft
-        // todo : add Action<string> property where we can push warnings to so they the consuming application may do something with them
         // todo: move ALL strings into the KeywordStrings file
 
         #region Fields
@@ -69,6 +68,12 @@ namespace VTS.Data.Runtime
         /// <summary>Gets or sets whether or not there was a read or write error.</summary>
         public bool HasError { get; set; }
 
+        /// <summary>
+        /// Gets or sets the action that the API can push warnings to so the consuming application can do as it sees fit with the warnings.
+        /// Default is to just write the warnings to the Debug console.
+        /// </summary>
+        public Action<string> WarningAction { get; set; }
+
         #endregion
 
         #region Constructors
@@ -76,6 +81,7 @@ namespace VTS.Data.Runtime
         /// <summary>Initializes a new instance of the <see cref="CustomScenario"/> class.</summary>
         public CustomScenario()
         {
+            WarningAction = WriteWarning;
         }
 
         /// <summary>Initializes a new instance of the <see cref="CustomScenario"/> class.</summary>
@@ -86,6 +92,8 @@ namespace VTS.Data.Runtime
         {
             if (string.IsNullOrWhiteSpace(scenario.File))
                 throw new ArgumentException("Abstraction.CustomScenario.File cannot be null, empty of consist of white-space characters only.");
+
+            WarningAction = WriteWarning;
 
             customScenario = scenario;
 
@@ -100,6 +108,8 @@ namespace VTS.Data.Runtime
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException("path cannot be null, empty of consist of white-space characters only.");
+
+            WarningAction = WriteWarning;
 
             customScenario = Abstractions.CustomScenario.ReadVtsFile(path);
 
@@ -220,6 +230,11 @@ namespace VTS.Data.Runtime
 
             if (!customScenario.HasError)
                 ReadData();
+        }
+
+        private void WriteWarning(string warning)
+        {
+            Debug.WriteLine(warning);
         }
 
         private void ReadData()
@@ -419,7 +434,7 @@ namespace VTS.Data.Runtime
 
                         if (match == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: waypoint {id} referenced on unit [unitInstanceID:{us.UnitInstanceId}] could not be found by id. No matching waypoint in the Waypoints collection.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: waypoint {id} referenced on unit [unitInstanceID:{us.UnitInstanceId}] could not be found by id. No matching waypoint in the Waypoints collection.");
                         }
                         else
                         {
@@ -457,7 +472,7 @@ namespace VTS.Data.Runtime
 
                             if (carrierSpawn == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the carrier unit {u.UnitInstanceId} referenced unit {unitId} and that unit could not be found in the collection of Units.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the carrier unit {u.UnitInstanceId} referenced unit {unitId} and that unit could not be found in the collection of Units.");
                             }
                             else
                             {
@@ -497,7 +512,7 @@ namespace VTS.Data.Runtime
 
                             if (index > Bases.Count)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the RTB destination {index} on unit {u.UnitInstanceId} could not be found in the list of Bases as the index was greater than the number of bases.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the RTB destination {index} on unit {u.UnitInstanceId} could not be found in the list of Bases as the index was greater than the number of bases.");
                             }
                             else
                             {
@@ -515,7 +530,7 @@ namespace VTS.Data.Runtime
 
                             if (rtb == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Units.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Units.");
                             }
                             else
                             {
@@ -540,7 +555,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Units.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Units.");
                             }
                             else
                             {
@@ -553,7 +568,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
                             }
                             else
                             {
@@ -578,7 +593,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the refuelWptID {customScenario.RefuelWaypointId} could not be found in the list of Units.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the refuelWptID {customScenario.RefuelWaypointId} could not be found in the list of Units.");
                             }
                             else
                             {
@@ -592,7 +607,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the refuelWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the refuelWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
                             }
                             else
                             {
@@ -671,7 +686,7 @@ namespace VTS.Data.Runtime
 
                         if (conditional == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references conditional {te.Conditional.Value} and that conditional could not be found in the list of Conditionals.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references conditional {te.Conditional.Value} and that conditional could not be found in the list of Conditionals.");
                         }
                         else
                         {
@@ -685,7 +700,7 @@ namespace VTS.Data.Runtime
 
                         if (waypoint == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references waypoint {te.Waypoint.Value} and that waypoint could not be found in the list of Waypoints.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references waypoint {te.Waypoint.Value} and that waypoint could not be found in the list of Waypoints.");
                         }
                         else
                         {
@@ -713,7 +728,7 @@ namespace VTS.Data.Runtime
 
                             if (trigEve == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
                             }
                             else
                             {
@@ -749,7 +764,7 @@ namespace VTS.Data.Runtime
 
                         if (conditional == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional {e.Conditional} and that conditional could not be found in the list of Conditionals.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional {e.Conditional} and that conditional could not be found in the list of Conditionals.");
                         }
                         else
                         {
@@ -762,7 +777,7 @@ namespace VTS.Data.Runtime
 
                             if (conditional == null)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional {e.Conditional} and that exit conditional could not be found in the list of Conditionals.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional {e.Conditional} and that exit conditional could not be found in the list of Conditionals.");
                             }
                             else
                             {
@@ -916,7 +931,7 @@ namespace VTS.Data.Runtime
 
                     if (unit == null)
                     {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit group {group} references unit {unitId} and that unit could not be found in the list of Units.");
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit group {group} references unit {unitId} and that unit could not be found in the list of Units.");
 
                         continue; // move on as no match was found
                     }
@@ -938,14 +953,14 @@ namespace VTS.Data.Runtime
                         {
                             if (groupData[1] != group)
                             {
-                                Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
 
                                 continue;
                             }
                         }
                         else
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
 
                             continue;
                         }
@@ -953,7 +968,7 @@ namespace VTS.Data.Runtime
 
                     // check duplicity, should be ok to check the instance because all instances come from the Units collection
                     if (groupGrouping.Units.Contains(unit))
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
                     else
                         groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
                 }
@@ -994,7 +1009,7 @@ namespace VTS.Data.Runtime
 
                 if (unit == null)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references unit {et.TargetId} and that unit could not be found in the list of Units.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references unit {et.TargetId} and that unit could not be found in the list of Units.");
                 }
                 else
                 {
@@ -1007,7 +1022,7 @@ namespace VTS.Data.Runtime
 
                 if (sequence == null)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
                 }
                 else
                 {
@@ -1104,7 +1119,7 @@ namespace VTS.Data.Runtime
 
                         if (staticObject == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references static object {comp.ObjectReference.Value} and that static object could not be found in the list of StaticObjects.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references static object {comp.ObjectReference.Value} and that static object could not be found in the list of StaticObjects.");
                         }
                         else
                         {
@@ -1124,7 +1139,7 @@ namespace VTS.Data.Runtime
 
                     if (globalValue == null)
                     {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references global value {comp.GlobalValue} and that global value could not be found in the list of GlobalValues.");
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references global value {comp.GlobalValue} and that global value could not be found in the list of GlobalValues.");
                     }
                     else
                     {
@@ -1138,7 +1153,7 @@ namespace VTS.Data.Runtime
 
                     if (unit == null)
                     {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {comp.Unit} and that unit could not be found in the list of Units.");
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {comp.Unit} and that unit could not be found in the list of Units.");
                     }
                     else
                     {
@@ -1158,7 +1173,7 @@ namespace VTS.Data.Runtime
 
                         if (u == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {id} in the unit list {comp.UnitList} and that unit could not be found in the list of Units.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {id} in the unit list {comp.UnitList} and that unit could not be found in the list of Units.");
                         }
                         else
                         {
@@ -1189,7 +1204,7 @@ namespace VTS.Data.Runtime
 
                         if (item == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: computation {com.Id} references other computations in its factors property. Computation {id} in the factors list could not be found in the list of compuations for conditional {conditional.Id}.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: computation {com.Id} references other computations in its factors property. Computation {id} in the factors list could not be found in the list of compuations for conditional {conditional.Id}.");
                         }
                         else
                         {
@@ -1234,7 +1249,7 @@ namespace VTS.Data.Runtime
 
                     if (unit == null)
                     {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references unit {id} as a waypoint. The unit could not be found in the list of Units.");
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references unit {id} as a waypoint. The unit could not be found in the list of Units.");
                     }
                     else
                     {
@@ -1249,7 +1264,7 @@ namespace VTS.Data.Runtime
 
                     if (waypoint == null)
                     {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references waypoint {id} as a waypoint. The waypoint could not be found in the list of Waypoints.");
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references waypoint {id} as a waypoint. The waypoint could not be found in the list of Waypoints.");
                     }
                     else
                     {
@@ -1278,7 +1293,7 @@ namespace VTS.Data.Runtime
 
                 if (conditional == null)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a fail conditional {o.Fields.FailConditional.Value} and that conditional could not be found in the list of Conditionals.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a fail conditional {o.Fields.FailConditional.Value} and that conditional could not be found in the list of Conditionals.");
                 }
                 else
                 {
@@ -1292,7 +1307,7 @@ namespace VTS.Data.Runtime
 
                 if (conditional == null)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a success conditional {o.Fields.SuccessConditional.Value} and that conditional could not be found in the list of Conditionals.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a success conditional {o.Fields.SuccessConditional.Value} and that conditional could not be found in the list of Conditionals.");
                 }
                 else
                 {
@@ -1306,7 +1321,7 @@ namespace VTS.Data.Runtime
 
                 if (waypoint == null)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a drop off rally point waypoint {o.Fields.DropoffRallyPoint.Value} and that waypoint could not be found in the list of Waypoints.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a drop off rally point waypoint {o.Fields.DropoffRallyPoint.Value} and that waypoint could not be found in the list of Waypoints.");
                 }
                 else
                 {
@@ -1320,7 +1335,7 @@ namespace VTS.Data.Runtime
 
                 if (unit == null)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target {o.Fields.Target.Value} and that unit could not be found in the list of Units.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target {o.Fields.Target.Value} and that unit could not be found in the list of Units.");
                 }
                 else
                 {
@@ -1334,7 +1349,7 @@ namespace VTS.Data.Runtime
 
                 if (unit == null)
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target unit {o.Fields.TargetUnit.Value} and that unit could not be found in the list of Units.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target unit {o.Fields.TargetUnit.Value} and that unit could not be found in the list of Units.");
                 }
                 else
                 {
@@ -1354,7 +1369,7 @@ namespace VTS.Data.Runtime
 
                     if (u == null)
                     {
-                        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference in targets {o.Fields.Targets} and that unit could not be found in the list of Units.");
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference in targets {o.Fields.Targets} and that unit could not be found in the list of Units.");
                     }
                     else
                     {
@@ -1400,7 +1415,7 @@ namespace VTS.Data.Runtime
 
                         if (match == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of ObjectivesOpFor.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of ObjectivesOpFor.");
                         }
                         else
                         {
@@ -1413,7 +1428,7 @@ namespace VTS.Data.Runtime
 
                         if (match == null)
                         {
-                            Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of Objectives.");
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of Objectives.");
                         }
                         else
                         {
@@ -1974,7 +1989,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a unit could not be cast as a unit. Setting TargetId to -1.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a unit could not be cast as a unit. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == "Event_Sequences")
@@ -1987,7 +2002,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a sequence could not be cast as a sequence. Setting TargetId to -1.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a sequence could not be cast as a sequence. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == "Trigger_Events")
@@ -2000,7 +2015,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a trigger event could not be cast as a trigger event. Setting TargetId to -1.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a trigger event could not be cast as a trigger event. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == "UnitGroup")
@@ -2069,7 +2084,7 @@ namespace VTS.Data.Runtime
                 }
                 else
                 {
-                    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: could not convert the Objective.Waypoint for objective [{objective.ObjectiveName}] to either a unit or a waypoint type.");
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: could not convert the Objective.Waypoint for objective [{objective.ObjectiveName}] to either a unit or a waypoint type.");
                 }
             }
 
