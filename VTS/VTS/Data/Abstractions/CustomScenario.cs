@@ -1163,6 +1163,7 @@ namespace VTS.Data.Abstractions
             if (!string.IsNullOrWhiteSpace(scenario.AllowedEquips) || scenario.AllowedEquips.Equals("none", StringComparison.OrdinalIgnoreCase))
                 cs.Properties.Add(new VtsProperty { Name = "allowedEquips", Value = scenario.AllowedEquips, IndentDepth = 1 });
 
+            // todo : will this need to be specific to the number of slots each aircraft has?
             cs.Properties.Add(new VtsProperty { Name = "forcedEquips", Value = string.IsNullOrWhiteSpace(scenario.ForcedEquips) ? ";;;;;;;;" : scenario.ForcedEquips, IndentDepth = 1 });
             cs.Properties.Add(new VtsProperty { Name = "forceEquips", Value = scenario.ForceEquips ? "True" : "False", IndentDepth = 1 });
             cs.Properties.Add(new VtsProperty { Name = "normForcedFuel", Value = scenario.NormalForcedFuel.ToString(), IndentDepth = 1 });
@@ -1246,7 +1247,7 @@ namespace VTS.Data.Abstractions
                     if (property == "defaultOrbitPoint")
                         unitFields.Properties.Add(new VtsProperty { Name = "defaultOrbitPoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultOrbitPoint) ? "null" : unitSpawner.UnitFields.DefaultOrbitPoint, IndentDepth = 4 });
                     if (property == "orbitAltitude")
-                        // this might need some kind of special formatting for a decimal number, we shall see
+                        // todo : verify if this might need some kind of special formatting for a decimal number
                         unitFields.Properties.Add(new VtsProperty { Name = "orbitAltitude", Value = unitSpawner.UnitFields.OrbitAltitude.ToString(), IndentDepth = 4 });
                     if (property == "fuel")
                         unitFields.Properties.Add(new VtsProperty { Name = "fuel", Value = unitSpawner.UnitFields.Fuel.ToString(), IndentDepth = 4 });
@@ -1259,7 +1260,7 @@ namespace VTS.Data.Abstractions
                     if (property == "parkedStartMode")
                         unitFields.Properties.Add(new VtsProperty { Name = "parkedStartMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ParkedStartMode) ? "null" : unitSpawner.UnitFields.ParkedStartMode, IndentDepth = 4 });
                     if (property == "equips")
-                        // the default value here may need to become unit specific
+                        // todo: see if the default value here may need to become unit specific
                         unitFields.Properties.Add(new VtsProperty { Name = "equips", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Equips) ? ";;;;;;" : unitSpawner.UnitFields.Equips, IndentDepth = 4 });
                     if (property == "stopToEngage")
                         unitFields.Properties.Add(new VtsProperty { Name = "stopToEngage", Value = unitSpawner.UnitFields.StopToEngage ? "True" : "False", IndentDepth = 4 });
