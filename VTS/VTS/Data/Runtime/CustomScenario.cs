@@ -9,7 +9,6 @@ namespace VTS.Data.Runtime
     public class CustomScenario : ICloneable
     {
         // todo : map weapon types for all aircraft
-        // todo: move ALL strings into the KeywordStrings file
 
         #region Fields
 
