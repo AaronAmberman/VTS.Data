@@ -4,34 +4,34 @@
     public class UnitGroup : ICloneable
     {
         #region Properties
-
-        public string Name { get; set; }
-        public string Alpha { get; set; }
-        public string Bravo { get; set; }
-        public string Charlie { get; set; }
-        public string Delta { get; set; }
-        public string Echo { get; set; }
-        public string Foxtrot { get; set; }
-        public string Golf { get; set; }
-        public string Hotel { get; set; }
-        public string India { get; set; }
-        public string Juliet { get; set; }
-        public string Kilo { get; set; }
-        public string Lima { get; set; }
-        public string Mike { get; set; }
-        public string November { get; set; }
-        public string Oscar { get; set; }
-        public string Papa { get; set; }
-        public string Quebec { get; set; }
-        public string Romeo { get; set; }
-        public string Sierra { get; set; }
-        public string Tango { get; set; }
-        public string Uniform { get; set; }
-        public string Victor { get; set; }
-        public string Whiskey { get; set; }
-        public string Xray { get; set; }
-        public string Yankee { get; set; }
-        public string Zulu { get; set; }
+                                                // References to unit groups inside VTS file
+        public string Name { get; set; }        // Allied       Enemy
+        public string Alpha { get; set; }       // 100          200
+        public string Bravo { get; set; }       // 101          201
+        public string Charlie { get; set; }     // 102          202
+        public string Delta { get; set; }       // 103          203
+        public string Echo { get; set; }        // 104          204
+        public string Foxtrot { get; set; }     // 105          205
+        public string Golf { get; set; }        // 106          206
+        public string Hotel { get; set; }       // 107          207
+        public string India { get; set; }       // 108          208
+        public string Juliet { get; set; }      // 109          209
+        public string Kilo { get; set; }        // 110          210
+        public string Lima { get; set; }        // 111          211
+        public string Mike { get; set; }        // 112          212
+        public string November { get; set; }    // 113          213
+        public string Oscar { get; set; }       // 114          214
+        public string Papa { get; set; }        // 115          215
+        public string Quebec { get; set; }      // 116          216
+        public string Romeo { get; set; }       // 117          217
+        public string Sierra { get; set; }      // 118          218
+        public string Tango { get; set; }       // 119          219
+        public string Uniform { get; set; }     // 120          220
+        public string Victor { get; set; }      // 121          221
+        public string Whiskey { get; set; }     // 122          222
+        public string Xray { get; set; }        // 123          223
+        public string Yankee { get; set; }      // 124          224
+        public string Zulu { get; set; }        // 125          225
 
         public List<UnitGroupSettings> UnitGroupSettings { get; set; } = new List<UnitGroupSettings>();
 
