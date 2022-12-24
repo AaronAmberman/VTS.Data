@@ -265,6 +265,9 @@
         public const string AlliedCarrier = "AlliedCarrier"; // 9 units
         public const string EnemyCarrier = "EnemyCarrier"; // 10 units
 
+        // units
+        public const string Aew50 = "AEW-50";
+
         // used by Raw and Abstraction namespaces for VTS object construction and recognition
         public const string Actions = "ACTIONS";
         public const string Allied = "ALLIED";

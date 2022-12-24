@@ -15,7 +15,7 @@ namespace VTS.Data.Abstractions
             {
                 Units = new List<string>
                 {
-                    "AEW-50", "AIUCAV", "ASF-30", "ASF-33", "ASF-58"
+                    "AEW-50"
                 },
                 UnitFields = new List<string>
                 {
@@ -26,11 +26,22 @@ namespace VTS.Data.Abstractions
             {
                 Units = new List<string>
                 {
+                    "AIUCAV", "ASF-30", "ASF-33", "ASF-58"
+                },
+                UnitFields = new List<string>
+                {
+                    "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable", "equips"
+                }
+            },
+            new UnitUnitFieldGrouping
+            {
+                Units = new List<string>
+                {
                     "ABomberAI", "AV-42CAI"
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
+                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable", "equips"
                 }
             },
             new UnitUnitFieldGrouping
@@ -52,14 +63,36 @@ namespace VTS.Data.Abstractions
                 },
                 UnitFields = new List<string>
                 {
-                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable"
+                    "unitGroup", "voiceProfile", "playerCommandsMode", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "defaultRadarEnabled", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable", "equips"
                 }
             },
             new UnitUnitFieldGrouping
             {
                 Units = new List<string>
                 {
-                    "EBomberAI", "GAV-25", "KC-49", "MQ-31"
+                    "MQ-31"
+                },
+                UnitFields = new List<string>
+                {
+                    "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable", "equips"
+                }
+            },
+            new UnitUnitFieldGrouping
+            {
+                Units = new List<string>
+                {
+                    "EBomberAI", "GAV-25",
+                },
+                UnitFields = new List<string>
+                {
+                    "unitGroup", "defaultBehavior", "initialSpeed", "defaultNavSpeed", "defaultOrbitPoint", "defaultPath", "orbitAltitude", "fuel", "autoRefuel", "autoRTB", "rtbDestination", "parkedStartMode", "engageEnemies", "detectionMode", "spawnOnStart", "invincible", "receiveFriendlyDamage", "respawnable", "equips"
+                }
+            },
+            new UnitUnitFieldGrouping
+            {
+                Units = new List<string>
+                {
+                    "KC-49",
                 },
                 UnitFields = new List<string>
                 {
