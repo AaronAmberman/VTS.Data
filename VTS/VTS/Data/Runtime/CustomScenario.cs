@@ -521,7 +521,7 @@ namespace VTS.Data.Runtime
 
                             #endregion
                         }
-                        else if (u.UnitFields.ReturnToBaseDestination.StartsWith("unit")) // UnitSpawner object
+                        else if (u.UnitFields.ReturnToBaseDestination.StartsWith(KeywordStrings.Unit)) // UnitSpawner object
                         {
                             string[] values = u.UnitFields.ReturnToBaseDestination.Split(':');
                             int id = Convert.ToInt32(values[1]);
@@ -549,7 +549,7 @@ namespace VTS.Data.Runtime
                     {
                         int id = Convert.ToInt32(data[1]);
 
-                        if (data[0] == "unit")
+                        if (data[0] == KeywordStrings.Unit)
                         {
                             UnitSpawner match = Units.FirstOrDefault(w => w.UnitInstanceId == id);
 
@@ -562,7 +562,7 @@ namespace VTS.Data.Runtime
                                 ReturnToBaseWaypoint = match;
                             }
                         }
-                        else if (data[0] == "wpt")
+                        else if (data[0] == KeywordStrings.Wpt)
                         {
                             Waypoint match = Waypoints.FirstOrDefault(w => w.Id == id);
 
@@ -587,7 +587,7 @@ namespace VTS.Data.Runtime
                     {
                         int id = Convert.ToInt32(data[1]);
 
-                        if (data[0] == "unit")
+                        if (data[0] == KeywordStrings.Unit)
                         {
                             UnitSpawner match = Units.FirstOrDefault(w => w.UnitInstanceId == id);
 
@@ -601,7 +601,7 @@ namespace VTS.Data.Runtime
                             }
 
                         }
-                        else if (data[0] == "wpt")
+                        else if (data[0] == KeywordStrings.Wpt)
                         {
                             Waypoint match = Waypoints.FirstOrDefault(w => w.Id == id);
 
@@ -625,32 +625,32 @@ namespace VTS.Data.Runtime
                         Parent = this
                     };
 
-                    unitGroup.Alpha = ReadUnitGroup(ug, "Alpha", ug.Alpha);
-                    unitGroup.Bravo = ReadUnitGroup(ug, "Bravo", ug.Bravo);
-                    unitGroup.Charlie = ReadUnitGroup(ug, "Charlie", ug.Charlie);
-                    unitGroup.Delta = ReadUnitGroup(ug, "Delta", ug.Delta);
-                    unitGroup.Echo = ReadUnitGroup(ug, "Echo", ug.Echo);
-                    unitGroup.Foxtrot = ReadUnitGroup(ug, "Foxtrot", ug.Foxtrot);
-                    unitGroup.Golf = ReadUnitGroup(ug, "Golf", ug.Golf);
-                    unitGroup.Hotel = ReadUnitGroup(ug, "Hotel", ug.Hotel);
-                    unitGroup.India = ReadUnitGroup(ug, "India", ug.India);
-                    unitGroup.Juliet = ReadUnitGroup(ug, "Juliet", ug.Juliet);
-                    unitGroup.Kilo = ReadUnitGroup(ug, "Kilo", ug.Kilo);
-                    unitGroup.Lima = ReadUnitGroup(ug, "Lima", ug.Lima);
-                    unitGroup.Mike = ReadUnitGroup(ug, "Mike", ug.Mike);
-                    unitGroup.November = ReadUnitGroup(ug, "November", ug.November);
-                    unitGroup.Oscar = ReadUnitGroup(ug, "Oscar", ug.Oscar);
-                    unitGroup.Papa = ReadUnitGroup(ug, "Papa", ug.Papa);
-                    unitGroup.Quebec = ReadUnitGroup(ug, "Quebec", ug.Quebec);
-                    unitGroup.Romeo = ReadUnitGroup(ug, "Romeo", ug.Romeo);
-                    unitGroup.Sierra = ReadUnitGroup(ug, "Sierra", ug.Sierra);
-                    unitGroup.Tango = ReadUnitGroup(ug, "Tango", ug.Tango);
-                    unitGroup.Uniform = ReadUnitGroup(ug, "Uniform", ug.Uniform);
-                    unitGroup.Victor = ReadUnitGroup(ug, "Victor", ug.Victor);
-                    unitGroup.Whiskey = ReadUnitGroup(ug, "Whiskey", ug.Whiskey);
-                    unitGroup.Xray = ReadUnitGroup(ug, "Xray", ug.Xray);
-                    unitGroup.Yankee = ReadUnitGroup(ug, "Yankee", ug.Yankee);
-                    unitGroup.Zulu = ReadUnitGroup(ug, "Zulu", ug.Zulu);
+                    unitGroup.Alpha = ReadUnitGroup(ug, KeywordStrings.Alpha, ug.Alpha);
+                    unitGroup.Bravo = ReadUnitGroup(ug, KeywordStrings.Bravo, ug.Bravo);
+                    unitGroup.Charlie = ReadUnitGroup(ug, KeywordStrings.Charlie, ug.Charlie);
+                    unitGroup.Delta = ReadUnitGroup(ug, KeywordStrings.Delta, ug.Delta);
+                    unitGroup.Echo = ReadUnitGroup(ug, KeywordStrings.Echo, ug.Echo);
+                    unitGroup.Foxtrot = ReadUnitGroup(ug, KeywordStrings.Foxtrot, ug.Foxtrot);
+                    unitGroup.Golf = ReadUnitGroup(ug, KeywordStrings.Golf, ug.Golf);
+                    unitGroup.Hotel = ReadUnitGroup(ug, KeywordStrings.Hotel, ug.Hotel);
+                    unitGroup.India = ReadUnitGroup(ug, KeywordStrings.India, ug.India);
+                    unitGroup.Juliet = ReadUnitGroup(ug, KeywordStrings.Juliet, ug.Juliet);
+                    unitGroup.Kilo = ReadUnitGroup(ug, KeywordStrings.Kilo, ug.Kilo);
+                    unitGroup.Lima = ReadUnitGroup(ug, KeywordStrings.Lima, ug.Lima);
+                    unitGroup.Mike = ReadUnitGroup(ug, KeywordStrings.Mike, ug.Mike);
+                    unitGroup.November = ReadUnitGroup(ug, KeywordStrings.November, ug.November);
+                    unitGroup.Oscar = ReadUnitGroup(ug, KeywordStrings.Oscar, ug.Oscar);
+                    unitGroup.Papa = ReadUnitGroup(ug, KeywordStrings.Papa, ug.Papa);
+                    unitGroup.Quebec = ReadUnitGroup(ug, KeywordStrings.Quebec, ug.Quebec);
+                    unitGroup.Romeo = ReadUnitGroup(ug, KeywordStrings.Romeo, ug.Romeo);
+                    unitGroup.Sierra = ReadUnitGroup(ug, KeywordStrings.Sierra, ug.Sierra);
+                    unitGroup.Tango = ReadUnitGroup(ug, KeywordStrings.Tango, ug.Tango);
+                    unitGroup.Uniform = ReadUnitGroup(ug, KeywordStrings.Uniform, ug.Uniform);
+                    unitGroup.Victor = ReadUnitGroup(ug, KeywordStrings.Victor, ug.Victor);
+                    unitGroup.Whiskey = ReadUnitGroup(ug, KeywordStrings.Whiskey, ug.Whiskey);
+                    unitGroup.Xray = ReadUnitGroup(ug, KeywordStrings.Xray, ug.Xray);
+                    unitGroup.Yankee = ReadUnitGroup(ug, KeywordStrings.Yankee, ug.Yankee);
+                    unitGroup.Zulu = ReadUnitGroup(ug, KeywordStrings.Zulu, ug.Zulu);
 
                     UnitGroups.Add(unitGroup);
                 }
@@ -722,7 +722,7 @@ namespace VTS.Data.Runtime
                         EventTarget eventTarget = triggerEvent.EventInfo.EventTargets[j];
                         Abstractions.EventTarget et = te.EventInfo.EventTargets[j];
 
-                        if (eventTarget.TargetType == "Trigger_Events")
+                        if (eventTarget.TargetType == KeywordStrings.TriggerEventsProperty)
                         {
                             TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
 
@@ -944,7 +944,7 @@ namespace VTS.Data.Runtime
                      */
 
                     // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
-                    if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != "null")
+                    if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != KeywordStrings.Null)
                     {
                         string[] groupData = unit.UnitFields.UnitGroup.Split(':');
 
@@ -1003,7 +1003,7 @@ namespace VTS.Data.Runtime
                 Parent = parent
             };
 
-            if (et.TargetType == "Unit")
+            if (et.TargetType == KeywordStrings.EventTargetUnit)
             {
                 UnitSpawner unit = Units.FirstOrDefault(u => u.UnitInstanceId == et.TargetId);
 
@@ -1016,7 +1016,7 @@ namespace VTS.Data.Runtime
                     eventTarget.Target = unit;
                 }
             }
-            else if (et.TargetType == "Event_Sequences")
+            else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
             {
                 Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId); ;
 
@@ -1030,7 +1030,7 @@ namespace VTS.Data.Runtime
                 }
             }
             // references to other trigger events must be done in an outer loop because the order is not guaranteed
-            //else if (et.TargetType == "Trigger_Events")
+            //else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents)
             //{
             //    TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
 
@@ -1043,9 +1043,9 @@ namespace VTS.Data.Runtime
             //        eventTarget.Target = triggerEvent;
             //    }
             //}
-            else if (et.TargetType == "UnitGroup")
+            else if (et.TargetType == KeywordStrings.EventTargetUnitGroup)
                 eventTarget.Target = et.TargetId; // just box the int that represents the group because I am not sure how these map
-            else if (et.TargetType == "System")
+            else if (et.TargetType == KeywordStrings.System)
                 eventTarget.Target = et.TargetId; // just box up the 0 as I don't believe it is used for system
             /// more?
 
@@ -1113,7 +1113,7 @@ namespace VTS.Data.Runtime
 
                 if (!string.IsNullOrWhiteSpace(comp.Type) && comp.ObjectReference.HasValue)
                 {
-                    if (comp.Type == "SCCStaticObject")
+                    if (comp.Type == KeywordStrings.SccStaticObject)
                     {
                         StaticObject staticObject = StaticObjects.FirstOrDefault(x => x.Id == comp.ObjectReference.Value);
 
@@ -1239,11 +1239,11 @@ namespace VTS.Data.Runtime
 
             int id;
 
-            if (o.Waypoint != "null")
+            if (o.Waypoint != KeywordStrings.Null)
             {
-                if (o.Waypoint.StartsWith("unit:", StringComparison.OrdinalIgnoreCase))
+                if (o.Waypoint.StartsWith(KeywordStrings.UnitWaypoint, StringComparison.OrdinalIgnoreCase))
                 {
-                    id = Convert.ToInt32(o.Waypoint.Replace("unit:", ""));
+                    id = Convert.ToInt32(o.Waypoint.Replace(KeywordStrings.UnitWaypoint, ""));
 
                     UnitSpawner unit = Units.FirstOrDefault(x => x.UnitInstanceId == id);
 
@@ -1480,12 +1480,12 @@ namespace VTS.Data.Runtime
                 {
                     if (ReturnToBaseWaypoint is UnitSpawner unitSpawner)
                     {
-                        cs.ReturnToBaseWaypointId = $"unit:{unitSpawner.UnitInstanceId}";
+                        cs.ReturnToBaseWaypointId = $"{KeywordStrings.UnitWaypoint}{unitSpawner.UnitInstanceId}";
                     }
 
                     if (ReturnToBaseWaypoint is Waypoint waypoint)
                     {
-                        cs.ReturnToBaseWaypointId = $"wpt:{waypoint.Id}";
+                        cs.ReturnToBaseWaypointId = $"{KeywordStrings.WptWaypoint}{waypoint.Id}";
                     }
                 }
 
@@ -1493,12 +1493,12 @@ namespace VTS.Data.Runtime
                 {
                     if (RefuelWaypoint is UnitSpawner unitSpawner)
                     {
-                        cs.RefuelWaypointId = $"unit:{unitSpawner.UnitInstanceId}";
+                        cs.RefuelWaypointId = $"{KeywordStrings.UnitWaypoint}{unitSpawner.UnitInstanceId}";
                     }
 
                     if (RefuelWaypoint is Waypoint waypoint)
                     {
-                        cs.RefuelWaypointId = $"wpt:{waypoint.Id}";
+                        cs.RefuelWaypointId = $"{KeywordStrings.WptWaypoint}{waypoint.Id}";
                     }
                 }
 
@@ -1645,48 +1645,48 @@ namespace VTS.Data.Runtime
 
                     IReadOnlyList<string> unitFieldProperties = Abstractions.UnitFields.GetUnitFieldsForUnitType(unit.UnitId);
 
-                    if (unitFieldProperties.Contains("waypoint"))
+                    if (unitFieldProperties.Contains(KeywordStrings.WaypointProperty))
                     {
                         if (unit.UnitFields.Waypoint == null)
                         {
-                            uf.Waypoint = "null";
+                            uf.Waypoint = KeywordStrings.Null;
                         }
                         else
                         {
                             uf.Waypoint = unit.UnitFields.Waypoint.Id.ToString();
                         }
                     }
-                    else if (unitFieldProperties.Contains("carrierSpawns"))
+                    else if (unitFieldProperties.Contains(KeywordStrings.CarrierSpawns))
                     {
                         // do I do something to ensure the correct number of units in the property based on ship type?
-                        //if (unit.UnitId == "EscortCruiser") // 1 unit
-                        //{
-                        //}
-                        //else if (unit.UnitId == "AlliedAAShip") // 6 units
-                        //{
-                        //}
-                        //else if (unit.UnitId == "AlliedCarrier") // 9 units
-                        //{
-                        //}
-                        //else if (unit.UnitId == "EnemyCarrier") // 10 units
-                        //{
-                        //}
+                        if (unit.UnitId == KeywordStrings.EscortCruiser) // 1 unit
+                        {
+                        }
+                        else if (unit.UnitId == KeywordStrings.AlliedAaShip) // 6 units
+                        {
+                        }
+                        else if (unit.UnitId == KeywordStrings.AlliedCarrier) // 9 units
+                        {
+                        }
+                        else if (unit.UnitId == KeywordStrings.EnemyCarrier) // 10 units
+                        {
+                        }
 
                         List<string> unitsOnCarrier = unit.UnitFields.CarrierSpawns.Select(x => $"{x.Item1}:{x.Item2.UnitInstanceId}").ToList();
 
                         uf.CarrierSpawns = string.Join(';', unitsOnCarrier) + ";";
                     }
-                    else if (unitFieldProperties.Contains("rtbDestination"))
+                    else if (unitFieldProperties.Contains(KeywordStrings.RtbDestination))
                     {
                         if (unit.UnitFields.ReturnToBaseDestination is UnitSpawner u)
                         {
-                            uf.ReturnToBaseDestination = $"unit:{u.UnitInstanceId}";
+                            uf.ReturnToBaseDestination = $"{KeywordStrings.UnitWaypoint}{u.UnitInstanceId}";
                         }
                         else if (unit.UnitFields.ReturnToBaseDestination is BaseInfo bi)
                         {
                             // base references seem to be index based not id based
-                            uf.ReturnToBaseDestination = $"map:{Bases.IndexOf(bi)}";
-                            //uf.ReturnToBaseDestination = $"map:{bi.Id}";
+                            uf.ReturnToBaseDestination = $"{KeywordStrings.MapWaypoint}{Bases.IndexOf(bi)}";
+                            //uf.ReturnToBaseDestination = $"{KeywordStrings.MapWaypoint}{bi.Id}";
                         }
                     }
 
@@ -1979,7 +1979,7 @@ namespace VTS.Data.Runtime
                 TargetType = eventTarget.TargetType,
             };
 
-            if (et.TargetType == "Unit")
+            if (et.TargetType == KeywordStrings.EventTargetUnit)
             {
                 if (eventTarget.Target is UnitSpawner unit)
                 {
@@ -1992,7 +1992,7 @@ namespace VTS.Data.Runtime
                     WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a unit could not be cast as a unit. Setting TargetId to -1.");
                 }
             }
-            else if (et.TargetType == "Event_Sequences")
+            else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
             {
                 if (eventTarget.Target is Sequence sequence)
                 {
@@ -2005,7 +2005,7 @@ namespace VTS.Data.Runtime
                     WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a sequence could not be cast as a sequence. Setting TargetId to -1.");
                 }
             }
-            else if (et.TargetType == "Trigger_Events")
+            else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents)
             {
                 if (eventTarget.Target is TriggerEvent triggerEvent)
                 {
@@ -2018,11 +2018,11 @@ namespace VTS.Data.Runtime
                     WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a trigger event could not be cast as a trigger event. Setting TargetId to -1.");
                 }
             }
-            else if (et.TargetType == "UnitGroup")
+            else if (et.TargetType == KeywordStrings.EventTargetUnitGroup)
             {
                 et.TargetId = (int)eventTarget.Target; // just unbox the int that represents the group because I am not sure how these map
             }
-            else if (et.TargetType == "System")
+            else if (et.TargetType == KeywordStrings.System)
             {
                 et.TargetId = (int)eventTarget.Target; // just unbox the 0 as I don't believe it is used for system
             }
@@ -2076,7 +2076,7 @@ namespace VTS.Data.Runtime
             {
                 if (objective.Waypoint is UnitSpawner unit)
                 {
-                    obj.Waypoint = $"unit:{unit.UnitInstanceId}";
+                    obj.Waypoint = $"{KeywordStrings.UnitWaypoint}{unit.UnitInstanceId}";
                 }
                 else if (objective.Waypoint is Waypoint waypoint)
                 {

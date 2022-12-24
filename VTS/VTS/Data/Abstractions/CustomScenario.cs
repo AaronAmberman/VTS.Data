@@ -126,55 +126,55 @@ namespace VTS.Data.Abstractions
         {
             foreach (VtsProperty property in cs.Properties)
             {
-                if (property.Name == "gameVersion")
+                if (property.Name == KeywordStrings.GameVersion)
                     scenario.GameVersion = property.Value;
-                if (property.Name == "campaignID")
+                if (property.Name == KeywordStrings.CampaignId)
                     scenario.CampaignId = property.Value;
-                if (property.Name == "campaignOrderIdx")
+                if (property.Name == KeywordStrings.CampaignOrderIdx)
                     scenario.CampaignOrderIndex = Convert.ToInt32(property.Value);
-                if (property.Name == "scenarioName")
+                if (property.Name == KeywordStrings.ScenarioName)
                     scenario.ScenarioName = property.Value;
-                if (property.Name == "scenarioID")
+                if (property.Name == KeywordStrings.ScenarioId)
                     scenario.ScenarioId = property.Value;
-                if (property.Name == "scenarioDescription")
+                if (property.Name == KeywordStrings.ScenarioDescription)
                     scenario.ScenarioDescription = property.Value;
-                if (property.Name == "mapID")
+                if (property.Name == KeywordStrings.MapId)
                     scenario.MapId = property.Value;
-                if (property.Name == "vehicle")
+                if (property.Name == KeywordStrings.Vehicle)
                     scenario.Vehicle = property.Value;
-                if (property.Name == "multiplayer")
+                if (property.Name == KeywordStrings.Multiplayer)
                     scenario.Multiplayer = Convert.ToBoolean(property.Value);
-                if (property.Name == "allowedEquips")
+                if (property.Name == KeywordStrings.AllowedEquips)
                     scenario.AllowedEquips = property.Value;
-                if (property.Name == "forcedEquips")
+                if (property.Name == KeywordStrings.ForcedEquips)
                     scenario.ForcedEquips = property.Value;
-                if (property.Name == "forceEquips")
+                if (property.Name == KeywordStrings.ForceEquips)
                     scenario.ForceEquips = Convert.ToBoolean(property.Value);
-                if (property.Name == "normForcedFuel")
+                if (property.Name == KeywordStrings.NormForcedFuel)
                     scenario.NormalForcedFuel = Convert.ToInt32(property.Value);
-                if (property.Name == "equipsConfigurable")
+                if (property.Name == KeywordStrings.EquipsConfigurable)
                     scenario.EquipsConfigurable = Convert.ToBoolean(property.Value);
-                if (property.Name == "baseBudget")
+                if (property.Name == KeywordStrings.BaseBudget)
                     scenario.BaseBudget = Convert.ToInt32(property.Value);
-                if (property.Name == "isTraining")
+                if (property.Name == KeywordStrings.IsTraining)
                     scenario.IsTraining = Convert.ToBoolean(property.Value);
-                if (property.Name == "rtbWptID")
+                if (property.Name == KeywordStrings.RtbWptId)
                     scenario.ReturnToBaseWaypointId = property.Value;
-                if (property.Name == "refuelWptID")
+                if (property.Name == KeywordStrings.RefuelWptId)
                     scenario.RefuelWaypointId = property.Value;
-                if (property.Name == "infiniteAmmo")
+                if (property.Name == KeywordStrings.InfiniteAmmo)
                     scenario.InfiniteAmmo = Convert.ToBoolean(property.Value);
-                if (property.Name == "infAmmoReloadDelay")
+                if (property.Name == KeywordStrings.InfAmmoReloadDelay)
                     scenario.InfiniteAmmoReloadDelay = Convert.ToSingle(property.Value);
-                if (property.Name == "fuelDrainMult")
+                if (property.Name == KeywordStrings.FuelDrainMult)
                     scenario.FuelDrainMultiplier = Convert.ToSingle(property.Value);
-                if (property.Name == "envName")
+                if (property.Name == KeywordStrings.EnvName)
                     scenario.EnvironmentName = property.Value;
-                if (property.Name == "selectableEnv")
+                if (property.Name == KeywordStrings.SelectableEnv)
                     scenario.SelectableEnvironment = Convert.ToBoolean(property.Value);
-                if (property.Name == "qsMode")
+                if (property.Name == KeywordStrings.QsMode)
                     scenario.QuickSaveMode = property.Value;
-                if (property.Name == "qsLimit")
+                if (property.Name == KeywordStrings.QsLimit)
                     scenario.QuickSaveLimit = Convert.ToInt32(property.Value);
             }
         }
@@ -195,23 +195,23 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in unit.Properties)
                 {
-                    if (property.Name == "unitName")
+                    if (property.Name == KeywordStrings.UnitName)
                         unitSpawner.UnitName = property.Value;
-                    if (property.Name == "globalPosition")
+                    if (property.Name == KeywordStrings.GlobalPosition)
                         unitSpawner.GlobalPosition = property.Value;
-                    if (property.Name == "unitInstanceID")
+                    if (property.Name == KeywordStrings.UnitInstanceId)
                         unitSpawner.UnitInstanceId = Convert.ToInt32(property.Value);
-                    if (property.Name == "unitID")
+                    if (property.Name == KeywordStrings.UnitId)
                         unitSpawner.UnitId = property.Value;
-                    if (property.Name == "rotation")
+                    if (property.Name == KeywordStrings.Rotation)
                         unitSpawner.Rotation = property.Value;
-                    if (property.Name == "spawnChance")
+                    if (property.Name == KeywordStrings.SpawnChance)
                         unitSpawner.SpawnChance = Convert.ToInt32(property.Value);
-                    if (property.Name == "lastValidPlacement")
+                    if (property.Name == KeywordStrings.LastValidPlacement)
                         unitSpawner.LastValidPlacement = property.Value;
-                    if (property.Name == "editorPlacementMode")
+                    if (property.Name == KeywordStrings.EditorPlacementMode)
                         unitSpawner.EditorPlacementMode = property.Value;
-                    if (property.Name == "spawnFlags")
+                    if (property.Name == KeywordStrings.SpawnFlags)
                         unitSpawner.SpawnFlags = property.Value;
                 }
 
@@ -221,81 +221,81 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty ufProperty in unitFields.Properties)
                 {
-                    if (ufProperty.Name == "unitGroup")
-                        uf.UnitGroup = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "defaultBehavior")
-                        uf.DefaultBehavior = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "defaultWaypoint")
-                        uf.DefaultWaypoint = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "defaultPath")
-                        uf.DefaultPath = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "hullNumber")
+                    if (ufProperty.Name == KeywordStrings.UnitGroup)
+                        uf.UnitGroup = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.DefaultBehavior)
+                        uf.DefaultBehavior = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.DefaultWaypoint)
+                        uf.DefaultWaypoint = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.DefaultPath)
+                        uf.DefaultPath = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.HullNumber)
                         uf.HullNumber = Convert.ToInt32(ufProperty.Value);
-                    if (ufProperty.Name == "engageEnemies")
+                    if (ufProperty.Name == KeywordStrings.EngageEnemies)
                         uf.EngageEnemies = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "detectionMode")
-                        uf.DetectionMode = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "spawnOnStart")
+                    if (ufProperty.Name == KeywordStrings.DetectionMode)
+                        uf.DetectionMode = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.SpawnOnStart)
                         uf.SpawnOnStart = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "invincible")
+                    if (ufProperty.Name == KeywordStrings.Invincible)
                         uf.Invincible = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "carrierSpawns")
-                        uf.CarrierSpawns = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "radarUnits")
-                        uf.RadarUnits = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "allowReload")
+                    if (ufProperty.Name == KeywordStrings.CarrierSpawns)
+                        uf.CarrierSpawns = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.RadarUnits)
+                        uf.RadarUnits = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.AllowReload)
                         uf.AllowReload = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "reloadTime")
+                    if (ufProperty.Name == KeywordStrings.ReloadTime)
                         uf.ReloadTime = Convert.ToInt32(ufProperty.Value);
-                    if (ufProperty.Name == "combatTarget")
+                    if (ufProperty.Name == KeywordStrings.CombatTarget)
                         uf.CombatTarget = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "moveSpeed")
-                        uf.MoveSpeed = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "behavior")
-                        uf.Behavior = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "waypoint")
-                        uf.Waypoint = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "voiceProfile")
-                        uf.VoiceProfile = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "playerCommandsMode")
+                    if (ufProperty.Name == KeywordStrings.MoveSpeed)
+                        uf.MoveSpeed = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.Behavior)
+                        uf.Behavior = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.WaypointProperty)
+                        uf.Waypoint = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.VoiceProfile)
+                        uf.VoiceProfile = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.PlayerCommandsMode)
                         uf.PlayerCommandsMode = ufProperty.Value;
-                    if (ufProperty.Name == "initialSpeed")
+                    if (ufProperty.Name == KeywordStrings.InitialSpeed)
                         uf.InitialSpeed = Convert.ToInt32(ufProperty.Value);
-                    if (ufProperty.Name == "defaultNavSpeed")
+                    if (ufProperty.Name == KeywordStrings.DefaultNavSpeed)
                         uf.DefaultNavSpeed = Convert.ToInt32(ufProperty.Value);
-                    if (ufProperty.Name == "defaultOrbitPoint")
-                        uf.DefaultOrbitPoint = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "orbitAltitude")
+                    if (ufProperty.Name == KeywordStrings.DefaultOrbitPoint)
+                        uf.DefaultOrbitPoint = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.OrbitAltitude)
                         uf.OrbitAltitude = Convert.ToSingle(ufProperty.Value);
-                    if (ufProperty.Name == "fuel")
+                    if (ufProperty.Name == KeywordStrings.Fuel)
                         uf.Fuel = Convert.ToInt32(ufProperty.Value);
-                    if (ufProperty.Name == "autoRefuel")
+                    if (ufProperty.Name == KeywordStrings.AutoRefuel)
                         uf.AutoRefuel = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "autoRTB")
+                    if (ufProperty.Name == KeywordStrings.AutoRtb)
                         uf.AutoReturnToBase = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "rtbDestination")
+                    if (ufProperty.Name == KeywordStrings.RtbDestination)
                         uf.ReturnToBaseDestination = ufProperty.Value;
-                    if (ufProperty.Name == "parkedStartMode")
-                        uf.ParkedStartMode = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "equips")
-                        uf.Equips = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "stopToEngage")
+                    if (ufProperty.Name == KeywordStrings.ParkedStartMode)
+                        uf.ParkedStartMode = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.Equips)
+                        uf.Equips = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.StopToEngage)
                         uf.StopToEngage = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "startMode")
-                        uf.StartMode = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "receiveFriendlyDamage")
+                    if (ufProperty.Name == KeywordStrings.StartMode)
+                        uf.StartMode = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.ReceiveFriendlyDamage)
                         uf.ReceiveFriendlyDamage = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "defaultRadarEnabled")
+                    if (ufProperty.Name == KeywordStrings.DefaultRadarEnabled)
                         uf.DefaultRadarEnabled = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "awacsVoiceProfile")
-                        uf.AwacsVoiceProfile = ufProperty.Value == "null" ? null : ufProperty.Value;
-                    if (ufProperty.Name == "commsEnabled")
+                    if (ufProperty.Name == KeywordStrings.AwacsVoiceProfile)
+                        uf.AwacsVoiceProfile = ufProperty.Value == KeywordStrings.Null ? null : ufProperty.Value;
+                    if (ufProperty.Name == KeywordStrings.CommsEnabled)
                         uf.CommsEnabled = Convert.ToBoolean(ufProperty.Value);
-                    if (ufProperty.Name == "defaultShotsPerSalvo")
+                    if (ufProperty.Name == KeywordStrings.DefaultShotsPerSalvo)
                         uf.DefaultShotsPerSalvo = Convert.ToInt32(ufProperty.Value);
-                    if (ufProperty.Name == "rippleRate")
+                    if (ufProperty.Name == KeywordStrings.RippleRate)
                         uf.RippleRate = Convert.ToInt32(ufProperty.Value);
-                    if (ufProperty.Name == "respawnable")
+                    if (ufProperty.Name == KeywordStrings.Respawnable)
                         uf.Respawnable = Convert.ToBoolean(ufProperty.Value);
                 }
 
@@ -327,15 +327,15 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in path.Properties)
                 {
-                    if (property.Name == "id")
+                    if (property.Name == KeywordStrings.Id)
                         p.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "name")
+                    if (property.Name == KeywordStrings.Name)
                         p.Name = property.Value;
-                    if (property.Name == "loop")
+                    if (property.Name == KeywordStrings.Loop)
                         p.Loop = Convert.ToBoolean(property.Value);
-                    if (property.Name == "points")
+                    if (property.Name == KeywordStrings.Points)
                         p.Points = property.Value;
-                    if (property.Name == "pathMode")
+                    if (property.Name == KeywordStrings.PathMode)
                         p.PathMode = property.Value;
                 }
 
@@ -364,11 +364,11 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in waypoint.Properties)
                 {
-                    if (property.Name == "id")
+                    if (property.Name == KeywordStrings.Id)
                         w.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "name")
+                    if (property.Name == KeywordStrings.Name)
                         w.Name = property.Value;
-                    if (property.Name == "globalPoint")
+                    if (property.Name == KeywordStrings.GlobalPoint)
                         w.GlobalPoint = property.Value;
                 }
 
@@ -393,57 +393,57 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in ug.Properties)
                 {
-                    if (property.Name == "Alpha")
+                    if (property.Name == KeywordStrings.Alpha)
                         unitGroup.Alpha = property.Value;
-                    if (property.Name == "Bravo")
+                    if (property.Name == KeywordStrings.Bravo)
                         unitGroup.Bravo = property.Value;
-                    if (property.Name == "Charlie")
+                    if (property.Name == KeywordStrings.Charlie)
                         unitGroup.Charlie = property.Value;
-                    if (property.Name == "Delta")
+                    if (property.Name == KeywordStrings.Delta)
                         unitGroup.Delta = property.Value;
-                    if (property.Name == "Echo")
+                    if (property.Name == KeywordStrings.Echo)
                         unitGroup.Echo = property.Value;
-                    if (property.Name == "Foxtrot")
+                    if (property.Name == KeywordStrings.Foxtrot)
                         unitGroup.Foxtrot = property.Value;
-                    if (property.Name == "Golf")
+                    if (property.Name == KeywordStrings.Golf)
                         unitGroup.Golf = property.Value;
-                    if (property.Name == "Hotel")
+                    if (property.Name == KeywordStrings.Hotel)
                         unitGroup.Hotel = property.Value;
-                    if (property.Name == "India")
+                    if (property.Name == KeywordStrings.India)
                         unitGroup.India = property.Value;
-                    if (property.Name == "Juliet")
+                    if (property.Name == KeywordStrings.Juliet)
                         unitGroup.Juliet = property.Value;
-                    if (property.Name == "Kilo")
+                    if (property.Name == KeywordStrings.Kilo)
                         unitGroup.Kilo = property.Value;
-                    if (property.Name == "Lima")
+                    if (property.Name == KeywordStrings.Lima)
                         unitGroup.Lima = property.Value;
-                    if (property.Name == "Mike")
+                    if (property.Name == KeywordStrings.Mike)
                         unitGroup.Mike = property.Value;
-                    if (property.Name == "November")
+                    if (property.Name == KeywordStrings.November)
                         unitGroup.November = property.Value;
-                    if (property.Name == "Oscar")
+                    if (property.Name == KeywordStrings.Oscar)
                         unitGroup.Oscar = property.Value;
-                    if (property.Name == "Papa")
+                    if (property.Name == KeywordStrings.Papa)
                         unitGroup.Papa = property.Value;
-                    if (property.Name == "Quebec")
+                    if (property.Name == KeywordStrings.Quebec)
                         unitGroup.Quebec = property.Value;
-                    if (property.Name == "Romeo")
+                    if (property.Name == KeywordStrings.Romeo)
                         unitGroup.Romeo = property.Value;
-                    if (property.Name == "Sierra")
+                    if (property.Name == KeywordStrings.Sierra)
                         unitGroup.Sierra = property.Value;
-                    if (property.Name == "Tango")
+                    if (property.Name == KeywordStrings.Tango)
                         unitGroup.Tango = property.Value;
-                    if (property.Name == "Uniform")
+                    if (property.Name == KeywordStrings.Uniform)
                         unitGroup.Uniform = property.Value;
-                    if (property.Name == "Victor")
+                    if (property.Name == KeywordStrings.Victor)
                         unitGroup.Victor = property.Value;
-                    if (property.Name == "Whiskey")
+                    if (property.Name == KeywordStrings.Whiskey)
                         unitGroup.Whiskey = property.Value;
-                    if (property.Name == "Xray")
+                    if (property.Name == KeywordStrings.Xray)
                         unitGroup.Xray = property.Value;
-                    if (property.Name == "Yankee")
+                    if (property.Name == KeywordStrings.Yankee)
                         unitGroup.Yankee = property.Value;
-                    if (property.Name == "Zulu")
+                    if (property.Name == KeywordStrings.Zulu)
                         unitGroup.Zulu = property.Value;
                 }
 
@@ -456,7 +456,7 @@ namespace VTS.Data.Abstractions
 
                     foreach (VtsProperty settingProperty in child.Properties)
                     {
-                        if (settingProperty.Name == "syncAltSpawns")
+                        if (settingProperty.Name == KeywordStrings.SyncAltSpawns)
                             unitGroupSettings.SyncAltSpawns = settingProperty.Value;
                     }
 
@@ -483,13 +483,13 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in teg.Properties)
                 {
-                    if (property.Name == "groupName")
+                    if (property.Name == KeywordStrings.GroupName)
                         timedEventGroup.GroupName = property.Value;
-                    if (property.Name == "groupID")
+                    if (property.Name == KeywordStrings.GroupId)
                         timedEventGroup.GroupId = Convert.ToInt32(property.Value);
-                    if (property.Name == "beginImmediately")
+                    if (property.Name == KeywordStrings.BeginImmediately)
                         timedEventGroup.BeginImmediately = Convert.ToBoolean(property.Value);
-                    if (property.Name == "initialDelay")
+                    if (property.Name == KeywordStrings.InitialDelay)
                         timedEventGroup.InitialDelay = Convert.ToInt32(property.Value);
                 }
 
@@ -499,9 +499,9 @@ namespace VTS.Data.Abstractions
 
                     foreach (VtsProperty property in tei.Properties)
                     {
-                        if (property.Name == "eventName")
+                        if (property.Name == KeywordStrings.EventName)
                             timedEventInfo.EventName = property.Value;
-                        if (property.Name == "time")
+                        if (property.Name == KeywordStrings.Time)
                             timedEventInfo.Time = Convert.ToInt32(property.Value);
                     }
 
@@ -533,25 +533,25 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in te.Properties)
                 {
-                    if (property.Name == "id")
+                    if (property.Name == KeywordStrings.Id)
                         triggerEvent.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "enabled")
+                    if (property.Name == KeywordStrings.Enabled)
                         triggerEvent.Enabled = Convert.ToBoolean(property.Value);
-                    if (property.Name == "triggerType")
+                    if (property.Name == KeywordStrings.TriggerType)
                         triggerEvent.TriggerType = property.Value;
-                    if (property.Name == "conditional")
+                    if (property.Name == KeywordStrings.ConditionalProperty)
                         triggerEvent.Conditional = Convert.ToInt32(property.Value);
-                    if (property.Name == "eventName")
+                    if (property.Name == KeywordStrings.EventName)
                         triggerEvent.EventName = property.Value;
-                    if (property.Name == "waypoint")
+                    if (property.Name == KeywordStrings.WaypointProperty)
                         triggerEvent.Waypoint = Convert.ToInt32(property.Value);
-                    if (property.Name == "radius")
+                    if (property.Name == KeywordStrings.Radius)
                         triggerEvent.Radius = Convert.ToSingle(property.Value);
-                    if (property.Name == "sphericalRadius")
+                    if (property.Name == KeywordStrings.SphericalRadius)
                         triggerEvent.SphericalRadius = Convert.ToBoolean(property.Value);
-                    if (property.Name == "triggerMode")
+                    if (property.Name == KeywordStrings.TriggerMode)
                         triggerEvent.TriggerMode = property.Value;
-                    if (property.Name == "proxyMode")
+                    if (property.Name == KeywordStrings.ProxyMode)
                         triggerEvent.ProxyMode = property.Value;
                 }
 
@@ -609,13 +609,13 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in so.Properties)
                 {
-                    if (property.Name == "prefabID")
+                    if (property.Name == KeywordStrings.PrefabId)
                         staticObject.PrefabId = property.Value;
-                    if (property.Name == "id")
+                    if (property.Name == KeywordStrings.Id)
                         staticObject.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "globalPos")
+                    if (property.Name == KeywordStrings.GlobalPos)
                         staticObject.GlobalPosition = property.Value;
-                    if (property.Name == "rotation")
+                    if (property.Name == KeywordStrings.Rotation)
                         staticObject.Rotation = property.Value;
                 }
 
@@ -655,9 +655,9 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in ca.Properties)
                 {
-                    if (property.Name == "id")
+                    if (property.Name == KeywordStrings.Id)
                         conditionalAction.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "name")
+                    if (property.Name == KeywordStrings.Name)
                         conditionalAction.Name = property.Value;
                 }
 
@@ -666,9 +666,9 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in bb.Properties)
                 {
-                    if (property.Name == "blockName")
+                    if (property.Name == KeywordStrings.BlockName)
                         baseBlock.BlockName = property.Value;
-                    if (property.Name == "blockId")
+                    if (property.Name == KeywordStrings.BlockId)
                         baseBlock.BlockId = Convert.ToInt32(property.Value);
                 }
 
@@ -684,9 +684,9 @@ namespace VTS.Data.Abstractions
 
                         foreach (VtsProperty property in baseBlockChild.Properties)
                         {
-                            if (property.Name == "blockName")
+                            if (property.Name == KeywordStrings.BlockName)
                                 elseIfBlock.BlockName = property.Value;
-                            if (property.Name == "blockId")
+                            if (property.Name == KeywordStrings.BlockId)
                                 elseIfBlock.BlockId = Convert.ToInt32(property.Value);
                         }
 
@@ -728,13 +728,13 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in es.Properties)
                 {
-                    if (property.Name == "id")
+                    if (property.Name == KeywordStrings.Id)
                         sequence.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "sequenceName")
+                    if (property.Name == KeywordStrings.SequenceName)
                         sequence.SequenceName = property.Value;
-                    if (property.Name == "startImmediately")
+                    if (property.Name == KeywordStrings.StartImmediately)
                         sequence.StartImmediately = Convert.ToBoolean(property.Value);
-                    if (property.Name == "whileLoop")
+                    if (property.Name == KeywordStrings.WhileLoop)
                         sequence.WhileLoop = Convert.ToBoolean(property.Value);
                 }
 
@@ -744,13 +744,13 @@ namespace VTS.Data.Abstractions
 
                     foreach (VtsProperty property in e.Properties)
                     {
-                        if (property.Name == "conditional")
+                        if (property.Name == KeywordStrings.ConditionalProperty)
                             @event.Conditional = Convert.ToInt32(property.Value);
-                        if (property.Name == "delay")
+                        if (property.Name == KeywordStrings.Delay)
                             @event.Delay = Convert.ToInt32(property.Value);
-                        if (property.Name == "nodeName")
+                        if (property.Name == KeywordStrings.NodeName)
                             @event.NodeName = property.Value;
-                        if (property.Name == "exitConditional")
+                        if (property.Name == KeywordStrings.ExitConditional)
                             @event.ExitConditional = Convert.ToInt32(property.Value);
                     }
 
@@ -782,11 +782,11 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in b.Properties)
                 {
-                    if (property.Name == "id")
+                    if (property.Name == KeywordStrings.Id)
                         baseInfo.Id = Convert.ToInt32(property.Value);
-                    if (property.Name == "overrideBaseName")
+                    if (property.Name == KeywordStrings.OverrideBaseName)
                         baseInfo.OverrideBaseName = property.Value;
-                    if (property.Name == "baseTeam")
+                    if (property.Name == KeywordStrings.BaseTeam)
                         baseInfo.BaseTeam = property.Value;
                 }
 
@@ -838,11 +838,11 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in bn.Properties)
                 {
-                    if (property.Name == "text")
+                    if (property.Name == KeywordStrings.Text)
                         briefingNote.Text = property.Value;
-                    if (property.Name == "imagePath")
+                    if (property.Name == KeywordStrings.ImagePath)
                         briefingNote.ImagePath = property.Value;
-                    if (property.Name == "audioClipPath")
+                    if (property.Name == KeywordStrings.AudioClipPath)
                         briefingNote.AudioClipPath = property.Value;
                 }
 
@@ -878,11 +878,11 @@ namespace VTS.Data.Abstractions
 
             foreach (VtsProperty property in con.Properties)
             {
-                if (property.Name == "id")
+                if (property.Name == KeywordStrings.Id)
                     conditional.Id = Convert.ToInt32(property.Value);
-                if (property.Name == "outputNodePos")
+                if (property.Name == KeywordStrings.OutputNodePos)
                     conditional.OutputNodePosition = property.Value;
-                if (property.Name == "root")
+                if (property.Name == KeywordStrings.Root)
                     conditional.Root = Convert.ToInt32(property.Value);
             }
 
@@ -892,41 +892,41 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty vtsProperty in child.Properties)
                 {
-                    if (vtsProperty.Name == "id")
+                    if (vtsProperty.Name == KeywordStrings.Id)
                         computation.Id = Convert.ToInt32(vtsProperty.Value);
-                    if (vtsProperty.Name == "type")
+                    if (vtsProperty.Name == KeywordStrings.Type)
                         computation.Type = vtsProperty.Value;
-                    if (vtsProperty.Name == "uiPos")
+                    if (vtsProperty.Name == KeywordStrings.UiPos)
                         computation.UiPosition = vtsProperty.Value;
-                    if (vtsProperty.Name == "unitGroup")
+                    if (vtsProperty.Name == KeywordStrings.UnitGroup)
                         computation.UnitGroup = vtsProperty.Value;
-                    if (vtsProperty.Name == "methodName")
+                    if (vtsProperty.Name == KeywordStrings.MethodName)
                         computation.MethodName = vtsProperty.Value;
-                    if (vtsProperty.Name == "methodParameters")
+                    if (vtsProperty.Name == KeywordStrings.MethodParameters)
                         computation.MethodParameters = vtsProperty.Value;
-                    if (vtsProperty.Name == "isNot")
+                    if (vtsProperty.Name == KeywordStrings.IsNot)
                         computation.IsNot = Convert.ToBoolean(vtsProperty.Value);
-                    if (vtsProperty.Name == "factors")
+                    if (vtsProperty.Name == KeywordStrings.Factors)
                         computation.Factors = vtsProperty.Value;
-                    if (vtsProperty.Name == "gv")
+                    if (vtsProperty.Name == KeywordStrings.GlobalValue)
                         computation.GlobalValue = Convert.ToInt32(vtsProperty.Value);
-                    if (vtsProperty.Name == "comparison")
+                    if (vtsProperty.Name == KeywordStrings.Comparison)
                         computation.Comparison = vtsProperty.Value;
-                    if (vtsProperty.Name == "c_value")
+                    if (vtsProperty.Name == KeywordStrings.C_Value)
                         computation.CValue = Convert.ToSingle(vtsProperty.Value);
-                    if (vtsProperty.Name == "unitList")
+                    if (vtsProperty.Name == KeywordStrings.UnitList)
                         computation.UnitList = vtsProperty.Value;
-                    if (vtsProperty.Name == "objectReference")
+                    if (vtsProperty.Name == KeywordStrings.ObjectReference)
                         computation.ObjectReference = Convert.ToInt32(vtsProperty.Value);
-                    if (vtsProperty.Name == "chance")
+                    if (vtsProperty.Name == KeywordStrings.Chance)
                         computation.Chance = Convert.ToInt32(vtsProperty.Value);
-                    if (vtsProperty.Name == "vehicleControl")
+                    if (vtsProperty.Name == KeywordStrings.VehicleControl)
                         computation.VehicleControl = vtsProperty.Value;
-                    if (vtsProperty.Name == "controlCondition")
+                    if (vtsProperty.Name == KeywordStrings.ControlCondition)
                         computation.ControlCondition = vtsProperty.Value;
-                    if (vtsProperty.Name == "controlValue")
+                    if (vtsProperty.Name == KeywordStrings.ControlValue)
                         computation.ControlValue = Convert.ToSingle(vtsProperty.Value);
-                    if (vtsProperty.Name == "unit")
+                    if (vtsProperty.Name == KeywordStrings.Unit)
                         computation.Unit = Convert.ToInt32(vtsProperty.Value);
                 }
 
@@ -942,7 +942,7 @@ namespace VTS.Data.Abstractions
 
             foreach (VtsProperty property in ei.Properties)
             {
-                if (property.Name == "eventName")
+                if (property.Name == KeywordStrings.EventName)
                     eventInfo.EventName = property.Value;
             }
 
@@ -960,13 +960,13 @@ namespace VTS.Data.Abstractions
 
             foreach (VtsProperty property in et.Properties)
             {
-                if (property.Name == "targetType")
+                if (property.Name == KeywordStrings.TargetType)
                     eventTarget.TargetType = property.Value;
-                if (property.Name == "targetID")
+                if (property.Name == KeywordStrings.TargetId)
                     eventTarget.TargetId = Convert.ToInt32(property.Value);
-                if (property.Name == "eventName")
+                if (property.Name == KeywordStrings.EventName)
                     eventTarget.EventName = property.Value;
-                if (property.Name == "methodName")
+                if (property.Name == KeywordStrings.MethodName)
                     eventTarget.MethodName = property.Value;
             }
 
@@ -976,11 +976,11 @@ namespace VTS.Data.Abstractions
 
                 foreach (VtsProperty property in pi.Properties)
                 {
-                    if (property.Name == "type")
+                    if (property.Name == KeywordStrings.Type)
                         paramInfo.Type = property.Value;
-                    if (property.Name == "value")
+                    if (property.Name == KeywordStrings.Value)
                         paramInfo.Value = property.Value;
-                    if (property.Name == "name")
+                    if (property.Name == KeywordStrings.Name)
                         paramInfo.Name = property.Value;
                 }
 
@@ -990,9 +990,9 @@ namespace VTS.Data.Abstractions
 
                     foreach (VtsProperty property in pai.Properties)
                     {
-                        if (property.Name == "type")
+                        if (property.Name == KeywordStrings.Type)
                             paramAttrInfo.Type = property.Value;
-                        if (property.Name == "data")
+                        if (property.Name == KeywordStrings.Data)
                             paramAttrInfo.Data = property.Value;
                     }
 
@@ -1011,27 +1011,27 @@ namespace VTS.Data.Abstractions
 
             foreach (VtsProperty property in obj.Properties)
             {
-                if (property.Name == "objectiveName")
+                if (property.Name == KeywordStrings.ObjectiveName)
                     objective.ObjectiveName = property.Value;
-                if (property.Name == "objectiveInfo")
+                if (property.Name == KeywordStrings.ObjectiveInfo)
                     objective.ObjectiveInfo = property.Value;
-                if (property.Name == "objectiveID")
+                if (property.Name == KeywordStrings.ObjectiveId)
                     objective.ObjectiveID = Convert.ToInt32(property.Value);
-                if (property.Name == "orderID")
+                if (property.Name == KeywordStrings.OrderId)
                     objective.OrderID = Convert.ToInt32(property.Value);
-                if (property.Name == "required")
+                if (property.Name == KeywordStrings.Required)
                     objective.Required = Convert.ToBoolean(property.Value);
-                if (property.Name == "completionReward")
+                if (property.Name == KeywordStrings.CompletionReward)
                     objective.CompletionReward = Convert.ToInt32(property.Value);
-                if (property.Name == "waypoint")
-                    objective.Waypoint = property.Value; // can't be an integer because of a value like unit:19
-                if (property.Name == "autoSetWaypoint")
+                if (property.Name == KeywordStrings.WaypointProperty)
+                    objective.Waypoint = property.Value;
+                if (property.Name == KeywordStrings.AutoSetWaypoint)
                     objective.AutoSetWaypoint = Convert.ToBoolean(property.Value);
-                if (property.Name == "startMode")
+                if (property.Name == KeywordStrings.StartMode)
                     objective.StartMode = property.Value;
-                if (property.Name == "objectiveType")
+                if (property.Name == KeywordStrings.ObjectiveType)
                     objective.ObjectiveType = property.Value;
-                if (property.Name == "preReqObjectives")
+                if (property.Name == KeywordStrings.PreReqObjectives)
                     objective.PreReqObjectives = property.Value;
             }
 
@@ -1049,35 +1049,35 @@ namespace VTS.Data.Abstractions
 
                     foreach (VtsProperty property in vtsObject.Properties)
                     {
-                        if (property.Name == "successConditional")
+                        if (property.Name == KeywordStrings.SuccessConditional)
                             objectiveFields.SuccessConditional = Convert.ToInt32(property.Value);
-                        if (property.Name == "failConditional")
-                            objectiveFields.FailConditional = property.Value == "null" ? null : Convert.ToInt32(property.Value);
-                        if (property.Name == "targets")
+                        if (property.Name == KeywordStrings.FailConditional)
+                            objectiveFields.FailConditional = property.Value == KeywordStrings.Null ? null : Convert.ToInt32(property.Value);
+                        if (property.Name == KeywordStrings.Targets)
                             objectiveFields.Targets = property.Value;
-                        if (property.Name == "minRequired")
+                        if (property.Name == KeywordStrings.MinRequired)
                             objectiveFields.MinRequired = Convert.ToInt32(property.Value);
-                        if (property.Name == "perUnitReward")
+                        if (property.Name == KeywordStrings.PerUnitReward)
                             objectiveFields.PerUnitReward = Convert.ToInt32(property.Value);
-                        if (property.Name == "fullCompleteBonus")
+                        if (property.Name == KeywordStrings.FullCompleteBonus)
                             objectiveFields.FullCompletionBonus = Convert.ToInt32(property.Value);
-                        if (property.Name == "unloadRadius")
+                        if (property.Name == KeywordStrings.UnloadRadius)
                             objectiveFields.UnloadRadius = Convert.ToSingle(property.Value);
-                        if (property.Name == "dropoffRallyPt")
+                        if (property.Name == KeywordStrings.DropoffRallyPt)
                             objectiveFields.DropoffRallyPoint = Convert.ToInt32(property.Value);
-                        if (property.Name == "triggerRadius")
+                        if (property.Name == KeywordStrings.TriggerRadius)
                             objectiveFields.TriggerRadius = Convert.ToSingle(property.Value);
-                        if (property.Name == "sphericalRadius")
+                        if (property.Name == KeywordStrings.SphericalRadius)
                             objectiveFields.SphericalRadius = Convert.ToBoolean(property.Value);
-                        if (property.Name == "targetUnit")
+                        if (property.Name == KeywordStrings.TargetUnit)
                             objectiveFields.TargetUnit = Convert.ToInt32(property.Value);
-                        if (property.Name == "radius")
+                        if (property.Name == KeywordStrings.Radius)
                             objectiveFields.Radius = Convert.ToSingle(property.Value);
-                        if (property.Name == "fuelLevel")
+                        if (property.Name == KeywordStrings.FuelLevel)
                             objectiveFields.FuelLevel = Convert.ToSingle(property.Value);
-                        if (property.Name == "completionMode")
+                        if (property.Name == KeywordStrings.CompletionMode)
                             objectiveFields.CompletionMode = property.Value;
-                        if (property.Name == "target")
+                        if (property.Name == KeywordStrings.Target)
                             objectiveFields.Target = Convert.ToInt32(property.Value);
                     }
 
@@ -1150,43 +1150,43 @@ namespace VTS.Data.Abstractions
 
         private static void WriteCustomScenarioProperties(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
-            cs.Properties.Add(new VtsProperty { Name = "gameVersion", Value = scenario.GameVersion, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "campaignID", Value = scenario.CampaignId == null ? "" : scenario.CampaignId, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "campaignOrderIdx", Value = scenario.CampaignOrderIndex.ToString(), IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "scenarioName", Value = scenario.ScenarioName, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "scenarioID", Value = scenario.ScenarioId, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "scenarioDescription", Value = scenario.ScenarioDescription == null ? "" : scenario.ScenarioDescription, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "mapID", Value = scenario.MapId, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "vehicle", Value = scenario.Vehicle, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "multiplayer", Value = scenario.Multiplayer ? "True" : "False", IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.GameVersion, Value = scenario.GameVersion, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.CampaignId, Value = scenario.CampaignId == null ? "" : scenario.CampaignId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.CampaignOrderIdx, Value = scenario.CampaignOrderIndex.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.ScenarioName, Value = scenario.ScenarioName, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.ScenarioId, Value = scenario.ScenarioId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.ScenarioDescription, Value = scenario.ScenarioDescription == null ? "" : scenario.ScenarioDescription, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.MapId, Value = scenario.MapId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.Vehicle, Value = scenario.Vehicle, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.Multiplayer, Value = scenario.Multiplayer ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
 
-            if (!string.IsNullOrWhiteSpace(scenario.AllowedEquips) || scenario.AllowedEquips.Equals("none", StringComparison.OrdinalIgnoreCase))
-                cs.Properties.Add(new VtsProperty { Name = "allowedEquips", Value = scenario.AllowedEquips, IndentDepth = 1 });
+            if (!string.IsNullOrWhiteSpace(scenario.AllowedEquips) || scenario.AllowedEquips.Equals(KeywordStrings.None, StringComparison.OrdinalIgnoreCase))
+                cs.Properties.Add(new VtsProperty { Name = KeywordStrings.AllowedEquips, Value = scenario.AllowedEquips, IndentDepth = 1 });
 
             string forcedEquips = ";;;;;;;"; // AV-42C
 
-            if (scenario.Vehicle == "F/A-26B")
+            if (scenario.Vehicle == KeywordStrings.Fa26B)
                 forcedEquips = ";;;;;;;;;;;;;;;;";
 
-            if (scenario.Vehicle == "F-45A")
+            if (scenario.Vehicle == KeywordStrings.F45A)
                 forcedEquips = ";;;;;;;;;;;";
 
             // todo : I do not have the helicopter DLC so I cannot setup missions to test this data but fill this in at some point
             //if (scenario.Vehicle == "Chopper")
             //    forcedEquips = ";;;;";
 
-            cs.Properties.Add(new VtsProperty { Name = "forcedEquips", Value = string.IsNullOrWhiteSpace(scenario.ForcedEquips) ? forcedEquips : scenario.ForcedEquips, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "forceEquips", Value = scenario.ForceEquips ? "True" : "False", IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "normForcedFuel", Value = scenario.NormalForcedFuel.ToString(), IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "equipsConfigurable", Value = scenario.EquipsConfigurable ? "True" : "False", IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "baseBudget", Value = scenario.BaseBudget.ToString(), IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "isTraining", Value = scenario.IsTraining ? "True" : "False", IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "rtbWptID", Value = scenario.ReturnToBaseWaypointId == null ? "" : scenario.ReturnToBaseWaypointId, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "refuelWptID", Value = scenario.RefuelWaypointId == null ? "" : scenario.RefuelWaypointId, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "envName", Value = scenario.EnvironmentName, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "selectableEnv", Value = scenario.SelectableEnvironment ? "True" : "False", IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "qsMode", Value = scenario.QuickSaveMode, IndentDepth = 1 });
-            cs.Properties.Add(new VtsProperty { Name = "qsLimit", Value = scenario.QuickSaveLimit.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.ForcedEquips, Value = string.IsNullOrWhiteSpace(scenario.ForcedEquips) ? forcedEquips : scenario.ForcedEquips, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.ForceEquips, Value = scenario.ForceEquips ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.NormForcedFuel, Value = scenario.NormalForcedFuel.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.EquipsConfigurable, Value = scenario.EquipsConfigurable ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.BaseBudget, Value = scenario.BaseBudget.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.IsTraining, Value = scenario.IsTraining ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.RtbWptId, Value = scenario.ReturnToBaseWaypointId == null ? "" : scenario.ReturnToBaseWaypointId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.RefuelWptId, Value = scenario.RefuelWaypointId == null ? "" : scenario.RefuelWaypointId, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.EnvName, Value = scenario.EnvironmentName, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.SelectableEnv, Value = scenario.SelectableEnvironment ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.QsMode, Value = scenario.QuickSaveMode, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.QsLimit, Value = scenario.QuickSaveLimit.ToString(), IndentDepth = 1 });
         }
 
         private static void WriteUnits(CustomScenario scenario, VtsCustomScenarioObject cs)
@@ -1196,15 +1196,15 @@ namespace VTS.Data.Abstractions
             foreach (UnitSpawner unitSpawner in scenario.Units)
             {
                 VtsObject unit = new VtsObject { Name = KeywordStrings.UnitSpawner, IndentDepth = 2 };
-                unit.Properties.Add(new VtsProperty { Name = "unitName", Value = unitSpawner.UnitName, IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "globalPosition", Value = unitSpawner.GlobalPosition.ToString(), IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "unitInstanceID", Value = unitSpawner.UnitInstanceId.ToString(), IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "unitID", Value = unitSpawner.UnitId, IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "rotation", Value = unitSpawner.Rotation.ToString(), IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "spawnChance", Value = unitSpawner.SpawnChance.ToString(), IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "lastValidPlacement", Value = unitSpawner.LastValidPlacement.ToString(), IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "editorPlacementMode", Value = unitSpawner.EditorPlacementMode, IndentDepth = 3 });
-                unit.Properties.Add(new VtsProperty { Name = "spawnFlags", Value = string.IsNullOrWhiteSpace(unitSpawner.SpawnFlags) ? "" : unitSpawner.SpawnFlags, IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.UnitName, Value = unitSpawner.UnitName, IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.GlobalPosition, Value = unitSpawner.GlobalPosition.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.UnitInstanceId, Value = unitSpawner.UnitInstanceId.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.UnitId, Value = unitSpawner.UnitId, IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.Rotation, Value = unitSpawner.Rotation.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.SpawnChance, Value = unitSpawner.SpawnChance.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.LastValidPlacement, Value = unitSpawner.LastValidPlacement.ToString(), IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.EditorPlacementMode, Value = unitSpawner.EditorPlacementMode, IndentDepth = 3 });
+                unit.Properties.Add(new VtsProperty { Name = KeywordStrings.SpawnFlags, Value = string.IsNullOrWhiteSpace(unitSpawner.SpawnFlags) ? "" : unitSpawner.SpawnFlags, IndentDepth = 3 });
 
                 // process unit fields
                 VtsObject unitFields = new VtsObject() { Name = KeywordStrings.UnitFields, IndentDepth = 3 };
@@ -1213,125 +1213,125 @@ namespace VTS.Data.Abstractions
                 
                 foreach (string property in propertiesForUnitFields)
                 {
-                    if (property == "unitGroup")
-                        unitFields.Properties.Add(new VtsProperty { Name = "unitGroup", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.UnitGroup) ? "null" : unitSpawner.UnitFields.UnitGroup, IndentDepth = 4 });
-                    if (property == "defaultBehavior")
-                        unitFields.Properties.Add(new VtsProperty { Name = "defaultBehavior", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultBehavior) ? "null" : unitSpawner.UnitFields.DefaultBehavior, IndentDepth = 4 });
-                    if (property == "defaultWaypoint")
-                        unitFields.Properties.Add(new VtsProperty { Name = "defaultWaypoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultWaypoint) ? "null" : unitSpawner.UnitFields.DefaultWaypoint, IndentDepth = 4 });
-                    if (property== "defaultPath")
-                        unitFields.Properties.Add(new VtsProperty { Name = "defaultPath", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultPath) ? "null" : unitSpawner.UnitFields.DefaultPath, IndentDepth = 4 });
-                    if (property == "hullNumber")
-                        unitFields.Properties.Add(new VtsProperty { Name = "hullNumber", Value = unitSpawner.UnitFields.HullNumber.ToString(), IndentDepth = 4 });
-                    if (property == "engageEnemies")
-                        unitFields.Properties.Add(new VtsProperty { Name = "engageEnemies", Value = unitSpawner.UnitFields.EngageEnemies ? "True" : "False", IndentDepth = 4 });
-                    if (property == "detectionMode")
-                        unitFields.Properties.Add(new VtsProperty { Name = "detectionMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DetectionMode) ? "null" : unitSpawner.UnitFields.DetectionMode, IndentDepth = 4 });
-                    if (property == "spawnOnStart")
-                        unitFields.Properties.Add(new VtsProperty { Name = "spawnOnStart", Value = unitSpawner.UnitFields.SpawnOnStart ? "True" : "False", IndentDepth = 4 });
-                    if (property == "invincible")
-                        unitFields.Properties.Add(new VtsProperty { Name = "invincible", Value = unitSpawner.UnitFields.Invincible ? "True" : "False", IndentDepth = 4 });
-                    if (property == "carrierSpawns")
-                        unitFields.Properties.Add(new VtsProperty { Name = "carrierSpawns", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.CarrierSpawns) ? "" : unitSpawner.UnitFields.CarrierSpawns, IndentDepth = 4 });
-                    if (property == "radarUnits")
-                        unitFields.Properties.Add(new VtsProperty { Name = "radarUnits", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.RadarUnits) ? "" : unitSpawner.UnitFields.RadarUnits, IndentDepth = 4 });
-                    if (property == "allowReload")
-                        unitFields.Properties.Add(new VtsProperty { Name = "allowReload", Value = unitSpawner.UnitFields.AllowReload ? "True" : "False", IndentDepth = 4 });
-                    if (property == "reloadTime")
-                        unitFields.Properties.Add(new VtsProperty { Name = "reloadTime", Value = unitSpawner.UnitFields.ReloadTime.ToString(), IndentDepth = 4 });
-                    if (property == "combatTarget")
-                        unitFields.Properties.Add(new VtsProperty { Name = "combatTarget", Value = unitSpawner.UnitFields.CombatTarget ? "True" : "False", IndentDepth = 4 });
-                    if (property == "moveSpeed")
-                        unitFields.Properties.Add(new VtsProperty { Name = "moveSpeed", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.MoveSpeed) ? "null" : unitSpawner.UnitFields.MoveSpeed, IndentDepth = 4 });
-                    if (property == "behavior")
-                        unitFields.Properties.Add(new VtsProperty { Name = "behavior", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Behavior) ? "null" : unitSpawner.UnitFields.Behavior, IndentDepth = 4 });
-                    if (property == "waypoint")
-                        unitFields.Properties.Add(new VtsProperty { Name = "waypoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Waypoint) ? "null" : unitSpawner.UnitFields.Waypoint, IndentDepth = 4 });
-                    if (property == "voiceProfile")
-                        unitFields.Properties.Add(new VtsProperty { Name = "voiceProfile", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.VoiceProfile) ? "null" : unitSpawner.UnitFields.VoiceProfile, IndentDepth = 4 });
-                    if (property == "playerCommandsMode")
-                        unitFields.Properties.Add(new VtsProperty { Name = "playerCommandsMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.PlayerCommandsMode) ? "null" : unitSpawner.UnitFields.PlayerCommandsMode, IndentDepth = 4 });
-                    if (property == "initialSpeed")
-                        unitFields.Properties.Add(new VtsProperty { Name = "initialSpeed", Value = unitSpawner.UnitFields.InitialSpeed.ToString(), IndentDepth = 4 });
-                    if (property == "defaultNavSpeed")
-                        unitFields.Properties.Add(new VtsProperty { Name = "defaultNavSpeed", Value = unitSpawner.UnitFields.DefaultNavSpeed.ToString(), IndentDepth = 4 });
-                    if (property == "defaultOrbitPoint")
-                        unitFields.Properties.Add(new VtsProperty { Name = "defaultOrbitPoint", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultOrbitPoint) ? "null" : unitSpawner.UnitFields.DefaultOrbitPoint, IndentDepth = 4 });
-                    if (property == "orbitAltitude")
-                        unitFields.Properties.Add(new VtsProperty { Name = "orbitAltitude", Value = unitSpawner.UnitFields.OrbitAltitude.ToString(), IndentDepth = 4 });
-                    if (property == "fuel")
-                        unitFields.Properties.Add(new VtsProperty { Name = "fuel", Value = unitSpawner.UnitFields.Fuel.ToString(), IndentDepth = 4 });
-                    if (property == "autoRefuel")
-                        unitFields.Properties.Add(new VtsProperty { Name = "autoRefuel", Value = unitSpawner.UnitFields.AutoRefuel ? "True" : "False", IndentDepth = 4 });
-                    if (property == "autoRTB")
-                        unitFields.Properties.Add(new VtsProperty { Name = "autoRTB", Value = unitSpawner.UnitFields.AutoReturnToBase ? "True" : "False", IndentDepth = 4 });
-                    if (property == "rtbDestination")
-                        unitFields.Properties.Add(new VtsProperty { Name = "rtbDestination", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ReturnToBaseDestination) ? "" : unitSpawner.UnitFields.ReturnToBaseDestination, IndentDepth = 4 });
-                    if (property == "parkedStartMode")
-                        unitFields.Properties.Add(new VtsProperty { Name = "parkedStartMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ParkedStartMode) ? "null" : unitSpawner.UnitFields.ParkedStartMode, IndentDepth = 4 });
-                    if (property == "equips")
+                    if (property == KeywordStrings.UnitGroup)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.UnitGroup, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.UnitGroup) ? KeywordStrings.Null : unitSpawner.UnitFields.UnitGroup, IndentDepth = 4 });
+                    if (property == KeywordStrings.DefaultBehavior)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DefaultBehavior, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultBehavior) ? KeywordStrings.Null : unitSpawner.UnitFields.DefaultBehavior, IndentDepth = 4 });
+                    if (property == KeywordStrings.DefaultWaypoint)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DefaultWaypoint, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultWaypoint) ? KeywordStrings.Null : unitSpawner.UnitFields.DefaultWaypoint, IndentDepth = 4 });
+                    if (property== KeywordStrings.DefaultPath)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DefaultPath, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultPath) ? KeywordStrings.Null : unitSpawner.UnitFields.DefaultPath, IndentDepth = 4 });
+                    if (property == KeywordStrings.HullNumber)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.HullNumber, Value = unitSpawner.UnitFields.HullNumber.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.EngageEnemies)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.EngageEnemies, Value = unitSpawner.UnitFields.EngageEnemies ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.DetectionMode)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DetectionMode, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DetectionMode) ? KeywordStrings.Null : unitSpawner.UnitFields.DetectionMode, IndentDepth = 4 });
+                    if (property == KeywordStrings.SpawnOnStart)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.SpawnOnStart, Value = unitSpawner.UnitFields.SpawnOnStart ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.Invincible)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Invincible, Value = unitSpawner.UnitFields.Invincible ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.CarrierSpawns)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.CarrierSpawns, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.CarrierSpawns) ? "" : unitSpawner.UnitFields.CarrierSpawns, IndentDepth = 4 });
+                    if (property == KeywordStrings.RadarUnits)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.RadarUnits, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.RadarUnits) ? "" : unitSpawner.UnitFields.RadarUnits, IndentDepth = 4 });
+                    if (property == KeywordStrings.AllowReload)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.AllowReload, Value = unitSpawner.UnitFields.AllowReload ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.ReloadTime)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.ReloadTime, Value = unitSpawner.UnitFields.ReloadTime.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.CombatTarget)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.CombatTarget, Value = unitSpawner.UnitFields.CombatTarget ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.MoveSpeed)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.MoveSpeed, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.MoveSpeed) ? KeywordStrings.Null : unitSpawner.UnitFields.MoveSpeed, IndentDepth = 4 });
+                    if (property == KeywordStrings.Behavior)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Behavior, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Behavior) ? KeywordStrings.Null : unitSpawner.UnitFields.Behavior, IndentDepth = 4 });
+                    if (property == KeywordStrings.WaypointProperty)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.WaypointProperty, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Waypoint) ? KeywordStrings.Null : unitSpawner.UnitFields.Waypoint, IndentDepth = 4 });
+                    if (property == KeywordStrings.VoiceProfile)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.VoiceProfile, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.VoiceProfile) ? KeywordStrings.Null : unitSpawner.UnitFields.VoiceProfile, IndentDepth = 4 });
+                    if (property == KeywordStrings.PlayerCommandsMode)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.PlayerCommandsMode, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.PlayerCommandsMode) ? KeywordStrings.Null : unitSpawner.UnitFields.PlayerCommandsMode, IndentDepth = 4 });
+                    if (property == KeywordStrings.InitialSpeed)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.InitialSpeed, Value = unitSpawner.UnitFields.InitialSpeed.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.DefaultNavSpeed)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DefaultNavSpeed, Value = unitSpawner.UnitFields.DefaultNavSpeed.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.DefaultOrbitPoint)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DefaultOrbitPoint, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.DefaultOrbitPoint) ? KeywordStrings.Null : unitSpawner.UnitFields.DefaultOrbitPoint, IndentDepth = 4 });
+                    if (property == KeywordStrings.OrbitAltitude)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.OrbitAltitude, Value = unitSpawner.UnitFields.OrbitAltitude.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.Fuel)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Fuel, Value = unitSpawner.UnitFields.Fuel.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.AutoRefuel)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.AutoRefuel, Value = unitSpawner.UnitFields.AutoRefuel ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.AutoRtb)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.AutoRtb, Value = unitSpawner.UnitFields.AutoReturnToBase ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.RtbDestination)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.RtbDestination, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ReturnToBaseDestination) ? "" : unitSpawner.UnitFields.ReturnToBaseDestination, IndentDepth = 4 });
+                    if (property == KeywordStrings.ParkedStartMode)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.ParkedStartMode, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ParkedStartMode) ? KeywordStrings.Null : unitSpawner.UnitFields.ParkedStartMode, IndentDepth = 4 });
+                    if (property == KeywordStrings.Equips)
                     {
                         string equips = ";;;;;;;"; // AV-42CAI
                         
-                        if (unitSpawner.UnitId == "F-45A AI")
+                        if (unitSpawner.UnitId == KeywordStrings.F45AAi)
                         {
                             equips = ";;;;;;;;;;;";
                         }
-                        else if (unitSpawner.UnitId == "FA-26B AI")
+                        else if (unitSpawner.UnitId == KeywordStrings.FA26BAi)
                         {
                             equips = ";;;;;;;;;;;;;;;;";
                         }
-                        else if (unitSpawner.UnitId == "ABomberAI")
+                        else if (unitSpawner.UnitId == KeywordStrings.ABomberAi)
                         {
                             equips = ";;;;";
                         }
-                        else if (unitSpawner.UnitId == "MQ-31")
+                        else if (unitSpawner.UnitId == KeywordStrings.MQ31)
                         {
                             equips = ";;";
                         }
-                        else if (unitSpawner.UnitId == "AIUCAV")
+                        else if (unitSpawner.UnitId == KeywordStrings.AiUCAV)
                         {
                             equips = ";;;;;";
                         }
-                        else if (unitSpawner.UnitId == "ASF-30")
+                        else if (unitSpawner.UnitId == KeywordStrings.ASF30)
                         {
                             equips = ";;;;;;;;;;;";
                         }
-                        else if (unitSpawner.UnitId == "ASF-33")
+                        else if (unitSpawner.UnitId == KeywordStrings.ASF33)
                         {
                             equips = ";;;;;;";
                         }
-                        else if (unitSpawner.UnitId == "ASF-58")
+                        else if (unitSpawner.UnitId == KeywordStrings.ASF58)
                         {
                             equips = ";;;;;;;";
                         }
-                        else if (unitSpawner.UnitId == "EBomberAI")
+                        else if (unitSpawner.UnitId == KeywordStrings.EBomberAi)
                         {
                             equips = ";;;;";
                         }
-                        else if (unitSpawner.UnitId == "GAV-25")
+                        else if (unitSpawner.UnitId == KeywordStrings.Gav25)
                         {
                             equips = ";;;;;;;;;";
                         }
 
-                        unitFields.Properties.Add(new VtsProperty { Name = "equips", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Equips) ? equips : unitSpawner.UnitFields.Equips, IndentDepth = 4 });
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Equips, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Equips) ? equips : unitSpawner.UnitFields.Equips, IndentDepth = 4 });
                     }                        
-                    if (property == "stopToEngage")
-                        unitFields.Properties.Add(new VtsProperty { Name = "stopToEngage", Value = unitSpawner.UnitFields.StopToEngage ? "True" : "False", IndentDepth = 4 });
-                    if (property == "startMode")
-                        unitFields.Properties.Add(new VtsProperty { Name = "startMode", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.StartMode) ? "null" : unitSpawner.UnitFields.StartMode, IndentDepth = 4 });
-                    if (property == "receiveFriendlyDamage")
-                        unitFields.Properties.Add(new VtsProperty { Name = "receiveFriendlyDamage", Value = unitSpawner.UnitFields.ReceiveFriendlyDamage ? "True" : "False", IndentDepth = 4 });
-                    if (property == "defaultRadarEnabled")
-                        unitFields.Properties.Add(new VtsProperty { Name = "defaultRadarEnabled", Value = unitSpawner.UnitFields.DefaultRadarEnabled ? "True" : "False", IndentDepth = 4 });
-                    if (property == "awacsVoiceProfile")
-                        unitFields.Properties.Add(new VtsProperty { Name = "awacsVoiceProfile", Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.AwacsVoiceProfile) ? "null" : unitSpawner.UnitFields.AwacsVoiceProfile, IndentDepth = 4 });
-                    if (property == "commsEnabled")
-                        unitFields.Properties.Add(new VtsProperty { Name = "commsEnabled", Value = unitSpawner.UnitFields.CommsEnabled ? "True" : "False", IndentDepth = 4 });
-                    if (property == "defaultShotsPerSalvo")
-                        unitFields.Properties.Add(new VtsProperty { Name = "defaultShotsPerSalvo", Value = unitSpawner.UnitFields.DefaultShotsPerSalvo.ToString(), IndentDepth = 4 });
-                    if (property == "rippleRate")
-                        unitFields.Properties.Add(new VtsProperty { Name = "rippleRate", Value = unitSpawner.UnitFields.RippleRate.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.StopToEngage)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.StopToEngage, Value = unitSpawner.UnitFields.StopToEngage ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.StartMode)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.StartMode, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.StartMode) ? KeywordStrings.Null : unitSpawner.UnitFields.StartMode, IndentDepth = 4 });
+                    if (property == KeywordStrings.ReceiveFriendlyDamage)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.ReceiveFriendlyDamage, Value = unitSpawner.UnitFields.ReceiveFriendlyDamage ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.DefaultRadarEnabled)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DefaultRadarEnabled, Value = unitSpawner.UnitFields.DefaultRadarEnabled ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.AwacsVoiceProfile)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.AwacsVoiceProfile, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.AwacsVoiceProfile) ? KeywordStrings.Null : unitSpawner.UnitFields.AwacsVoiceProfile, IndentDepth = 4 });
+                    if (property == KeywordStrings.CommsEnabled)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.CommsEnabled, Value = unitSpawner.UnitFields.CommsEnabled ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.DefaultShotsPerSalvo)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DefaultShotsPerSalvo, Value = unitSpawner.UnitFields.DefaultShotsPerSalvo.ToString(), IndentDepth = 4 });
+                    if (property == KeywordStrings.RippleRate)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.RippleRate, Value = unitSpawner.UnitFields.RippleRate.ToString(), IndentDepth = 4 });
                 }
 
                 unit.Children.Add(unitFields);
@@ -1349,11 +1349,11 @@ namespace VTS.Data.Abstractions
             foreach (Path path in scenario.Paths)
             {
                 VtsObject p = new VtsObject { Name = KeywordStrings.Path, IndentDepth = 2 };
-                p.Properties.Add(new VtsProperty { Name = "id", Value = path.Id.ToString(), IndentDepth = 3 });
-                p.Properties.Add(new VtsProperty { Name = "name", Value = path.Name, IndentDepth = 3 });
-                p.Properties.Add(new VtsProperty { Name = "loop", Value = path.Loop ? "True" : "False", IndentDepth = 3 });
-                p.Properties.Add(new VtsProperty { Name = "points", Value = string.Join(';', path.Points) + ";", IndentDepth = 3 });
-                p.Properties.Add(new VtsProperty { Name = "pathMode", Value = path.PathMode.ToString(), IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = path.Id.ToString(), IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = KeywordStrings.Name, Value = path.Name, IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = KeywordStrings.Loop, Value = path.Loop ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = KeywordStrings.Points, Value = string.Join(';', path.Points) + ";", IndentDepth = 3 });
+                p.Properties.Add(new VtsProperty { Name = KeywordStrings.PathMode, Value = path.PathMode.ToString(), IndentDepth = 3 });
 
                 paths.Children.Add(p);
             }
@@ -1368,9 +1368,9 @@ namespace VTS.Data.Abstractions
             foreach (Waypoint waypoint in scenario.Waypoints)
             {
                 VtsObject wp = new VtsObject { Name = KeywordStrings.Waypoint, IndentDepth = 2 };
-                wp.Properties.Add(new VtsProperty { Name = "id", Value = waypoint.Id.ToString(), IndentDepth = 3 });
-                wp.Properties.Add(new VtsProperty { Name = "name", Value = waypoint.Name, IndentDepth = 3 });
-                wp.Properties.Add(new VtsProperty { Name = "globalPoint", Value = waypoint.GlobalPoint.ToString(), IndentDepth = 3 });
+                wp.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = waypoint.Id.ToString(), IndentDepth = 3 });
+                wp.Properties.Add(new VtsProperty { Name = KeywordStrings.Name, Value = waypoint.Name, IndentDepth = 3 });
+                wp.Properties.Add(new VtsProperty { Name = KeywordStrings.GlobalPoint, Value = waypoint.GlobalPoint.ToString(), IndentDepth = 3 });
 
                 waypoints.Children.Add(wp);
             }
@@ -1405,159 +1405,159 @@ namespace VTS.Data.Abstractions
 
             if (!string.IsNullOrWhiteSpace(unitGroup.Alpha))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Alpha", Value = unitGroup.Alpha, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Alpha, Value = unitGroup.Alpha, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Alpha");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Alpha);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Bravo))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Bravo", Value = unitGroup.Bravo, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Bravo, Value = unitGroup.Bravo, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Bravo");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Bravo);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Charlie))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Charlie", Value = unitGroup.Charlie, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Charlie, Value = unitGroup.Charlie, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Charlie");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Charlie);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Delta))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Delta", Value = unitGroup.Delta, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Delta, Value = unitGroup.Delta, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Delta");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Delta);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Echo))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Echo", Value = unitGroup.Echo, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Echo, Value = unitGroup.Echo, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Echo");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Echo);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Foxtrot))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Foxtrot", Value = unitGroup.Foxtrot, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Foxtrot, Value = unitGroup.Foxtrot, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Foctrot");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Foxtrot);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Golf))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Golf", Value = unitGroup.Golf, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Golf, Value = unitGroup.Golf, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Golf");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Golf);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Hotel))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Hotel", Value = unitGroup.Hotel, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Hotel, Value = unitGroup.Hotel, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Hotel");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Hotel);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.India))
             {
-                ug.Properties.Add(new VtsProperty { Name = "India", Value = unitGroup.India, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.India, Value = unitGroup.India, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "India");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.India);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Juliet))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Juliet", Value = unitGroup.Juliet, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Juliet, Value = unitGroup.Juliet, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Juliet");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Juliet);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Kilo))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Kilo", Value = unitGroup.Kilo, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Kilo, Value = unitGroup.Kilo, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Kilo");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Kilo);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Lima))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Lima", Value = unitGroup.Lima, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Lima, Value = unitGroup.Lima, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Lima");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Lima);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Mike))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Mike", Value = unitGroup.Mike, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Mike, Value = unitGroup.Mike, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Mike");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Mike);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.November))
             {
-                ug.Properties.Add(new VtsProperty { Name = "November", Value = unitGroup.November, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.November, Value = unitGroup.November, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "November");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.November);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Oscar))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Oscar", Value = unitGroup.Oscar, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Oscar, Value = unitGroup.Oscar, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Oscar");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Oscar);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Papa))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Papa", Value = unitGroup.Papa, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Papa, Value = unitGroup.Papa, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Papa");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Papa);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Quebec))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Quebec", Value = unitGroup.Quebec, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Quebec, Value = unitGroup.Quebec, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Quebec");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Quebec);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Romeo))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Romeo", Value = unitGroup.Romeo, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Romeo, Value = unitGroup.Romeo, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Romeo");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Romeo);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Sierra))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Sierra", Value = unitGroup.Sierra, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Sierra, Value = unitGroup.Sierra, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Sierra");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Sierra);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Tango))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Tango", Value = unitGroup.Tango, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Tango, Value = unitGroup.Tango, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Tango");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Tango);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Uniform))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Uniform", Value = unitGroup.Uniform, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Uniform, Value = unitGroup.Uniform, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Uniform");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Uniform);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Victor))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Victor", Value = unitGroup.Victor, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Victor, Value = unitGroup.Victor, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Victor");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Victor);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Whiskey))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Whiskey", Value = unitGroup.Whiskey, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Whiskey, Value = unitGroup.Whiskey, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Whiskey");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Whiskey);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Xray))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Xray", Value = unitGroup.Xray, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Xray, Value = unitGroup.Xray, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Xray");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Xray);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Yankee))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Yankee", Value = unitGroup.Yankee, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Yankee, Value = unitGroup.Yankee, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Yankee");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Yankee);
             }
             if (!string.IsNullOrWhiteSpace(unitGroup.Zulu))
             {
-                ug.Properties.Add(new VtsProperty { Name = "Zulu", Value = unitGroup.Zulu, IndentDepth = 3 });
+                ug.Properties.Add(new VtsProperty { Name = KeywordStrings.Zulu, Value = unitGroup.Zulu, IndentDepth = 3 });
 
-                WriteUnitGroupSettings(unitGroup, ug, "Zulu");
+                WriteUnitGroupSettings(unitGroup, ug, KeywordStrings.Zulu);
             }
         }
 
@@ -1568,8 +1568,8 @@ namespace VTS.Data.Abstractions
             // if we don't find a match should we throw an exception of some kind?
             if (unitGroupSettings == null) return;
 
-            VtsObject ugs = new VtsObject { Name = $"{name}_SETTINGS", IndentDepth = 3 };
-            ugs.Properties.Add(new VtsProperty { Name = "syncAltSpawns", Value = unitGroupSettings.SyncAltSpawns, IndentDepth = 4 });
+            VtsObject ugs = new VtsObject { Name = $"{name}{KeywordStrings.UnitGroupSettingsExtension}", IndentDepth = 3 };
+            ugs.Properties.Add(new VtsProperty { Name = KeywordStrings.SyncAltSpawns, Value = unitGroupSettings.SyncAltSpawns, IndentDepth = 4 });
 
             ug.Children.Add(ugs);
         }
@@ -1581,16 +1581,16 @@ namespace VTS.Data.Abstractions
             foreach (TimedEventGroup timedEventGroup in scenario.TimedEventGroups)
             {
                 VtsObject teg = new VtsObject { Name = KeywordStrings.TimedEventGroup, IndentDepth = 2 };
-                teg.Properties.Add(new VtsProperty { Name = "groupName", Value = timedEventGroup.GroupName, IndentDepth = 3 });
-                teg.Properties.Add(new VtsProperty { Name = "groupID", Value = timedEventGroup.GroupId.ToString(), IndentDepth = 3 });
-                teg.Properties.Add(new VtsProperty { Name = "beginImmediately", Value = timedEventGroup.BeginImmediately ? "True" : "False", IndentDepth = 3 });
-                teg.Properties.Add(new VtsProperty { Name = "initialDelay", Value = timedEventGroup.InitialDelay.ToString(), IndentDepth = 3 });
+                teg.Properties.Add(new VtsProperty { Name = KeywordStrings.GroupName, Value = timedEventGroup.GroupName, IndentDepth = 3 });
+                teg.Properties.Add(new VtsProperty { Name = KeywordStrings.GroupId, Value = timedEventGroup.GroupId.ToString(), IndentDepth = 3 });
+                teg.Properties.Add(new VtsProperty { Name = KeywordStrings.BeginImmediately, Value = timedEventGroup.BeginImmediately ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
+                teg.Properties.Add(new VtsProperty { Name = KeywordStrings.InitialDelay, Value = timedEventGroup.InitialDelay.ToString(), IndentDepth = 3 });
 
                 foreach (TimedEventInfo timedEventInfo in timedEventGroup.TimedEventInfos)
                 {
                     VtsObject tei = new VtsObject { Name = KeywordStrings.TimedEventInfo, IndentDepth = 3 };
-                    tei.Properties.Add(new VtsProperty { Name = "eventName", Value = timedEventInfo.EventName, IndentDepth = 4 });
-                    tei.Properties.Add(new VtsProperty { Name = "time", Value = timedEventInfo.Time.ToString(), IndentDepth = 4 });
+                    tei.Properties.Add(new VtsProperty { Name = KeywordStrings.EventName, Value = timedEventInfo.EventName, IndentDepth = 4 });
+                    tei.Properties.Add(new VtsProperty { Name = KeywordStrings.Time, Value = timedEventInfo.Time.ToString(), IndentDepth = 4 });
 
                     foreach (EventTarget eventTarget in timedEventInfo.EventTargets)
                     {
@@ -1609,23 +1609,23 @@ namespace VTS.Data.Abstractions
         private static VtsObject WriteEventTarget(EventTarget eventTarget, int indentDepth)
         {
             VtsObject et = new VtsObject { Name = KeywordStrings.EventTarget, IndentDepth = indentDepth };
-            et.Properties.Add(new VtsProperty { Name = "targetType", Value = eventTarget.TargetType, IndentDepth = indentDepth + 1 });
-            et.Properties.Add(new VtsProperty { Name = "targetID", Value = eventTarget.TargetId.ToString(), IndentDepth = indentDepth + 1 });
-            et.Properties.Add(new VtsProperty { Name = "eventName", Value = eventTarget.EventName, IndentDepth = indentDepth + 1 });
-            et.Properties.Add(new VtsProperty { Name = "methodName", Value = eventTarget.MethodName, IndentDepth = indentDepth + 1 });
+            et.Properties.Add(new VtsProperty { Name = KeywordStrings.TargetType, Value = eventTarget.TargetType, IndentDepth = indentDepth + 1 });
+            et.Properties.Add(new VtsProperty { Name = KeywordStrings.TargetId, Value = eventTarget.TargetId.ToString(), IndentDepth = indentDepth + 1 });
+            et.Properties.Add(new VtsProperty { Name = KeywordStrings.EventName, Value = eventTarget.EventName, IndentDepth = indentDepth + 1 });
+            et.Properties.Add(new VtsProperty { Name = KeywordStrings.MethodName, Value = eventTarget.MethodName, IndentDepth = indentDepth + 1 });
 
             foreach (ParamInfo paramInfo in eventTarget.ParamInfos)
             {
                 VtsObject pi = new VtsObject { Name = KeywordStrings.ParamInfo, IndentDepth = indentDepth + 1 };
-                pi.Properties.Add(new VtsProperty { Name = "type", Value = paramInfo.Type, IndentDepth = indentDepth + 2 });
-                pi.Properties.Add(new VtsProperty { Name = "value", Value = paramInfo.Value, IndentDepth = indentDepth + 2 });
-                pi.Properties.Add(new VtsProperty { Name = "name", Value = paramInfo.Name, IndentDepth = indentDepth + 2 });
+                pi.Properties.Add(new VtsProperty { Name = KeywordStrings.Type, Value = paramInfo.Type, IndentDepth = indentDepth + 2 });
+                pi.Properties.Add(new VtsProperty { Name = KeywordStrings.Value, Value = paramInfo.Value, IndentDepth = indentDepth + 2 });
+                pi.Properties.Add(new VtsProperty { Name = KeywordStrings.Name, Value = paramInfo.Name, IndentDepth = indentDepth + 2 });
 
                 foreach (ParamAttrInfo paramAttrInfo in paramInfo.ParamAttrInfos)
                 {
                     VtsObject pai = new VtsObject { Name = KeywordStrings.ParamAttrInfo, IndentDepth = indentDepth + 2 };
-                    pai.Properties.Add(new VtsProperty { Name = "type", Value = paramAttrInfo.Type, IndentDepth = indentDepth + 3 });
-                    pai.Properties.Add(new VtsProperty { Name = "data", Value = paramAttrInfo.Data, IndentDepth = indentDepth + 3 });
+                    pai.Properties.Add(new VtsProperty { Name = KeywordStrings.Type, Value = paramAttrInfo.Type, IndentDepth = indentDepth + 3 });
+                    pai.Properties.Add(new VtsProperty { Name = KeywordStrings.Data, Value = paramAttrInfo.Data, IndentDepth = indentDepth + 3 });
 
                     pi.Children.Add(pai);
                 }
@@ -1643,29 +1643,29 @@ namespace VTS.Data.Abstractions
             foreach (TriggerEvent triggerEvent in scenario.TriggerEvents)
             {
                 VtsObject te = new VtsObject { Name = KeywordStrings.TriggerEvent, IndentDepth = 2 };
-                te.Properties.Add(new VtsProperty { Name = "id", Value = triggerEvent.Id.ToString(), IndentDepth = 3 });
-                te.Properties.Add(new VtsProperty { Name = "enabled", Value = triggerEvent.Enabled ? "True" : "False", IndentDepth = 3 });
-                te.Properties.Add(new VtsProperty { Name = "triggerType", Value = triggerEvent.TriggerType, IndentDepth = 3 });
+                te.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = triggerEvent.Id.ToString(), IndentDepth = 3 });
+                te.Properties.Add(new VtsProperty { Name = KeywordStrings.Enabled, Value = triggerEvent.Enabled ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
+                te.Properties.Add(new VtsProperty { Name = KeywordStrings.TriggerType, Value = triggerEvent.TriggerType, IndentDepth = 3 });
 
                 if (triggerEvent.Conditional.HasValue)
-                    te.Properties.Add(new VtsProperty { Name = "conditional", Value = triggerEvent.Conditional.Value.ToString(), IndentDepth = 3 });
+                    te.Properties.Add(new VtsProperty { Name = KeywordStrings.ConditionalProperty, Value = triggerEvent.Conditional.Value.ToString(), IndentDepth = 3 });
 
                 if (triggerEvent.Waypoint.HasValue)
-                    te.Properties.Add(new VtsProperty { Name = "waypoint", Value = triggerEvent.Waypoint.Value.ToString(), IndentDepth = 3 });
+                    te.Properties.Add(new VtsProperty { Name = KeywordStrings.WaypointProperty, Value = triggerEvent.Waypoint.Value.ToString(), IndentDepth = 3 });
 
                 if (triggerEvent.Radius.HasValue)
-                    te.Properties.Add(new VtsProperty { Name = "radius", Value = triggerEvent.Radius.Value.ToString(), IndentDepth = 3 });
+                    te.Properties.Add(new VtsProperty { Name = KeywordStrings.Radius, Value = triggerEvent.Radius.Value.ToString(), IndentDepth = 3 });
 
                 if (triggerEvent.SphericalRadius.HasValue)
-                    te.Properties.Add(new VtsProperty { Name = "sphericalRadius", Value = triggerEvent.SphericalRadius.Value ? "True" : "False", IndentDepth = 3 });
+                    te.Properties.Add(new VtsProperty { Name = KeywordStrings.SphericalRadius, Value = triggerEvent.SphericalRadius.Value ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
 
                 if (!string.IsNullOrWhiteSpace(triggerEvent.TriggerMode))
-                    te.Properties.Add(new VtsProperty { Name = "triggerMode", Value = triggerEvent.TriggerMode, IndentDepth = 3 });
+                    te.Properties.Add(new VtsProperty { Name = KeywordStrings.TriggerMode, Value = triggerEvent.TriggerMode, IndentDepth = 3 });
 
                 if (!string.IsNullOrWhiteSpace(triggerEvent.ProxyMode))
-                    te.Properties.Add(new VtsProperty { Name = "proxyMode", Value = triggerEvent.ProxyMode, IndentDepth = 3 });
+                    te.Properties.Add(new VtsProperty { Name = KeywordStrings.ProxyMode, Value = triggerEvent.ProxyMode, IndentDepth = 3 });
 
-                te.Properties.Add(new VtsProperty { Name = "eventName", Value = triggerEvent.EventName, IndentDepth = 3 });
+                te.Properties.Add(new VtsProperty { Name = KeywordStrings.EventName, Value = triggerEvent.EventName, IndentDepth = 3 });
 
                 te.Children.Add(WriteEventInfo(triggerEvent.EventInfo, 3, 0));
 
@@ -1678,7 +1678,7 @@ namespace VTS.Data.Abstractions
         private static VtsObject WriteEventInfo(EventInfo eventInfo, int indentDepth, int stringToUse)
         {
             VtsObject ei = new VtsObject { Name = stringToUse == 0 ? KeywordStrings.EventInfo : stringToUse == 1 ? KeywordStrings.Actions : stringToUse == 2 ? KeywordStrings.ElseActions : KeywordStrings.EventInfo, IndentDepth = indentDepth };
-            ei.Properties.Add(new VtsProperty { Name = "eventName", Value = eventInfo.EventName, IndentDepth = indentDepth + 1 });
+            ei.Properties.Add(new VtsProperty { Name = KeywordStrings.EventName, Value = eventInfo.EventName, IndentDepth = indentDepth + 1 });
 
             foreach (EventTarget eventTarget in eventInfo.EventTargets)
             {
@@ -1695,19 +1695,19 @@ namespace VTS.Data.Abstractions
             foreach (Objective objective in objectives)
             {
                 VtsObject obj = new VtsObject { Name = KeywordStrings.Objective, IndentDepth = 2 };
-                obj.Properties.Add(new VtsProperty { Name = "objectiveName", Value = objective.ObjectiveName, IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "objectiveInfo", Value = objective.ObjectiveInfo, IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "objectiveID", Value = objective.ObjectiveID.ToString(), IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "orderID", Value = objective.OrderID.ToString(), IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "required", Value = objective.Required ? "True" : "False", IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "completionReward", Value = objective.CompletionReward.ToString(), IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "waypoint", Value = string.IsNullOrWhiteSpace(objective.Waypoint) ? "null" : objective.Waypoint, IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "autoSetWaypoint", Value = objective.AutoSetWaypoint ? "True" : "False", IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "startMode", Value = objective.StartMode, IndentDepth = 3 });
-                obj.Properties.Add(new VtsProperty { Name = "objectiveType", Value = objective.ObjectiveType, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.ObjectiveName, Value = objective.ObjectiveName, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.ObjectiveInfo, Value = objective.ObjectiveInfo, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.ObjectiveId, Value = objective.ObjectiveID.ToString(), IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.OrderId, Value = objective.OrderID.ToString(), IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.Required, Value = objective.Required ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.CompletionReward, Value = objective.CompletionReward.ToString(), IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.WaypointProperty, Value = string.IsNullOrWhiteSpace(objective.Waypoint) ? KeywordStrings.Null : objective.Waypoint, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.AutoSetWaypoint, Value = objective.AutoSetWaypoint ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.StartMode, Value = objective.StartMode, IndentDepth = 3 });
+                obj.Properties.Add(new VtsProperty { Name = KeywordStrings.ObjectiveType, Value = objective.ObjectiveType, IndentDepth = 3 });
 
                 if (!string.IsNullOrWhiteSpace(objective.PreReqObjectives))
-                    obj.Properties.Add(new VtsProperty { Name = "preReqObjectives", Value = objective.PreReqObjectives, IndentDepth = 3 });
+                    obj.Properties.Add(new VtsProperty { Name = KeywordStrings.PreReqObjectives, Value = objective.PreReqObjectives, IndentDepth = 3 });
 
                 VtsObject startEvent = new VtsObject { Name = KeywordStrings.StartEvent, IndentDepth = 3 };
                 startEvent.Children.Add(WriteEventInfo(objective.StartEvent, 4, 0));
@@ -1727,49 +1727,49 @@ namespace VTS.Data.Abstractions
                 VtsObject objectiveFields = new VtsObject { Name = KeywordStrings.Fields, IndentDepth = 3 };
 
                 if (objective.Fields.SuccessConditional.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "successConditional", Value = objective.Fields.SuccessConditional.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.SuccessConditional, Value = objective.Fields.SuccessConditional.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.FailConditional.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "failConditional", Value = objective.Fields.FailConditional.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FailConditional, Value = objective.Fields.FailConditional.Value.ToString(), IndentDepth = 4 });
 
                 if (!string.IsNullOrWhiteSpace(objective.Fields.Targets))
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "targets", Value = objective.Fields.Targets, IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Targets, Value = objective.Fields.Targets, IndentDepth = 4 });
 
                 if (objective.Fields.MinRequired.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "minRequired", Value = objective.Fields.MinRequired.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.MinRequired, Value = objective.Fields.MinRequired.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.PerUnitReward.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "perUnitReward", Value = objective.Fields.PerUnitReward.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.PerUnitReward, Value = objective.Fields.PerUnitReward.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.FullCompletionBonus.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "fullCompleteBonus", Value = objective.Fields.FullCompletionBonus.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FullCompleteBonus, Value = objective.Fields.FullCompletionBonus.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.UnloadRadius.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "unloadRadius", Value = objective.Fields.UnloadRadius.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.UnloadRadius, Value = objective.Fields.UnloadRadius.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.DropoffRallyPoint.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "dropoffRallyPt", Value = objective.Fields.DropoffRallyPoint.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.DropoffRallyPt, Value = objective.Fields.DropoffRallyPoint.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.TriggerRadius.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "triggerRadius", Value = objective.Fields.TriggerRadius.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.TriggerRadius, Value = objective.Fields.TriggerRadius.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.SphericalRadius.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "sphericalRadius", Value = objective.Fields.SphericalRadius.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.SphericalRadius, Value = objective.Fields.SphericalRadius.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.TargetUnit.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "targetUnit", Value = objective.Fields.TargetUnit.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.TargetUnit, Value = objective.Fields.TargetUnit.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.Target.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "target", Value = objective.Fields.Target.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Target, Value = objective.Fields.Target.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.Radius.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "radius", Value = objective.Fields.Radius.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Radius, Value = objective.Fields.Radius.Value.ToString(), IndentDepth = 4 });
 
                 if (objective.Fields.FuelLevel.HasValue)
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "fuelLevel", Value = objective.Fields.FuelLevel.Value.ToString(), IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FuelLevel, Value = objective.Fields.FuelLevel.Value.ToString(), IndentDepth = 4 });
 
                 if (!string.IsNullOrWhiteSpace(objective.Fields.CompletionMode))
-                    objectiveFields.Properties.Add(new VtsProperty { Name = "completionMode", Value = objective.Fields.CompletionMode, IndentDepth = 4 });
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.CompletionMode, Value = objective.Fields.CompletionMode, IndentDepth = 4 });
 
                 obj.Children.Add(objectiveFields);
 
@@ -1796,10 +1796,10 @@ namespace VTS.Data.Abstractions
             foreach (StaticObject staticObject in scenario.StaticObjects)
             {
                 VtsObject so = new VtsObject { Name = KeywordStrings.StaticObject, IndentDepth = 2 };
-                so.Properties.Add(new VtsProperty { Name = "prefabID", Value = staticObject.PrefabId, IndentDepth = 3 });
-                so.Properties.Add(new VtsProperty { Name = "id", Value = staticObject.Id.ToString(), IndentDepth = 3 });
-                so.Properties.Add(new VtsProperty { Name = "globalPos", Value = staticObject.GlobalPosition.ToString(), IndentDepth = 3 });
-                so.Properties.Add(new VtsProperty { Name = "rotation", Value = staticObject.Rotation.ToString(), IndentDepth = 3 });
+                so.Properties.Add(new VtsProperty { Name = KeywordStrings.PrefabId, Value = staticObject.PrefabId, IndentDepth = 3 });
+                so.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = staticObject.Id.ToString(), IndentDepth = 3 });
+                so.Properties.Add(new VtsProperty { Name = KeywordStrings.GlobalPos, Value = staticObject.GlobalPosition.ToString(), IndentDepth = 3 });
+                so.Properties.Add(new VtsProperty { Name = KeywordStrings.Rotation, Value = staticObject.Rotation.ToString(), IndentDepth = 3 });
 
                 sos.Children.Add(so);
             }
@@ -1810,63 +1810,63 @@ namespace VTS.Data.Abstractions
         private static VtsObject WriteConditional(Conditional conditional, int indentDepth)
         {
             VtsObject c = new VtsObject { Name = KeywordStrings.Conditional, IndentDepth = indentDepth };
-            c.Properties.Add(new VtsProperty { Name = "id", Value = conditional.Id.ToString(), IndentDepth = indentDepth + 1 });
-            c.Properties.Add(new VtsProperty { Name = "outputNodePos", Value = conditional.OutputNodePosition.ToString(), IndentDepth = indentDepth + 1 });
+            c.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = conditional.Id.ToString(), IndentDepth = indentDepth + 1 });
+            c.Properties.Add(new VtsProperty { Name = KeywordStrings.OutputNodePos, Value = conditional.OutputNodePosition.ToString(), IndentDepth = indentDepth + 1 });
 
             if (conditional.Root.HasValue)
-                c.Properties.Add(new VtsProperty { Name = "root", Value = conditional.Root.Value.ToString(), IndentDepth = indentDepth + 1 });
+                c.Properties.Add(new VtsProperty { Name = KeywordStrings.Root, Value = conditional.Root.Value.ToString(), IndentDepth = indentDepth + 1 });
 
             foreach (Computation computation in conditional.Computations)
             {
                 VtsObject comp = new VtsObject { Name = KeywordStrings.Comp, IndentDepth = indentDepth + 1 };
-                comp.Properties.Add(new VtsProperty { Name = "id", Value = computation.Id.ToString(), IndentDepth = indentDepth + 2 });
-                comp.Properties.Add(new VtsProperty { Name = "type", Value = computation.Type, IndentDepth = indentDepth + 2 });
-                comp.Properties.Add(new VtsProperty { Name = "uiPos", Value = computation.UiPosition.ToString(), IndentDepth = indentDepth + 2 });
+                comp.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = computation.Id.ToString(), IndentDepth = indentDepth + 2 });
+                comp.Properties.Add(new VtsProperty { Name = KeywordStrings.Type, Value = computation.Type, IndentDepth = indentDepth + 2 });
+                comp.Properties.Add(new VtsProperty { Name = KeywordStrings.UiPos, Value = computation.UiPosition.ToString(), IndentDepth = indentDepth + 2 });
 
                 if (computation.Unit.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "unit", Value = computation.Unit.ToString(), IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.Unit, Value = computation.Unit.ToString(), IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.UnitGroup))
-                    comp.Properties.Add(new VtsProperty { Name = "unitGroup", Value = computation.UnitGroup, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.UnitGroup, Value = computation.UnitGroup, IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.UnitList))
-                    comp.Properties.Add(new VtsProperty { Name = "unitList", Value = computation.UnitList, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.UnitList, Value = computation.UnitList, IndentDepth = indentDepth + 2 });
 
                 if (computation.ObjectReference.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "objectReference", Value = computation.ObjectReference.ToString(), IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.ObjectReference, Value = computation.ObjectReference.ToString(), IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.MethodName))
-                    comp.Properties.Add(new VtsProperty { Name = "methodName", Value = computation.MethodName, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.MethodName, Value = computation.MethodName, IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.MethodParameters))
-                    comp.Properties.Add(new VtsProperty { Name = "methodParameters", Value = computation.MethodParameters, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.MethodParameters, Value = computation.MethodParameters, IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.Factors))
-                    comp.Properties.Add(new VtsProperty { Name = "factors", Value = computation.Factors, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.Factors, Value = computation.Factors, IndentDepth = indentDepth + 2 });
 
                 if (computation.Chance.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "chance", Value = computation.Chance.ToString(), IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.Chance, Value = computation.Chance.ToString(), IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.VehicleControl))
-                    comp.Properties.Add(new VtsProperty { Name = "vehicleControl", Value = computation.VehicleControl, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.VehicleControl, Value = computation.VehicleControl, IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.ControlCondition))
-                    comp.Properties.Add(new VtsProperty { Name = "controlCondition", Value = computation.ControlCondition, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.ControlCondition, Value = computation.ControlCondition, IndentDepth = indentDepth + 2 });
 
                 if (computation.ControlValue.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "controlValue", Value = computation.ControlValue.ToString(), IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.ControlValue, Value = computation.ControlValue.ToString(), IndentDepth = indentDepth + 2 });
 
                 if (computation.GlobalValue.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "gv", Value = computation.GlobalValue.ToString(), IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.GlobalValue, Value = computation.GlobalValue.ToString(), IndentDepth = indentDepth + 2 });
 
                 if (!string.IsNullOrWhiteSpace(computation.Comparison))
-                    comp.Properties.Add(new VtsProperty { Name = "comparison", Value = computation.Comparison, IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.Comparison, Value = computation.Comparison, IndentDepth = indentDepth + 2 });
 
                 if (computation.CValue.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "c_value", Value = computation.CValue.ToString(), IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.C_Value, Value = computation.CValue.ToString(), IndentDepth = indentDepth + 2 });
 
                 if (computation.IsNot.HasValue)
-                    comp.Properties.Add(new VtsProperty { Name = "isNot", Value = computation.IsNot.Value ? "True" : "False", IndentDepth = indentDepth + 2 });
+                    comp.Properties.Add(new VtsProperty { Name = KeywordStrings.IsNot, Value = computation.IsNot.Value ? KeywordStrings.True : KeywordStrings.False, IndentDepth = indentDepth + 2 });
 
                 c.Children.Add(comp);
             }
@@ -1893,12 +1893,12 @@ namespace VTS.Data.Abstractions
             foreach (ConditionalAction conditionalAction in scenario.ConditionalActions)
             {
                 VtsObject ca = new VtsObject { Name = KeywordStrings.ConditionalAction, IndentDepth = 2 };
-                ca.Properties.Add(new VtsProperty { Name = "id", Value = conditionalAction.Id.ToString(), IndentDepth = 3 });
-                ca.Properties.Add(new VtsProperty { Name = "name", Value = conditionalAction.Name, IndentDepth = 3 });
+                ca.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = conditionalAction.Id.ToString(), IndentDepth = 3 });
+                ca.Properties.Add(new VtsProperty { Name = KeywordStrings.Name, Value = conditionalAction.Name, IndentDepth = 3 });
 
                 VtsObject bb = new VtsObject { Name = KeywordStrings.BaseBlock, IndentDepth = 3 };
-                bb.Properties.Add(new VtsProperty { Name = "blockName", Value = conditionalAction.BaseBlock.BlockName, IndentDepth = 4 });
-                bb.Properties.Add(new VtsProperty { Name = "blockId", Value = conditionalAction.BaseBlock.BlockId.ToString(), IndentDepth = 4 });
+                bb.Properties.Add(new VtsProperty { Name = KeywordStrings.BlockName, Value = conditionalAction.BaseBlock.BlockName, IndentDepth = 4 });
+                bb.Properties.Add(new VtsProperty { Name = KeywordStrings.BlockId, Value = conditionalAction.BaseBlock.BlockId.ToString(), IndentDepth = 4 });
 
                 bb.Children.Add(WriteConditional(conditionalAction.BaseBlock.Conditional, 4));
                 bb.Children.Add(WriteEventInfo(conditionalAction.BaseBlock.Actions, 4, 1));
@@ -1906,8 +1906,8 @@ namespace VTS.Data.Abstractions
                 foreach (Block elseIfBlock in conditionalAction.BaseBlock.ElseIfBlocks)
                 {
                     VtsObject eib = new VtsObject { Name = KeywordStrings.ElseIf, IndentDepth = 4 };
-                    eib.Properties.Add(new VtsProperty { Name = "blockName", Value = elseIfBlock.BlockName, IndentDepth = 5 });
-                    eib.Properties.Add(new VtsProperty { Name = "blockId", Value = elseIfBlock.BlockId.ToString(), IndentDepth = 5 });
+                    eib.Properties.Add(new VtsProperty { Name = KeywordStrings.BlockName, Value = elseIfBlock.BlockName, IndentDepth = 5 });
+                    eib.Properties.Add(new VtsProperty { Name = KeywordStrings.BlockId, Value = elseIfBlock.BlockId.ToString(), IndentDepth = 5 });
 
                     eib.Children.Add(WriteConditional(elseIfBlock.Conditional, 5));
                     eib.Children.Add(WriteEventInfo(elseIfBlock.Actions, 5, 1));
@@ -1933,19 +1933,19 @@ namespace VTS.Data.Abstractions
             foreach (Sequence sequence in scenario.EventSequences)
             {
                 VtsObject s = new VtsObject { Name = KeywordStrings.Sequence, IndentDepth = 2 };
-                s.Properties.Add(new VtsProperty { Name = "id", Value = sequence.Id.ToString(), IndentDepth = 3 });
-                s.Properties.Add(new VtsProperty { Name = "sequenceName", Value = sequence.SequenceName, IndentDepth = 3 });
-                s.Properties.Add(new VtsProperty { Name = "startImmediately", Value = sequence.StartImmediately ? "True" : "False", IndentDepth = 3 });
+                s.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = sequence.Id.ToString(), IndentDepth = 3 });
+                s.Properties.Add(new VtsProperty { Name = KeywordStrings.SequenceName, Value = sequence.SequenceName, IndentDepth = 3 });
+                s.Properties.Add(new VtsProperty { Name = KeywordStrings.StartImmediately, Value = sequence.StartImmediately ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
 
                 foreach (Event @event in sequence.Events)
                 {
                     VtsObject e = new VtsObject { Name = KeywordStrings.Event, IndentDepth = 3 };
-                    e.Properties.Add(new VtsProperty { Name = "conditional", Value = @event.Conditional.ToString(), IndentDepth = 4 });
-                    e.Properties.Add(new VtsProperty { Name = "delay", Value = @event.Delay.ToString(), IndentDepth = 4 });
-                    e.Properties.Add(new VtsProperty { Name = "nodeName", Value = @event.NodeName, IndentDepth = 4 });
+                    e.Properties.Add(new VtsProperty { Name = KeywordStrings.ConditionalProperty, Value = @event.Conditional.ToString(), IndentDepth = 4 });
+                    e.Properties.Add(new VtsProperty { Name = KeywordStrings.Delay, Value = @event.Delay.ToString(), IndentDepth = 4 });
+                    e.Properties.Add(new VtsProperty { Name = KeywordStrings.NodeName, Value = @event.NodeName, IndentDepth = 4 });
 
                     if (@event.ExitConditional.HasValue)
-                        e.Properties.Add(new VtsProperty { Name = "exitConditional", Value = @event.ExitConditional.Value.ToString(), IndentDepth = 4 });
+                        e.Properties.Add(new VtsProperty { Name = KeywordStrings.ExitConditional, Value = @event.ExitConditional.Value.ToString(), IndentDepth = 4 });
 
                     VtsObject ei = WriteEventInfo(@event.EventInfo, 4, 0);
 
@@ -1967,9 +1967,9 @@ namespace VTS.Data.Abstractions
             foreach (BaseInfo baseInfo in scenario.Bases)
             {
                 VtsObject b = new VtsObject { Name = KeywordStrings.BaseInfo, IndentDepth = 2 };
-                b.Properties.Add(new VtsProperty { Name = "id", Value = baseInfo.Id.ToString(), IndentDepth = 3 });
-                b.Properties.Add(new VtsProperty { Name = "overrideBaseName", Value = baseInfo.OverrideBaseName, IndentDepth = 3 });
-                b.Properties.Add(new VtsProperty { Name = "baseTeam", Value = baseInfo.BaseTeam, IndentDepth = 3 });
+                b.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = baseInfo.Id.ToString(), IndentDepth = 3 });
+                b.Properties.Add(new VtsProperty { Name = KeywordStrings.OverrideBaseName, Value = baseInfo.OverrideBaseName, IndentDepth = 3 });
+                b.Properties.Add(new VtsProperty { Name = KeywordStrings.BaseTeam, Value = baseInfo.BaseTeam, IndentDepth = 3 });
 
                 bases.Children.Add(b);
             }
@@ -1984,7 +1984,7 @@ namespace VTS.Data.Abstractions
             foreach (GlobalValue globalValue in scenario.GlobalValues)
             {
                 VtsObject gv = new VtsObject { Name = KeywordStrings.GlobalValue, IndentDepth = 2 };
-                gv.Properties.Add(new VtsProperty { Name = "data", Value = globalValue.ToString(), IndentDepth = 3 });
+                gv.Properties.Add(new VtsProperty { Name = KeywordStrings.Data, Value = globalValue.ToString(), IndentDepth = 3 });
 
                 globalValues.Children.Add(gv);
             }
@@ -1999,9 +1999,9 @@ namespace VTS.Data.Abstractions
             foreach (BriefingNote briefingNote in scenario.BriefingNotes)
             {
                 VtsObject bn = new VtsObject { Name = KeywordStrings.BriefingNote, IndentDepth = 2 };
-                bn.Properties.Add(new VtsProperty { Name = "text", Value = briefingNote.Text, IndentDepth = 3 });
-                bn.Properties.Add(new VtsProperty { Name = "imagePath", Value = briefingNote.ImagePath, IndentDepth = 3 });
-                bn.Properties.Add(new VtsProperty { Name = "audioClipPath", Value = briefingNote.AudioClipPath, IndentDepth = 3 });
+                bn.Properties.Add(new VtsProperty { Name = KeywordStrings.Text, Value = briefingNote.Text, IndentDepth = 3 });
+                bn.Properties.Add(new VtsProperty { Name = KeywordStrings.ImagePath, Value = briefingNote.ImagePath, IndentDepth = 3 });
+                bn.Properties.Add(new VtsProperty { Name = KeywordStrings.AudioClipPath, Value = briefingNote.AudioClipPath, IndentDepth = 3 });
 
                 briefing.Children.Add(bn);
             }
