@@ -21,6 +21,12 @@
         public const string Null = "null";
         public const string Radius = "radius";
         public const string Rotation = "rotation";
+        public const string SccUnit = "SCCUnit";
+        public const string SccUnitGroup = "SCCUnitGroup";
+        public const string SccUnitList = "SCCUnitList";
+        public const string SccChance = "SCCChance";
+        public const string SccVehicleControl = "SCCVehicleControl";
+        public const string SccGlobalValue = "SCCGlobalValue";
         public const string SccStaticObject = "SCCStaticObject";
         public const string SphericalRadius = "sphericalRadius";
         public const string StartMode = "startMode";

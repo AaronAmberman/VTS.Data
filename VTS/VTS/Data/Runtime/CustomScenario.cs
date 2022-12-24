@@ -8,7 +8,7 @@ namespace VTS.Data.Runtime
     [DebuggerDisplay("VTS File:{File} (HasError:{HasError})")]
     public class CustomScenario : ICloneable
     {
-        // todo : map weapon types for all aircraft
+        // todo : map weapon types for all aircraft and update code where needed
 
         #region Fields
 
@@ -1160,6 +1160,26 @@ namespace VTS.Data.Runtime
 
                 if (!string.IsNullOrWhiteSpace(comp.Type) && comp.ObjectReference.HasValue)
                 {
+                    //if (comp.Type == KeywordStrings.SccUnit)
+                    //{
+                    //}
+                    //else if (comp.Type == KeywordStrings.SccUnitGroup)
+                    //{
+                    //}
+                    //else if (comp.Type == KeywordStrings.SccUnitList)
+                    //{
+                    //}
+                    //else if (comp.Type == KeywordStrings.SccChance)
+                    //{
+
+                    //}
+                    //else if (comp.Type == KeywordStrings.SccVehicleControl)
+                    //{
+                    //}
+                    //else if (comp.Type == KeywordStrings.SccGlobalValue)
+                    //{
+                    //}
+                    // only static objects seem to use the object reference property
                     if (comp.Type == KeywordStrings.SccStaticObject)
                     {
                         StaticObject staticObject = StaticObjects.FirstOrDefault(x => x.Id == comp.ObjectReference.Value);
@@ -1173,7 +1193,6 @@ namespace VTS.Data.Runtime
                             computation.ObjectReference = staticObject;
                         }
                     }
-                    // todo : identify if there can be other object types
                     else
                     {
                         computation.ObjectReference = comp.ObjectReference;
@@ -2036,7 +2055,7 @@ namespace VTS.Data.Runtime
 
                 if (computation.ObjectReference != null)
                 {
-                    int? id = computation.ObjectReference is StaticObject staticObject ? staticObject.Id : (int)computation.ObjectReference;
+                    int? id = computation.ObjectReference == null ? null : computation.ObjectReference is StaticObject staticObject ? staticObject.Id : (int)computation.ObjectReference;
 
                     c.ObjectReference = id;
                 }

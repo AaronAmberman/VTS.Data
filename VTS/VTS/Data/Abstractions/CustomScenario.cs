@@ -1172,7 +1172,7 @@ namespace VTS.Data.Abstractions
                 forcedEquips = ";;;;;;;;;;;";
 
             // todo : I do not have the helicopter DLC so I cannot setup missions to test this data but fill this in at some point
-            //if (scenario.Vehicle == "Chopper")
+            //if (scenario.Vehicle == "Helicopter")
             //    forcedEquips = ";;;;";
 
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.ForcedEquips, Value = string.IsNullOrWhiteSpace(scenario.ForcedEquips) ? forcedEquips : scenario.ForcedEquips, IndentDepth = 1 });
