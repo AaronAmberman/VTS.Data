@@ -404,7 +404,6 @@ namespace VTS.Data.Runtime
                         DefaultWaypoint = us.UnitFields.DefaultWaypoint,
                         DetectionMode = us.UnitFields.DetectionMode,
                         EngageEnemies = us.UnitFields.EngageEnemies,
-                        Equips = us.UnitFields.Equips,
                         Fuel = us.UnitFields.Fuel,
                         HullNumber = us.UnitFields.HullNumber,
                         InitialSpeed = us.UnitFields.InitialSpeed,
@@ -426,7 +425,56 @@ namespace VTS.Data.Runtime
                         Parent = unit
                     };
 
-                    if (!string.IsNullOrWhiteSpace(us.UnitFields.Waypoint) && us.UnitFields.Waypoint != "null")
+                    if (string.IsNullOrWhiteSpace(us.UnitFields.Equips))
+                    {
+                        string equips = ";;;;;;;"; // AV-42CAI
+
+                        if (unit.UnitId == KeywordStrings.F45AAi)
+                        {
+                            equips = ";;;;;;;;;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.FA26BAi)
+                        {
+                            equips = ";;;;;;;;;;;;;;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.ABomberAi)
+                        {
+                            equips = ";;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.MQ31)
+                        {
+                            equips = ";;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.AiUCAV)
+                        {
+                            equips = ";;;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.ASF30)
+                        {
+                            equips = ";;;;;;;;;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.ASF33)
+                        {
+                            equips = ";;;;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.ASF58)
+                        {
+                            equips = ";;;;;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.EBomberAi)
+                        {
+                            equips = ";;;;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.Gav25)
+                        {
+                            equips = ";;;;;;;;;";
+                        }
+
+                        unitFields.Equips = equips;
+                    }
+                    else unitFields.Equips = us.UnitFields.Equips;
+
+                    if (!string.IsNullOrWhiteSpace(us.UnitFields.Waypoint) && us.UnitFields.Waypoint != KeywordStrings.Null)
                     {
                         int id = Convert.ToInt32(us.UnitFields.Waypoint);
 
@@ -1622,7 +1670,6 @@ namespace VTS.Data.Runtime
                         DefaultWaypoint = unit.UnitFields.DefaultWaypoint,
                         DetectionMode = unit.UnitFields.DetectionMode,
                         EngageEnemies = unit.UnitFields.EngageEnemies,
-                        Equips = unit.UnitFields.Equips,
                         Fuel = unit.UnitFields.Fuel,
                         HullNumber = unit.UnitFields.HullNumber,
                         InitialSpeed = unit.UnitFields.InitialSpeed,
@@ -1688,6 +1735,57 @@ namespace VTS.Data.Runtime
                             uf.ReturnToBaseDestination = $"{KeywordStrings.MapWaypoint}{Bases.IndexOf(bi)}";
                             //uf.ReturnToBaseDestination = $"{KeywordStrings.MapWaypoint}{bi.Id}";
                         }
+                    }
+                    else if (unitFieldProperties.Contains(KeywordStrings.Equips))
+                    {
+                        if (string.IsNullOrWhiteSpace(us.UnitFields.Equips))
+                        {
+                            string equips = ";;;;;;;"; // AV-42CAI
+
+                            if (unit.UnitId == KeywordStrings.F45AAi)
+                            {
+                                equips = ";;;;;;;;;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.FA26BAi)
+                            {
+                                equips = ";;;;;;;;;;;;;;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.ABomberAi)
+                            {
+                                equips = ";;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.MQ31)
+                            {
+                                equips = ";;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.AiUCAV)
+                            {
+                                equips = ";;;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.ASF30)
+                            {
+                                equips = ";;;;;;;;;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.ASF33)
+                            {
+                                equips = ";;;;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.ASF58)
+                            {
+                                equips = ";;;;;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.EBomberAi)
+                            {
+                                equips = ";;;;";
+                            }
+                            else if (unit.UnitId == KeywordStrings.Gav25)
+                            {
+                                equips = ";;;;;;;;;";
+                            }
+
+                            uf.Equips = equips;
+                        }
+                        else uf.Equips = unit.UnitFields.Equips;
                     }
 
                     us.UnitFields = uf;
