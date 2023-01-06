@@ -132,5 +132,3 @@ In the debug console you will notice some data warnings that come from the API a
      - Unit {unitName} (unitInstanceID) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}).
 3. VTS.Data.Runtime.CustomScenario Data Conversion Warning
    - This occurs within this API when attempting to cast between expected types and the cast fails.
-  
-There are plans in the future to add the ability to push these warning to the consuming application so that they be logged...or whatever it is that the consuming application wishes to do with the warning. 
