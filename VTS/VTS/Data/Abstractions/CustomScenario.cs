@@ -1183,6 +1183,11 @@ namespace VTS.Data.Abstractions
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.IsTraining, Value = scenario.IsTraining ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.RtbWptId, Value = scenario.ReturnToBaseWaypointId == null ? "" : scenario.ReturnToBaseWaypointId, IndentDepth = 1 });
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.RefuelWptId, Value = scenario.RefuelWaypointId == null ? "" : scenario.RefuelWaypointId, IndentDepth = 1 });
+
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.InfiniteAmmo, Value = scenario.InfiniteAmmo ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.InfAmmoReloadDelay, Value = scenario.InfiniteAmmoReloadDelay.ToString(), IndentDepth = 1 });
+            cs.Properties.Add(new VtsProperty { Name = KeywordStrings.FuelDrainMult, Value = scenario.FuelDrainMultiplier.ToString(), IndentDepth = 1 });
+
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.EnvName, Value = scenario.EnvironmentName, IndentDepth = 1 });
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.SelectableEnv, Value = scenario.SelectableEnvironment ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.QsMode, Value = scenario.QuickSaveMode, IndentDepth = 1 });
@@ -1231,6 +1236,8 @@ namespace VTS.Data.Abstractions
                         unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.SpawnOnStart, Value = unitSpawner.UnitFields.SpawnOnStart ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
                     if (property == KeywordStrings.Invincible)
                         unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Invincible, Value = unitSpawner.UnitFields.Invincible ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
+                    if (property == KeywordStrings.Respawnable)
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Respawnable, Value = unitSpawner.UnitFields.Respawnable ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
                     if (property == KeywordStrings.CarrierSpawns)
                         unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.CarrierSpawns, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.CarrierSpawns) ? "" : unitSpawner.UnitFields.CarrierSpawns, IndentDepth = 4 });
                     if (property == KeywordStrings.RadarUnits)
@@ -1383,18 +1390,86 @@ namespace VTS.Data.Abstractions
             VtsObject unitGroups = new VtsObject { Name = KeywordStrings.UnitGroups, IndentDepth = 1 };
 
             UnitGroup alliedUG = scenario.UnitGroups.FirstOrDefault(ug => ug.Name == KeywordStrings.Allied);
-            VtsObject allied = new VtsObject { Name = KeywordStrings.Allied, IndentDepth = 2 };
-            
-            WriteUnitGroupProperties(alliedUG, allied);
 
-            unitGroups.Children.Add(allied);
+            if (alliedUG != null)
+            {
+                // check to make sure we even need to write the unit group
+                // needs to be any unit group with data
+                if (!string.IsNullOrWhiteSpace(alliedUG.Alpha) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Bravo) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Charlie) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Delta) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Echo) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Foxtrot) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Golf) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Hotel) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.India) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Juliet) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Kilo) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Lima) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Mike) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.November) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Oscar) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Papa) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Quebec) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Romeo) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Sierra) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Tango) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Uniform) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Victor) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Whiskey) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Xray) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Yankee) ||
+                    !string.IsNullOrWhiteSpace(alliedUG.Zulu))
+                {
+                    VtsObject allied = new VtsObject { Name = KeywordStrings.Allied, IndentDepth = 2 };
+
+                    WriteUnitGroupProperties(alliedUG, allied);
+
+                    unitGroups.Children.Add(allied);
+                }
+            }
 
             UnitGroup enemyUG = scenario.UnitGroups.FirstOrDefault(ug => ug.Name == KeywordStrings.Enemy);
-            VtsObject enemy = new VtsObject { Name = KeywordStrings.Enemy, IndentDepth = 2 };
-            
-            WriteUnitGroupProperties(enemyUG, enemy);
 
-            unitGroups.Children.Add(enemy);
+            if (enemyUG != null)
+            {
+                // check to make sure we even need to write the unit group
+                // needs to be any unit group with data
+                if (!string.IsNullOrWhiteSpace(enemyUG.Alpha) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Bravo) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Charlie) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Delta) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Echo) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Foxtrot) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Golf) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Hotel) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.India) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Juliet) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Kilo) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Lima) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Mike) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.November) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Oscar) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Papa) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Quebec) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Romeo) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Sierra) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Tango) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Uniform) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Victor) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Whiskey) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Xray) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Yankee) ||
+                    !string.IsNullOrWhiteSpace(enemyUG.Zulu))
+                {
+                    VtsObject enemy = new VtsObject { Name = KeywordStrings.Enemy, IndentDepth = 2 };
+
+                    WriteUnitGroupProperties(enemyUG, enemy);
+
+                    unitGroups.Children.Add(enemy);
+                }
+            }
 
             cs.Children.Add(unitGroups);
         }

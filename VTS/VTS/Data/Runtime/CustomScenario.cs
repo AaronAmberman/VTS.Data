@@ -931,7 +931,7 @@ namespace VTS.Data.Runtime
 
         private UnitGroupGrouping ReadUnitGroup(Abstractions.UnitGroup ug, string group, string groupUnits)
         {
-            if (!string.IsNullOrWhiteSpace(groupUnits)) return null;
+            if (string.IsNullOrWhiteSpace(groupUnits)) return null;
 
             UnitGroupGrouping groupGrouping = new UnitGroupGrouping
             {
@@ -975,7 +975,7 @@ namespace VTS.Data.Runtime
                      */
 
                     // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
-                    if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) || unit.UnitFields.UnitGroup != KeywordStrings.Null)
+                    if (unit.UnitFields.UnitGroup != null && !string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) && unit.UnitFields.UnitGroup != KeywordStrings.Null)
                     {
                         string[] groupData = unit.UnitFields.UnitGroup.Split(':');
 
@@ -2025,6 +2025,8 @@ namespace VTS.Data.Runtime
                     ug.Yankee = WriteUnitGroup(unitGroup.Yankee);
                     ug.Zulu = WriteUnitGroup(unitGroup.Zulu);
 
+                    ug.UnitGroupSettings.AddRange(WriteUnitGroupSettings(unitGroup));
+
                     cs.UnitGroups.Add(ug);
                 }
 
@@ -2178,6 +2180,8 @@ namespace VTS.Data.Runtime
                 if (DiagnosticOptions.OutputCustomScenarioConversionTime)
                     Debug.WriteLine($"VTS.Data.Runtime.CustomScenario converted to VTS.Data.Abstractions.CustomScenario:{sw.Elapsed}");
 
+                Abstractions.CustomScenario.WriteVtsFile(cs);
+
                 return true;
             }
             catch (Exception ex)
@@ -2196,6 +2200,58 @@ namespace VTS.Data.Runtime
             string units = string.Join(';', unitIds) + ";";
 
             return units;
+        }
+
+        private List<Abstractions.UnitGroupSettings> WriteUnitGroupSettings(UnitGroup unitGroup)
+        {
+            List<Abstractions.UnitGroupSettings> unitGroupSettings = new List<Abstractions.UnitGroupSettings>();
+
+            if (unitGroup.Alpha.Settings != null)
+            {
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Alpha?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Bravo?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Charlie?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Delta?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Echo?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Foxtrot?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Golf?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Hotel?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.India?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Juliet?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Kilo?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Lima?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Mike?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.November?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Oscar?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Papa?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Quebec?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Romeo?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Sierra?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Tango?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Uniform?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Victor?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Whiskey?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Xray?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Yankee?.Settings));
+                unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Zulu?.Settings));
+            }
+
+            return unitGroupSettings;
+        }
+
+        private Abstractions.UnitGroupSettings WriteUnitGroupSetting(UnitGroupSettings unitGroupSettingsObj)
+        {
+            if (unitGroupSettingsObj != null)
+            {
+                Abstractions.UnitGroupSettings ugs = new Abstractions.UnitGroupSettings
+                {
+                    Name = unitGroupSettingsObj.Name,
+                    SyncAltSpawns = unitGroupSettingsObj.SyncAltSpawns,
+                };
+
+                return ugs;
+            }
+            else return null;
         }
 
         private Abstractions.Conditional WriteConditional(Conditional conditional)
@@ -2405,7 +2461,7 @@ namespace VTS.Data.Runtime
                             List<int> unitIds = paramInfoUnits.Select(u => u.UnitInstanceId).ToList();
 
                             if (unitIds.Count > 0)
-                                pi.Value = string.Join(";", unitIds);
+                                pi.Value = string.Join(";", unitIds) + ";";
                             else
                                 pi.Value = string.Empty;
                         }
@@ -2580,7 +2636,7 @@ namespace VTS.Data.Runtime
                 else if (pi.Type == KeywordStrings.SystemString || pi.Type == KeywordStrings.Teams ||
                          pi.Type == KeywordStrings.GroundUnitSpawnPlusMoveSpeeds || pi.Type == KeywordStrings.SmokeFlarePlusFlareColors)
                 {
-                    pi.Value = paramInfo.Value.ToString();
+                    pi.Value = paramInfo.Value == null ? string.Empty : paramInfo.Value.ToString();
                 }
 
                 foreach (ParamAttrInfo paramAttrInfo in paramInfo.ParamAttrInfos)
@@ -2637,15 +2693,15 @@ namespace VTS.Data.Runtime
 
             Abstractions.ObjectiveFields objectiveFields = new Abstractions.ObjectiveFields
             {
-                CompletionMode = obj.Fields.CompletionMode,
-                FuelLevel = obj.Fields.FuelLevel,
-                FullCompletionBonus = obj.Fields.FullCompletionBonus,
-                MinRequired = obj.Fields.MinRequired,
-                PerUnitReward = obj.Fields.PerUnitReward,
-                Radius = obj.Fields.Radius,
-                SphericalRadius = obj.Fields.SphericalRadius,
-                TriggerRadius = obj.Fields.TriggerRadius,
-                UnloadRadius = obj.Fields.UnloadRadius
+                CompletionMode = objective.Fields.CompletionMode,
+                FuelLevel = objective.Fields.FuelLevel,
+                FullCompletionBonus = objective.Fields.FullCompletionBonus,
+                MinRequired = objective.Fields.MinRequired,
+                PerUnitReward = objective.Fields.PerUnitReward,
+                Radius = objective.Fields.Radius,
+                SphericalRadius = objective.Fields.SphericalRadius,
+                TriggerRadius = objective.Fields.TriggerRadius,
+                UnloadRadius = objective.Fields.UnloadRadius
             };
 
             if (objective.Fields.FailConditional != null)
