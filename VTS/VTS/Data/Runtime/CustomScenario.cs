@@ -18,6 +18,12 @@ namespace VTS.Data.Runtime
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the path to where the EditorResources directory lives for VTOL VR.
+        /// Default is C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\EditorResources\.
+        /// </summary>
+        public static string EditorResourcesPath { get; set; } = @"C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\EditorResources\";
+
         public string AllowedEquips { get; set; }
         public int BaseBudget { get; set; }
         public string CampaignId { get; set; }
@@ -530,31 +536,11 @@ namespace VTS.Data.Runtime
 
                     if (!string.IsNullOrWhiteSpace(u.UnitFields.ReturnToBaseDestination))
                     {
-                        if (u.UnitFields.ReturnToBaseDestination.StartsWith("map")) // BaseInfo object
+                        if (u.UnitFields.ReturnToBaseDestination.StartsWith(KeywordStrings.MapWaypoint)) // BaseInfo object
                         {
                             string[] values = u.UnitFields.ReturnToBaseDestination.Split(':');
 
-                            #region Id
-
-                            //int id = Convert.ToInt32(values[1]);
-
-                            //BaseInfo rtb = Bases.FirstOrDefault(a => a.Id == id);
-
-                            //if (rtb == null)
-                            //{
-                            //    Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Bases.");
-                            //}
-                            //else
-                            //{
-                            //    unit.UnitFields.ReturnToBaseDestination = rtb;
-                            //}
-
-                            #endregion
-
-                            #region Index
-
                             // base references seem to be index based not id based
-
                             int index = Convert.ToInt32(values[1]);
 
                             if (index > Bases.Count)
@@ -565,10 +551,8 @@ namespace VTS.Data.Runtime
                             {
                                 unit.UnitFields.ReturnToBaseDestination = Bases[index];
                             }
-
-                            #endregion
                         }
-                        else if (u.UnitFields.ReturnToBaseDestination.StartsWith(KeywordStrings.Unit)) // UnitSpawner object
+                        else if (u.UnitFields.ReturnToBaseDestination.StartsWith(KeywordStrings.UnitWaypoint)) // UnitSpawner object
                         {
                             string[] values = u.UnitFields.ReturnToBaseDestination.Split(':');
                             int id = Convert.ToInt32(values[1]);
@@ -1094,7 +1078,6 @@ namespace VTS.Data.Runtime
                 eventTarget.Target = et.TargetId; // just box the int that represents the group because I am not sure how these map
             else if (et.TargetType == KeywordStrings.System)
                 eventTarget.Target = et.TargetId; // just box up the 0 as I don't believe it is used for system
-            /// more?
 
             foreach (Abstractions.ParamInfo pi in et.ParamInfos)
             {
@@ -1102,13 +1085,210 @@ namespace VTS.Data.Runtime
                 {
                     Name = pi.Name,
                     Type = pi.Type,
-                    Value = pi.Value,
                     Parent = eventTarget
                 };
 
-                // this will be very complex and tedious to track down all the various types of objects that can be referenced here
-                //string value = pi.Value; // this will be an int, a string, a Unit, a list of Units, a Path, a Waypoint, ???
-                // todo
+                /*
+                 * System.Boolean : value = False || True
+                 * System.Single : value = 1 || 1.0
+                 * UnitReference : value = -1:0 (this means empty I guess) || 6 (UnitSpawner object)
+                 * UnitReferenceListAI : value = 0;7; (; separated list of unit ids)
+                 * UnitReferenceListOtherSubs : value = 157;158;179;180;183;184;260;261;312;178;152;154;159; (; separated list of unit ids)
+                 * ConditionalActionReference : value = 0 (id of action)
+                 * AirportReference : value = map:0 (BaseInfo object) || unit:0 (UnitSpawner object)
+                 * VTSAudioReference : value = null (path on hard drive)
+                 * GlobalValue : value = 0 (index of global value)
+                 * FollowPath : value = 23 (id of path)
+                 * Waypoint : value = 8 (id of waypoint)
+                 * FixedPoint : value = (52126.018064498901, 2258.798828125, 38374.517822265625) (ThreePointValue)
+                 * Teams : value = Allied || Enemy
+                 * System.String : value = '' (or any other string)
+                 * GroundUnitSpawn+MoveSpeeds : value = Fast_30 || Medium_20 || Slow_10
+                 * SmokeFlare+FlareColors : value = Blue
+                 */
+
+                if (string.IsNullOrWhiteSpace(pi.Value)) paramInfo.Value = null;
+                else if (pi.Value == KeywordStrings.Null) paramInfo.Value = null;
+                else
+                {
+                    if (pi.Type == KeywordStrings.SystemBoolean)
+                    {
+                        paramInfo.Value = Convert.ToBoolean(pi.Value);
+                    }
+                    else if (pi.Type == KeywordStrings.SystemSingle)
+                    {
+                        paramInfo.Value = Convert.ToSingle(pi.Value);
+                    }
+                    else if (pi.Type == KeywordStrings.UnitReference)
+                    {
+                        if (pi.Value.StartsWith("-1", StringComparison.OrdinalIgnoreCase))
+                        {
+                            paramInfo.Value = null;
+                        }
+                        else
+                        {
+                            int id  = Convert.ToInt32(pi.Value);
+
+                            UnitSpawner match = Units.FirstOrDefault(unit => unit.UnitInstanceId == id);
+
+                            if (match != null)
+                            {
+                                paramInfo.Value = match;
+                            }
+                            else
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{pi.Value}] that could not be found.");
+                            }
+                        }
+                    }
+                    else if (pi.Type == KeywordStrings.UnitReferenceListAI || pi.Type == KeywordStrings.UnitReferenceListOtherSubs)
+                    {
+                        string[] units = pi.Value.Split(";", StringSplitOptions.RemoveEmptyEntries);
+                        List<UnitSpawner> paramInfoUnits = new List<UnitSpawner>();
+
+                        foreach (string unit in units)
+                        {
+                            int id = Convert.ToInt32(unit);
+
+                            UnitSpawner match = Units.FirstOrDefault(unit => unit.UnitInstanceId == id);
+
+                            if (match != null)
+                            {
+                                paramInfoUnits.Add(match);
+                            }
+                            else
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{pi.Value}] in its list of units that could not be found.");
+                            }
+                        }
+
+                        paramInfo.Value = paramInfoUnits;
+                    }
+                    else if (pi.Type == KeywordStrings.ConditionalActionReference)
+                    {
+                        int id = Convert.ToInt32(pi.Value);
+
+                        ConditionalAction ca = ConditionalActions.FirstOrDefault(action => action.Id == id);
+
+                        if (ca != null)
+                        {
+                            paramInfo.Value = ca;
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference [{pi.Value}] that could not be found.");
+                        }
+                    }
+                    else if (pi.Type == KeywordStrings.AirportReference)
+                    {
+                        if (pi.Value.StartsWith(KeywordStrings.MapWaypoint)) // BaseInfo object
+                        {
+                            string[] values = pi.Value.Split(':');
+
+                            // base references seem to be index based not id based
+                            int index = Convert.ToInt32(values[1]);
+
+                            if (index > Bases.Count)
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a airport reference (base) [{pi.Value}] that could not be found.");
+                            }
+                            else
+                            {
+                                paramInfo.Value = Bases[index];
+                            }
+                        }
+                        else if (pi.Value.StartsWith(KeywordStrings.UnitWaypoint)) // UnitSpawner object
+                        {
+                            string[] values = pi.Value.Split(':');
+                            int id = Convert.ToInt32(values[1]);
+
+                            UnitSpawner rtb = Units.FirstOrDefault(theUnit => theUnit.UnitInstanceId == id);
+
+                            if (rtb == null)
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a airport reference (unit) [{pi.Value}] that could not be found.");
+                            }
+                            else
+                            {
+                                paramInfo.Value = rtb;
+                            }
+                        }
+                    }
+                    else if (pi.Type == KeywordStrings.VTSAudioReference)
+                    {
+                        try
+                        {
+                            string path = System.IO.Path.Combine(EditorResourcesPath, pi.Value);
+
+                            if (System.IO.File.Exists(path))
+                            {
+                                paramInfo.Value = new FileInfo(path);
+                            }
+                            else
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching File Data Warning: The VTSAudioReference {pi.Value} could not be found. Please be sure to set the EditorResourcesPath if VTOL VR is installed some where other than Program Files (x86).");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching File Data Warning: The VTSAudioReference {pi.Value} could not be found. Please be sure to set the EditorResourcesPath if VTOL VR is installed some where other than Program Files (x86).{Environment.NewLine}{ex.Message}");
+                        }
+                    }
+                    else if (pi.Type == KeywordStrings.GlobalValueParamInfoType)
+                    {
+                        int index = Convert.ToInt32(pi.Value);
+
+                        GlobalValue globalValue = GlobalValues[index];
+
+                        if (globalValue == null)
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a global value reference [{pi.Value}] that could not be found.");
+                        }
+                        else
+                        {
+                            paramInfo.Value = globalValue;
+                        }
+                    }
+                    else if (pi.Type == KeywordStrings.FollowPath)
+                    {
+                        int id = Convert.ToInt32(pi.Value);
+
+                        Path path = Paths.FirstOrDefault(p => p.Id == id);
+
+                        if (path == null)
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a path reference [{pi.Value}] that could not be found.");
+                        }
+                        else
+                        {
+                            paramInfo.Value = path;
+                        }
+                    }
+                    else if (pi.Type == KeywordStrings.WaypointParamInfoType)
+                    {
+                        int id = Convert.ToInt32(pi.Value);
+
+                        Waypoint waypoint = Waypoints.FirstOrDefault(wp => wp.Id == id);
+
+                        if (waypoint == null)
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference [{pi.Value}] that could not be found.");
+                        }
+                        else
+                        {
+                            paramInfo.Value = waypoint;
+                        }
+                    }
+                    else if (pi.Type == KeywordStrings.FixedPoint)
+                    {
+                        ThreePointValue threePointValue = ReadThreePointValue(pi.Value);
+                    }
+                    else if (pi.Type == KeywordStrings.GroundUnitSpawnPlusMoveSpeeds || pi.Type == KeywordStrings.SmokeFlarePlusFlareColors || 
+                             pi.Type == KeywordStrings.Teams || pi.Type == KeywordStrings.SystemString)
+                    {
+                        paramInfo.Value = pi.Value;
+                    }
+                }
 
                 foreach (Abstractions.ParamAttrInfo pai in pi.ParamAttrInfos)
                 {
@@ -2148,9 +2328,260 @@ namespace VTS.Data.Runtime
                 Abstractions.ParamInfo pi = new Abstractions.ParamInfo
                 {
                     Name = paramInfo.Name,
-                    Type = paramInfo.Type,
-                    Value = paramInfo.Value
+                    Type = paramInfo.Type
                 };
+
+                /*
+                 * System.Boolean : value = False || True
+                 * System.Single : value = 1 || 1.0
+                 * UnitReference : value = -1:0 (this means empty I guess) || 6 (UnitSpawner object)
+                 * UnitReferenceListAI : value = 0;7; (; separated list of unit ids)
+                 * UnitReferenceListOtherSubs : value = 157;158;179;180;183;184;260;261;312;178;152;154;159; (; separated list of unit ids)
+                 * ConditionalActionReference : value = 0 (id of action)
+                 * AirportReference : value = map:0 (base -> BaseInfo object) || unit:0 (UnitSpawner object)
+                 * VTSAudioReference : value = null (path on hard drive)
+                 * GlobalValue : value = 0 (index of global value)
+                 * FollowPath : value = 23 (id of path)
+                 * Waypoint : value = 8 (id of waypoint)
+                 * FixedPoint : value = (52126.018064498901, 2258.798828125, 38374.517822265625) (ThreePointValue)
+                 * System.String : value = '' (or any other string)
+                 * Teams : value = Allied || Enemy
+                 * GroundUnitSpawn+MoveSpeeds : value = Fast_30 || Medium_20 || Slow_10
+                 * SmokeFlare+FlareColors : value = Blue
+                 */
+
+                if (pi.Type == KeywordStrings.SystemBoolean)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        pi.Value = (bool)paramInfo.Value ? KeywordStrings.True : KeywordStrings.False;
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.SystemSingle)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        pi.Value = ((float)paramInfo.Value).ToString();
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.UnitReference)
+                {
+                    if (paramInfo.Value == null)
+                    {
+                        pi.Value = "-1:0";
+                    }
+                    else 
+                    {
+                        UnitSpawner unit = paramInfo.Value as UnitSpawner;
+
+                        if (unit != null)
+                        {
+                            pi.Value = unit.UnitInstanceId.ToString();
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference that could not be cast as a unit to read data from.");
+
+                            pi.Value = "-1:0";
+                        }
+                    }
+                }
+                else if (pi.Type == KeywordStrings.UnitReferenceListAI  || pi.Type == KeywordStrings.UnitReferenceListOtherSubs)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        List<UnitSpawner> paramInfoUnits = paramInfo.Value as List<UnitSpawner>;
+
+                        if (paramInfoUnits != null)
+                        {
+                            List<int> unitIds = paramInfoUnits.Select(u => u.UnitInstanceId).ToList();
+
+                            if (unitIds.Count > 0)
+                                pi.Value = string.Join(";", unitIds);
+                            else
+                                pi.Value = string.Empty;
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a list of units reference that could not be cast as a list of units to read data from.");
+
+                            pi.Value = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.ConditionalActionReference)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        ConditionalAction ca = paramInfo.Value as ConditionalAction;
+
+                        if (ca != null)
+                        {
+                            pi.Value = ca.Id.ToString();
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference that could not be cast as a conditional action to read data from.");
+
+                            pi.Value = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.AirportReference)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        if (paramInfo.Value is BaseInfo baseInfo)
+                        {
+                            pi.Value = KeywordStrings.MapWaypoint + Bases.IndexOf(baseInfo).ToString();
+                        }
+                        else if (paramInfo.Value is UnitSpawner unit)
+                        {
+                            pi.Value = KeywordStrings.UnitWaypoint + unit.UnitInstanceId.ToString();
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a value reference that could not be cast as a base or a unit to read data from.");
+
+                            pi.Value = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.VTSAudioReference)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        FileInfo fi = paramInfo.Value as FileInfo;
+
+                        if (fi != null)
+                        {
+                            pi.Value = fi.FullName.Replace(EditorResourcesPath, "");
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a file info reference that could not be cast as a file info to read data from.");
+
+                            pi.Value = KeywordStrings.Null;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = KeywordStrings.Null;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.GlobalValueParamInfoType)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        GlobalValue gv = paramInfo.Value as GlobalValue;
+
+                        if (gv != null)
+                        {
+                            pi.Value = gv.Index.ToString();
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a global value reference that could not be cast as a global value to read data from.");
+
+                            pi.Value = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.FollowPath)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        Path path = paramInfo.Value as Path;
+
+                        if (path != null)
+                        {
+                            pi.Value = path.Id.ToString();
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a path reference that could not be cast as a path to read data from.");
+
+                            pi.Value = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.WaypointParamInfoType)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        Waypoint waypoint = paramInfo.Value as Waypoint;
+
+                        if (waypoint != null)
+                        {
+                            pi.Value = waypoint.Id.ToString();
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference that could not be cast as a waypoint to read data from.");
+
+                            pi.Value = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.FixedPoint)
+                {
+                    if (paramInfo.Value != null)
+                    {
+                        ThreePointValue tpv = paramInfo.Value as ThreePointValue;
+
+                        if (tpv != null)
+                        {
+                            pi.Value = tpv.ToString();
+                        }
+                        else
+                        {
+                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference that could not be cast as a waypoint to read data from.");
+
+                            pi.Value = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        pi.Value = string.Empty;
+                    }
+                }
+                else if (pi.Type == KeywordStrings.SystemString || pi.Type == KeywordStrings.Teams ||
+                         pi.Type == KeywordStrings.GroundUnitSpawnPlusMoveSpeeds || pi.Type == KeywordStrings.SmokeFlarePlusFlareColors)
+                {
+                    pi.Value = paramInfo.Value.ToString();
+                }
 
                 foreach (ParamAttrInfo paramAttrInfo in paramInfo.ParamAttrInfos)
                 {

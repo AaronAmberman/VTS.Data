@@ -221,6 +221,24 @@
         // properties on param infos
         public const string Value = "value";
 
+        // types of param infos
+        public const string SystemBoolean = "System.Boolean";
+        public const string SystemSingle = "System.Single";
+        public const string SystemString = "System.String";
+        public const string ConditionalActionReference = "ConditionalActionReference";
+        public const string UnitReference = "UnitReference";
+        public const string AirportReference = "AirportReference";
+        public const string VTSAudioReference = "VTSAudioReference";
+        public const string GlobalValueParamInfoType = "GlobalValue";
+        public const string UnitReferenceListAI = "UnitReferenceListAI";
+        public const string UnitReferenceListOtherSubs = "UnitReferenceListOtherSubs";
+        public const string Teams = "Teams";
+        public const string FollowPath = "FollowPath";
+        public const string WaypointParamInfoType = "Waypoint";
+        public const string GroundUnitSpawnPlusMoveSpeeds = "GroundUnitSpawn+MoveSpeeds";
+        public const string FixedPoint = "FixedPoint";
+        public const string SmokeFlarePlusFlareColors = "SmokeFlare+FlareColors";
+
         // properties on objectives
         public const string ObjectiveName = "objectiveName";
         public const string ObjectiveInfo = "objectiveInfo";

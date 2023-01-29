@@ -47,9 +47,9 @@
                 ObjectiveType = ObjectiveType,
                 OrderID = OrderID,
                 Required = Required,
-                PreReqObjectives = PreReqObjectives,
+                PreReqObjectives = PreReqObjectives.Select(x => x.Clone()).ToList(),
                 StartMode = StartMode,
-                Waypoint = Waypoint is ICloneable cloneable ? cloneable.Clone() : Waypoint, // prefer clone, else just mae reference
+                Waypoint = Waypoint is ICloneable cloneable ? cloneable.Clone() : Waypoint, // prefer clone, else just reference
                 CompleteEvent = CompleteEvent.Clone(),
                 FailEvent = FailEvent.Clone(),
                 StartEvent = StartEvent.Clone(),
