@@ -5,7 +5,7 @@
     {
         #region Properties
 
-        public int Conditional { get; set; }
+        public int? Conditional { get; set; }
         public int Delay { get; set; }
         public EventInfo EventInfo { get; set; }
         public int? ExitConditional { get; set; }

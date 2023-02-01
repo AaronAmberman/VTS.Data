@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using VTS.Collections;
 using VTS.Data.Diagnostics;
 using VTS.Data.Raw;
@@ -1160,7 +1161,7 @@ namespace VTS.Data.Abstractions
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.Vehicle, Value = scenario.Vehicle, IndentDepth = 1 });
             cs.Properties.Add(new VtsProperty { Name = KeywordStrings.Multiplayer, Value = scenario.Multiplayer ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 1 });
 
-            if (!string.IsNullOrWhiteSpace(scenario.AllowedEquips) || scenario.AllowedEquips.Equals(KeywordStrings.None, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(scenario.AllowedEquips) && !scenario.AllowedEquips.Equals(KeywordStrings.None, StringComparison.OrdinalIgnoreCase))
                 cs.Properties.Add(new VtsProperty { Name = KeywordStrings.AllowedEquips, Value = scenario.AllowedEquips, IndentDepth = 1 });
 
             string forcedEquips = ";;;;;;;"; // AV-42C
@@ -1371,6 +1372,13 @@ namespace VTS.Data.Abstractions
         private static void WriteWaypoints(CustomScenario scenario, VtsCustomScenarioObject cs)
         {
             VtsObject waypoints = new VtsObject { Name = KeywordStrings.Waypoints, IndentDepth = 1 };
+
+            for (int i = 0; i < scenario.Waypoints.GetPropertyCount(); i++)
+            {
+                DictionaryEntry property = scenario.Waypoints.GetProperty(i);
+
+                waypoints.Properties.Add(new VtsProperty { Name = property.Key.ToString(), Value = property.Value.ToString(), IndentDepth = 2 });
+            }
 
             foreach (Waypoint waypoint in scenario.Waypoints)
             {
@@ -2011,11 +2019,15 @@ namespace VTS.Data.Abstractions
                 s.Properties.Add(new VtsProperty { Name = KeywordStrings.Id, Value = sequence.Id.ToString(), IndentDepth = 3 });
                 s.Properties.Add(new VtsProperty { Name = KeywordStrings.SequenceName, Value = sequence.SequenceName, IndentDepth = 3 });
                 s.Properties.Add(new VtsProperty { Name = KeywordStrings.StartImmediately, Value = sequence.StartImmediately ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
+                s.Properties.Add(new VtsProperty { Name = KeywordStrings.WhileLoop, Value = sequence.WhileLoop ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 3 });
 
                 foreach (Event @event in sequence.Events)
                 {
                     VtsObject e = new VtsObject { Name = KeywordStrings.Event, IndentDepth = 3 };
-                    e.Properties.Add(new VtsProperty { Name = KeywordStrings.ConditionalProperty, Value = @event.Conditional.ToString(), IndentDepth = 4 });
+
+                    if (@event.ExitConditional.HasValue)
+                        e.Properties.Add(new VtsProperty { Name = KeywordStrings.ConditionalProperty, Value = @event.Conditional.ToString(), IndentDepth = 4 });
+
                     e.Properties.Add(new VtsProperty { Name = KeywordStrings.Delay, Value = @event.Delay.ToString(), IndentDepth = 4 });
                     e.Properties.Add(new VtsProperty { Name = KeywordStrings.NodeName, Value = @event.NodeName, IndentDepth = 4 });
 

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using VTS.Collections;
 using VTS.Data.Diagnostics;
 
@@ -375,6 +376,13 @@ namespace VTS.Data.Runtime
                     Waypoints.Add(waypoint);
                 }
 
+                for (int i = 0; i < customScenario.Waypoints.GetPropertyCount(); i++)
+                {
+                    DictionaryEntry property = customScenario.Waypoints.GetProperty(i);
+
+                    Waypoints.AddProperty(property.Key, property.Value);
+                }
+
                 foreach (Abstractions.UnitSpawner us in customScenario.Units)
                 {
                     UnitSpawner unit = new UnitSpawner
@@ -709,7 +717,7 @@ namespace VTS.Data.Runtime
                         Parent = this
                     };
 
-                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent);
+                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent, false);
 
                     if (te.Conditional.HasValue)
                     {
@@ -789,26 +797,33 @@ namespace VTS.Data.Runtime
                             Parent = sequence
                         };
 
-                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence);
+                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence, true);
 
-                        Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.Conditional);
+                        if (e.Conditional.HasValue)
+                        {
+                            Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.Conditional);
 
-                        if (conditional == null)
-                        {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional {e.Conditional} and that conditional could not be found in the list of Conditionals.");
-                        }
-                        else
-                        {
-                            @event.Conditional = conditional;
+                            if (conditional == null)
+                            {
+                                int cond = e.Conditional.HasValue ? e.Conditional.Value : -1;
+
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional [{cond}] and that conditional could not be found in the list of Conditionals.");
+                            }
+                            else
+                            {
+                                @event.Conditional = conditional;
+                            }
                         }
 
                         if (e.ExitConditional.HasValue)
                         {
-                            conditional = Conditionals.FirstOrDefault(x => x.Id == e.ExitConditional.Value);
+                            Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.ExitConditional.Value);
 
                             if (conditional == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional {e.Conditional} and that exit conditional could not be found in the list of Conditionals.");
+                                int cond = e.ExitConditional.HasValue ? e.ExitConditional.Value : -1;
+
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional [{cond}] and that exit conditional could not be found in the list of Conditionals.");
                             }
                             else
                             {
@@ -838,9 +853,9 @@ namespace VTS.Data.Runtime
                         Parent = conditionalAction
                     };
 
-                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock);
+                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock, true);
                     baseBlock.Conditional = ReadConditional(ca.BaseBlock.Conditional, baseBlock);
-                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock);
+                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock, true);
 
                     foreach (Abstractions.Block eib in ca.BaseBlock.ElseIfBlocks)
                     {
@@ -851,9 +866,9 @@ namespace VTS.Data.Runtime
                             Parent = baseBlock
                         };
 
-                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock);
+                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock, true);
                         elseIfBlock.Conditional = ReadConditional(eib.Conditional, elseIfBlock);
-                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock);
+                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock, true);
 
                         baseBlock.ElseIfBlocks.Add(elseIfBlock);
                     }
@@ -909,7 +924,7 @@ namespace VTS.Data.Runtime
 
                         foreach (Abstractions.EventTarget et in tei.EventTargets)
                         {
-                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo));
+                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo, true));
                         }
 
                         timedEventGroup.TimedEventInfos.Add(timedEventInfo);
@@ -1008,7 +1023,7 @@ namespace VTS.Data.Runtime
             return groupGrouping;
         }
 
-        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent)
+        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent, bool processTriggerEvents)
         {
             EventInfo eventInfo = new EventInfo
             {
@@ -1018,13 +1033,13 @@ namespace VTS.Data.Runtime
 
             foreach (Abstractions.EventTarget et in ei.EventTargets)
             {
-                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo));
+                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo, processTriggerEvents));
             }
 
             return eventInfo;
         }
 
-        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent)
+        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent, bool processTriggerEvents)
         {
             EventTarget eventTarget = new EventTarget
             {
@@ -1049,7 +1064,7 @@ namespace VTS.Data.Runtime
             }
             else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
             {
-                Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId); ;
+                Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
 
                 if (sequence == null)
                 {
@@ -1060,20 +1075,32 @@ namespace VTS.Data.Runtime
                     eventTarget.Target = sequence;
                 }
             }
-            // references to other trigger events must be done in an outer loop because the order is not guaranteed
-            //else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents)
-            //{
-            //    TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+            else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents)
+            {
+                TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
 
-            //    if (triggerEvent == null)
-            //    {
-            //        Debug.WriteLine($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
-            //    }
-            //    else
-            //    {
-            //        eventTarget.Target = triggerEvent;
-            //    }
-            //}
+                if (triggerEvent == null)
+                {
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                }
+                else
+                {
+                    eventTarget.Target = triggerEvent;
+                }
+            }
+            else if (et.TargetType == KeywordStrings.EventTargetStaticObject)
+            {
+                StaticObject staticObject = StaticObjects.FirstOrDefault(so => so.Id == et.TargetId);
+
+                if (staticObject == null)
+                {
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references static object {et.TargetId} and that static object could not be found in the list of StaticObjects.");
+                }
+                else
+                {
+                    eventTarget.Target = staticObject;
+                }
+            }
             else if (et.TargetType == KeywordStrings.EventTargetUnitGroup)
                 eventTarget.Target = et.TargetId; // just box the int that represents the group because I am not sure how these map
             else if (et.TargetType == KeywordStrings.System)
@@ -1281,7 +1308,7 @@ namespace VTS.Data.Runtime
                     }
                     else if (pi.Type == KeywordStrings.FixedPoint)
                     {
-                        ThreePointValue threePointValue = ReadThreePointValue(pi.Value);
+                        paramInfo.Value = ReadThreePointValue(pi.Value);
                     }
                     else if (pi.Type == KeywordStrings.GroundUnitSpawnPlusMoveSpeeds || pi.Type == KeywordStrings.SmokeFlarePlusFlareColors || 
                              pi.Type == KeywordStrings.Teams || pi.Type == KeywordStrings.SystemString)
@@ -1362,20 +1389,27 @@ namespace VTS.Data.Runtime
                     // only static objects seem to use the object reference property
                     if (comp.Type == KeywordStrings.SccStaticObject)
                     {
-                        StaticObject staticObject = StaticObjects.FirstOrDefault(x => x.Id == comp.ObjectReference.Value);
-
-                        if (staticObject == null)
+                        if (comp.ObjectReference.Value == -1)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references static object {comp.ObjectReference.Value} and that static object could not be found in the list of StaticObjects.");
+                            computation.ObjectReference = comp.ObjectReference.Value;
                         }
                         else
                         {
-                            computation.ObjectReference = staticObject;
+                            StaticObject staticObject = StaticObjects.FirstOrDefault(x => x.Id == comp.ObjectReference.Value);
+
+                            if (staticObject == null)
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references static object {comp.ObjectReference.Value} and that static object could not be found in the list of StaticObjects.");
+                            }
+                            else
+                            {
+                                computation.ObjectReference = staticObject;
+                            }
                         }
                     }
                     else
                     {
-                        computation.ObjectReference = comp.ObjectReference;
+                        computation.ObjectReference = comp.ObjectReference.Value;
                     }
                 }
 
@@ -1479,9 +1513,9 @@ namespace VTS.Data.Runtime
                 Parent = this
             };
 
-            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective);
-            objective.FailEvent = ReadEventInfo(o.FailEvent, objective);
-            objective.StartEvent = ReadEventInfo(o.StartEvent, objective);
+            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective, true);
+            objective.FailEvent = ReadEventInfo(o.FailEvent, objective, true);
+            objective.StartEvent = ReadEventInfo(o.StartEvent, objective, true);
 
             int id;
 
@@ -1835,6 +1869,13 @@ namespace VTS.Data.Runtime
                     cs.Waypoints.Add(wp);
                 }
 
+                for (int i = 0; i < Waypoints.GetPropertyCount(); i++)
+                {
+                    DictionaryEntry property = Waypoints.GetProperty(i);
+
+                    cs.Waypoints.AddProperty(property.Key, property.Value);
+                }
+
                 foreach (UnitSpawner unit in Units)
                 {
                     Abstractions.UnitSpawner us = new Abstractions.UnitSpawner
@@ -2186,7 +2227,7 @@ namespace VTS.Data.Runtime
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"An exception occurred attempting to save the custom scenario.{Environment.NewLine}{ex}");
+                WriteWarning($"An exception occurred attempting to save the custom scenario.{Environment.NewLine}{ex}");
 
                 return false;
             }
@@ -2370,6 +2411,19 @@ namespace VTS.Data.Runtime
                     WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a trigger event could not be cast as a trigger event. Setting TargetId to -1.");
                 }
             }
+            else if (et.TargetType == KeywordStrings.EventTargetStaticObject)
+            {
+                if  (eventTarget.Target is StaticObject staticObject)
+                {
+                    et.TargetId = staticObject.Id;
+                }
+                else
+                {
+                    et.TargetId = -1;
+
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a static object could not be cast as a static object. Setting TargetId to -1.");
+                }
+            }
             else if (et.TargetType == KeywordStrings.EventTargetUnitGroup)
             {
                 et.TargetId = (int)eventTarget.Target; // just unbox the int that represents the group because I am not sure how these map
@@ -2505,11 +2559,25 @@ namespace VTS.Data.Runtime
                     {
                         if (paramInfo.Value is BaseInfo baseInfo)
                         {
-                            pi.Value = KeywordStrings.MapWaypoint + Bases.IndexOf(baseInfo).ToString();
+                            if (baseInfo == null) pi.Value = KeywordStrings.MapWaypoint + "-1";
+                            else
+                            {
+                                BaseInfo match = Bases.FirstOrDefault(x => x.Id == baseInfo.Id);
+
+                                if (match == null) pi.Value = KeywordStrings.MapWaypoint + "-1";
+                                else pi.Value = KeywordStrings.MapWaypoint + Bases.IndexOf(match).ToString();
+                            }
                         }
                         else if (paramInfo.Value is UnitSpawner unit)
                         {
-                            pi.Value = KeywordStrings.UnitWaypoint + unit.UnitInstanceId.ToString();
+                            if (unit == null) pi.Value = KeywordStrings.UnitWaypoint + "-1";
+                            else
+                            {
+                                UnitSpawner match = Units.FirstOrDefault(u => u.UnitInstanceId == unit.UnitInstanceId);
+
+                                if (match == null) pi.Value = KeywordStrings.UnitWaypoint + "-1";
+                                else pi.Value = KeywordStrings.UnitWaypoint + unit.UnitInstanceId.ToString();
+                            }
                         }
                         else
                         {

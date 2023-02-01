@@ -9,6 +9,7 @@
         public const string Enabled = "enabled";
         public const string EventName = "eventName";
         public const string EventTargetEventSequences = "Event_Sequences";
+        public const string EventTargetStaticObject = "Static_Object";
         public const string EventTargetTriggerEvents = "Trigger_Events";
         public const string EventTargetUnit = "Unit";
         public const string EventTargetUnitGroup = "UnitGroup";

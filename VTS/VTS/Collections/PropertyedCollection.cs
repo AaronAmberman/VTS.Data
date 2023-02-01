@@ -44,7 +44,7 @@ namespace VTS.Collections
         /// <summary>Adds a property to the property collection.</summary>
         /// <param name="key">The key for the item.</param>
         /// <param name="value">The value for the item.</param>
-        public void AddProperty(string key, string value)
+        public void AddProperty(object key, object value)
         {
             dictionaryEntries.Add(new DictionaryEntry(key, value));
         }
