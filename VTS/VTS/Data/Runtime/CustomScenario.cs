@@ -438,54 +438,8 @@ namespace VTS.Data.Runtime
                         Parent = unit
                     };
 
-                    if (string.IsNullOrWhiteSpace(us.UnitFields.Equips))
-                    {
-                        string equips = ";;;;;;;"; // AV-42CAI
-
-                        if (unit.UnitId == KeywordStrings.F45AAi)
-                        {
-                            equips = ";;;;;;;;;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.FA26BAi)
-                        {
-                            equips = ";;;;;;;;;;;;;;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.ABomberAi)
-                        {
-                            equips = ";;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.MQ31)
-                        {
-                            equips = ";;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.AiUCAV)
-                        {
-                            equips = ";;;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.ASF30)
-                        {
-                            equips = ";;;;;;;;;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.ASF33)
-                        {
-                            equips = ";;;;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.ASF58)
-                        {
-                            equips = ";;;;;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.EBomberAi)
-                        {
-                            equips = ";;;;";
-                        }
-                        else if (unit.UnitId == KeywordStrings.Gav25)
-                        {
-                            equips = ";;;;;;;;;";
-                        }
-
-                        unitFields.Equips = equips;
-                    }
-                    else unitFields.Equips = us.UnitFields.Equips;
+                    // if the property is empty then let it continue to be empty
+                    unitFields.Equips = us.UnitFields.Equips;
 
                     if (!string.IsNullOrWhiteSpace(us.UnitFields.Waypoint) && us.UnitFields.Waypoint != KeywordStrings.Null)
                     {
@@ -702,6 +656,47 @@ namespace VTS.Data.Runtime
                     Conditionals.Add(ReadConditional(c, customScenario));
                 }
 
+                foreach (Abstractions.ConditionalAction ca in customScenario.ConditionalActions)
+                {
+                    ConditionalAction conditionalAction = new ConditionalAction
+                    {
+                        Id = ca.Id,
+                        Name = ca.Name,
+                        Parent = this
+                    };
+
+                    Block baseBlock = new Block
+                    {
+                        BlockId = ca.BaseBlock.BlockId,
+                        BlockName = ca.BaseBlock.BlockName,
+                        Parent = conditionalAction
+                    };
+
+                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock, false, false);
+                    baseBlock.Conditional = ReadConditional(ca.BaseBlock.Conditional, baseBlock);
+                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock, false, false);
+
+                    foreach (Abstractions.Block eib in ca.BaseBlock.ElseIfBlocks)
+                    {
+                        Block elseIfBlock = new Block
+                        {
+                            BlockId = eib.BlockId,
+                            BlockName = eib.BlockName,
+                            Parent = baseBlock
+                        };
+
+                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock, false, false);
+                        elseIfBlock.Conditional = ReadConditional(eib.Conditional, elseIfBlock);
+                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock, false, false);
+
+                        baseBlock.ElseIfBlocks.Add(elseIfBlock);
+                    }
+
+                    conditionalAction.BaseBlock = baseBlock;
+
+                    ConditionalActions.Add(conditionalAction);
+                }
+
                 foreach (Abstractions.TriggerEvent te in customScenario.TriggerEvents)
                 {
                     TriggerEvent triggerEvent = new TriggerEvent
@@ -717,7 +712,7 @@ namespace VTS.Data.Runtime
                         Parent = this
                     };
 
-                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent, false);
+                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent, false, true);
 
                     if (te.Conditional.HasValue)
                     {
@@ -777,6 +772,103 @@ namespace VTS.Data.Runtime
                     }
                 }
 
+                // loop through conditional actions again in case they reference triggers or other conditional actions
+                for (int i = 0; i < ConditionalActions.Count; i++)
+                {
+                    ConditionalAction conditionalAction = ConditionalActions[i];
+                    Abstractions.ConditionalAction ca = customScenario.ConditionalActions[i];
+
+                    for (int j = 0; j < conditionalAction.BaseBlock.Actions.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = conditionalAction.BaseBlock.Actions.EventTargets[j];
+                        Abstractions.EventTarget et = ca.BaseBlock.Actions.EventTargets[j];
+
+                        if (eventTarget.TargetType == KeywordStrings.TriggerEventsProperty)
+                        {
+                            TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+
+                            if (trigEve == null)
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                            }
+                            else
+                            {
+                                eventTarget.Target = trigEve;
+                            }
+                        }
+
+                        for (int k = 0; k < eventTarget.ParamInfos.Count; k++)
+                        {
+                            ParamInfo paramInfo = eventTarget.ParamInfos[k];
+                            Abstractions.ParamInfo pi = et.ParamInfos[k];
+
+                            if (paramInfo.Type == KeywordStrings.ConditionalActionReference)
+                            {
+                                string val = pi.Value;
+
+                                if (string.IsNullOrEmpty(val))
+                                {
+                                    continue;
+                                }
+
+                                int id = Convert.ToInt32(val);
+
+                                ConditionalAction reference = ConditionalActions.FirstOrDefault(x => x.Id == id);
+
+                                if (reference != null)
+                                {
+                                    paramInfo.Value = reference;
+                                }
+                            }
+                        }
+                    }
+
+                    for (int j = 0; j < conditionalAction.BaseBlock.ElseActions.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = conditionalAction.BaseBlock.ElseActions.EventTargets[j];
+                        Abstractions.EventTarget et = ca.BaseBlock.ElseActions.EventTargets[j];
+
+                        if (eventTarget.TargetType == KeywordStrings.TriggerEventsProperty)
+                        {
+                            TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+
+                            if (trigEve == null)
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                            }
+                            else
+                            {
+                                eventTarget.Target = trigEve;
+                            }
+                        }
+
+                        for (int k = 0; k < eventTarget.ParamInfos.Count; k++)
+                        {
+                            ParamInfo paramInfo = eventTarget.ParamInfos[k];
+                            Abstractions.ParamInfo pi = et.ParamInfos[k];
+
+                            if (paramInfo.Type == KeywordStrings.ConditionalActionReference)
+                            {
+                                string val = pi.Value;
+
+                                if (string.IsNullOrEmpty(val))
+                                {
+                                    continue;
+                                }
+
+                                int id = Convert.ToInt32(val);
+
+                                ConditionalAction reference = ConditionalActions.FirstOrDefault(x => x.Id == id);
+
+                                if (reference != null)
+                                {
+                                    paramInfo.Value = reference;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 foreach (Abstractions.Sequence s in customScenario.EventSequences)
                 {
                     Sequence sequence = new Sequence
@@ -797,7 +889,7 @@ namespace VTS.Data.Runtime
                             Parent = sequence
                         };
 
-                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence, true);
+                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence, true, true);
 
                         if (e.Conditional.HasValue)
                         {
@@ -835,47 +927,6 @@ namespace VTS.Data.Runtime
                     }
 
                     EventSequences.Add(sequence);
-                }
-
-                foreach (Abstractions.ConditionalAction ca in customScenario.ConditionalActions)
-                {
-                    ConditionalAction conditionalAction = new ConditionalAction
-                    {
-                        Id = ca.Id,
-                        Name = ca.Name,
-                        Parent = this
-                    };
-
-                    Block baseBlock = new Block
-                    {
-                        BlockId = ca.BaseBlock.BlockId,
-                        BlockName = ca.BaseBlock.BlockName,
-                        Parent = conditionalAction
-                    };
-
-                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock, true);
-                    baseBlock.Conditional = ReadConditional(ca.BaseBlock.Conditional, baseBlock);
-                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock, true);
-
-                    foreach (Abstractions.Block eib in ca.BaseBlock.ElseIfBlocks)
-                    {
-                        Block elseIfBlock = new Block
-                        {
-                            BlockId = eib.BlockId,
-                            BlockName = eib.BlockName,
-                            Parent = baseBlock
-                        };
-
-                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock, true);
-                        elseIfBlock.Conditional = ReadConditional(eib.Conditional, elseIfBlock);
-                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock, true);
-
-                        baseBlock.ElseIfBlocks.Add(elseIfBlock);
-                    }
-
-                    conditionalAction.BaseBlock = baseBlock;
-
-                    ConditionalActions.Add(conditionalAction);
                 }
 
                 foreach (Abstractions.Objective o in customScenario.Objectives)
@@ -924,7 +975,7 @@ namespace VTS.Data.Runtime
 
                         foreach (Abstractions.EventTarget et in tei.EventTargets)
                         {
-                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo, true));
+                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo, true, true));
                         }
 
                         timedEventGroup.TimedEventInfos.Add(timedEventInfo);
@@ -1023,7 +1074,7 @@ namespace VTS.Data.Runtime
             return groupGrouping;
         }
 
-        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent, bool processTriggerEvents)
+        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent, bool processTriggerEvents, bool processConditionaActionReference)
         {
             EventInfo eventInfo = new EventInfo
             {
@@ -1033,13 +1084,13 @@ namespace VTS.Data.Runtime
 
             foreach (Abstractions.EventTarget et in ei.EventTargets)
             {
-                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo, processTriggerEvents));
+                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo, processTriggerEvents, processConditionaActionReference));
             }
 
             return eventInfo;
         }
 
-        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent, bool processTriggerEvents)
+        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent, bool processTriggerEvents, bool processConditionaActionReference)
         {
             EventTarget eventTarget = new EventTarget
             {
@@ -1075,7 +1126,7 @@ namespace VTS.Data.Runtime
                     eventTarget.Target = sequence;
                 }
             }
-            else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents)
+            else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents && processTriggerEvents)
             {
                 TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
 
@@ -1191,7 +1242,7 @@ namespace VTS.Data.Runtime
 
                         paramInfo.Value = paramInfoUnits;
                     }
-                    else if (pi.Type == KeywordStrings.ConditionalActionReference)
+                    else if (pi.Type == KeywordStrings.ConditionalActionReference && processConditionaActionReference)
                     {
                         int id = Convert.ToInt32(pi.Value);
 
@@ -1513,9 +1564,9 @@ namespace VTS.Data.Runtime
                 Parent = this
             };
 
-            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective, true);
-            objective.FailEvent = ReadEventInfo(o.FailEvent, objective, true);
-            objective.StartEvent = ReadEventInfo(o.StartEvent, objective, true);
+            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective, true, true);
+            objective.FailEvent = ReadEventInfo(o.FailEvent, objective, true, true);
+            objective.StartEvent = ReadEventInfo(o.StartEvent, objective, true, true);
 
             int id;
 
@@ -1942,7 +1993,8 @@ namespace VTS.Data.Runtime
                             uf.Waypoint = unit.UnitFields.Waypoint.Id.ToString();
                         }
                     }
-                    else if (unitFieldProperties.Contains(KeywordStrings.CarrierSpawns))
+                    
+                    if (unitFieldProperties.Contains(KeywordStrings.CarrierSpawns))
                     {
                         // do I do something to ensure the correct number of units in the property based on ship type?
                         if (unit.UnitId == KeywordStrings.EscortCruiser) // 1 unit
@@ -1960,9 +2012,13 @@ namespace VTS.Data.Runtime
 
                         List<string> unitsOnCarrier = unit.UnitFields.CarrierSpawns.Select(x => $"{x.Item1}:{x.Item2.UnitInstanceId}").ToList();
 
-                        uf.CarrierSpawns = string.Join(';', unitsOnCarrier) + ";";
+                        if (unitsOnCarrier.Count > 0)
+                        {
+                            uf.CarrierSpawns = string.Join(';', unitsOnCarrier) + ";";
+                        }
                     }
-                    else if (unitFieldProperties.Contains(KeywordStrings.RtbDestination))
+                    
+                    if (unitFieldProperties.Contains(KeywordStrings.RtbDestination))
                     {
                         if (unit.UnitFields.ReturnToBaseDestination is UnitSpawner u)
                         {
@@ -1971,60 +2027,16 @@ namespace VTS.Data.Runtime
                         else if (unit.UnitFields.ReturnToBaseDestination is BaseInfo bi)
                         {
                             // base references seem to be index based not id based
-                            uf.ReturnToBaseDestination = $"{KeywordStrings.MapWaypoint}{Bases.IndexOf(bi)}";
-                            //uf.ReturnToBaseDestination = $"{KeywordStrings.MapWaypoint}{bi.Id}";
+                            BaseInfo match = Bases.FirstOrDefault(x => x.Id == bi.Id);
+
+                            if (match == null) uf.ReturnToBaseDestination = KeywordStrings.MapWaypoint + "-1";
+                            else uf.ReturnToBaseDestination = KeywordStrings.MapWaypoint + Bases.IndexOf(match).ToString();
                         }
                     }
-                    else if (unitFieldProperties.Contains(KeywordStrings.Equips))
+                    
+                    if (unitFieldProperties.Contains(KeywordStrings.Equips))
                     {
-                        if (string.IsNullOrWhiteSpace(us.UnitFields.Equips))
-                        {
-                            string equips = ";;;;;;;"; // AV-42CAI
-
-                            if (unit.UnitId == KeywordStrings.F45AAi)
-                            {
-                                equips = ";;;;;;;;;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.FA26BAi)
-                            {
-                                equips = ";;;;;;;;;;;;;;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.ABomberAi)
-                            {
-                                equips = ";;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.MQ31)
-                            {
-                                equips = ";;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.AiUCAV)
-                            {
-                                equips = ";;;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.ASF30)
-                            {
-                                equips = ";;;;;;;;;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.ASF33)
-                            {
-                                equips = ";;;;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.ASF58)
-                            {
-                                equips = ";;;;;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.EBomberAi)
-                            {
-                                equips = ";;;;";
-                            }
-                            else if (unit.UnitId == KeywordStrings.Gav25)
-                            {
-                                equips = ";;;;;;;;;";
-                            }
-
-                            uf.Equips = equips;
-                        }
-                        else uf.Equips = unit.UnitFields.Equips;
+                        uf.Equips = unit.UnitFields.Equips;
                     }
 
                     us.UnitFields = uf;

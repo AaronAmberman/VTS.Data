@@ -1277,53 +1277,8 @@ namespace VTS.Data.Abstractions
                         unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.RtbDestination, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ReturnToBaseDestination) ? "" : unitSpawner.UnitFields.ReturnToBaseDestination, IndentDepth = 4 });
                     if (property == KeywordStrings.ParkedStartMode)
                         unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.ParkedStartMode, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.ParkedStartMode) ? KeywordStrings.Null : unitSpawner.UnitFields.ParkedStartMode, IndentDepth = 4 });
-                    if (property == KeywordStrings.Equips)
-                    {
-                        string equips = ";;;;;;;"; // AV-42CAI
-                        
-                        if (unitSpawner.UnitId == KeywordStrings.F45AAi)
-                        {
-                            equips = ";;;;;;;;;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.FA26BAi)
-                        {
-                            equips = ";;;;;;;;;;;;;;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.ABomberAi)
-                        {
-                            equips = ";;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.MQ31)
-                        {
-                            equips = ";;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.AiUCAV)
-                        {
-                            equips = ";;;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.ASF30)
-                        {
-                            equips = ";;;;;;;;;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.ASF33)
-                        {
-                            equips = ";;;;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.ASF58)
-                        {
-                            equips = ";;;;;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.EBomberAi)
-                        {
-                            equips = ";;;;";
-                        }
-                        else if (unitSpawner.UnitId == KeywordStrings.Gav25)
-                        {
-                            equips = ";;;;;;;;;";
-                        }
-
-                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Equips, Value = string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Equips) ? equips : unitSpawner.UnitFields.Equips, IndentDepth = 4 });
-                    }                        
+                    if (property == KeywordStrings.Equips && !string.IsNullOrWhiteSpace(unitSpawner.UnitFields.Equips))
+                        unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Equips, Value = unitSpawner.UnitFields.Equips, IndentDepth = 4 });                     
                     if (property == KeywordStrings.StopToEngage)
                         unitFields.Properties.Add(new VtsProperty { Name = KeywordStrings.StopToEngage, Value = unitSpawner.UnitFields.StopToEngage ? KeywordStrings.True : KeywordStrings.False, IndentDepth = 4 });
                     if (property == KeywordStrings.StartMode)
@@ -1814,6 +1769,8 @@ namespace VTS.Data.Abstractions
 
                 if (objective.Fields.FailConditional.HasValue)
                     objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FailConditional, Value = objective.Fields.FailConditional.Value.ToString(), IndentDepth = 4 });
+                else
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FailConditional, Value = KeywordStrings.Null, IndentDepth = 4 });
 
                 if (!string.IsNullOrWhiteSpace(objective.Fields.Targets))
                     objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.Targets, Value = objective.Fields.Targets, IndentDepth = 4 });
