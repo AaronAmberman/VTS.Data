@@ -168,6 +168,8 @@
         public const string TriggerType = "triggerType";
         public const string TriggerMode = "triggerMode";
         public const string ProxyMode = "proxyMode";
+        public const string Proximity = "Proximity";
+
 
         // properties on static objects
         public const string PrefabId = "prefabID";
@@ -250,6 +252,7 @@
         public const string CompletionReward = "completionReward";
         public const string AutoSetWaypoint = "autoSetWaypoint";
         public const string PreReqObjectives = "preReqObjectives";
+        public const string ObjectiveTypeConditional = "Conditional";
 
         // properties on objective fields
         public const string SuccessConditional = "successConditional";

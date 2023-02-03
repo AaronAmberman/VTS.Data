@@ -27,7 +27,7 @@
             return new UnitGroupGrouping
             {
                 Name = Name,
-                Settings = Settings.Clone(),
+                Settings = Settings?.Clone(),
                 Units = Units.Select(x => x.Clone()).ToList(),
                 Parent = Parent
             };

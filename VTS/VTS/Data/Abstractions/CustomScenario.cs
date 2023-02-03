@@ -545,7 +545,12 @@ namespace VTS.Data.Abstractions
                     if (property.Name == KeywordStrings.EventName)
                         triggerEvent.EventName = property.Value;
                     if (property.Name == KeywordStrings.WaypointProperty)
-                        triggerEvent.Waypoint = Convert.ToInt32(property.Value);
+                    {
+                        if (property.Value == KeywordStrings.Null)
+                            triggerEvent.Waypoint = null;
+                        else
+                            triggerEvent.Waypoint = Convert.ToInt32(property.Value);
+                    }
                     if (property.Name == KeywordStrings.Radius)
                         triggerEvent.Radius = Convert.ToSingle(property.Value);
                     if (property.Name == KeywordStrings.SphericalRadius)
@@ -1690,6 +1695,8 @@ namespace VTS.Data.Abstractions
 
                 if (triggerEvent.Waypoint.HasValue)
                     te.Properties.Add(new VtsProperty { Name = KeywordStrings.WaypointProperty, Value = triggerEvent.Waypoint.Value.ToString(), IndentDepth = 3 });
+                else if (!triggerEvent.Waypoint.HasValue && triggerEvent.TriggerType == KeywordStrings.Proximity)
+                    te.Properties.Add(new VtsProperty { Name = KeywordStrings.WaypointProperty, Value = KeywordStrings.Null, IndentDepth = 3 });
 
                 if (triggerEvent.Radius.HasValue)
                     te.Properties.Add(new VtsProperty { Name = KeywordStrings.Radius, Value = triggerEvent.Radius.Value.ToString(), IndentDepth = 3 });
@@ -1769,7 +1776,7 @@ namespace VTS.Data.Abstractions
 
                 if (objective.Fields.FailConditional.HasValue)
                     objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FailConditional, Value = objective.Fields.FailConditional.Value.ToString(), IndentDepth = 4 });
-                else
+                else if (!objective.Fields.FailConditional.HasValue && objective.ObjectiveType == KeywordStrings.ObjectiveTypeConditional)
                     objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FailConditional, Value = KeywordStrings.Null, IndentDepth = 4 });
 
                 if (!string.IsNullOrWhiteSpace(objective.Fields.Targets))

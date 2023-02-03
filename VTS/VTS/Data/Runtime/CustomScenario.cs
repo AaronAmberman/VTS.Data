@@ -316,6 +316,7 @@ namespace VTS.Data.Runtime
 
                     GlobalValues.Add(globalValue);
                 }
+
                 foreach (Abstractions.Path p in customScenario.Paths)
                 {
                     Path path = new Path
@@ -672,9 +673,9 @@ namespace VTS.Data.Runtime
                         Parent = conditionalAction
                     };
 
-                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock, false, false);
+                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock, false, false, false);
                     baseBlock.Conditional = ReadConditional(ca.BaseBlock.Conditional, baseBlock);
-                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock, false, false);
+                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock, false, false, false);
 
                     foreach (Abstractions.Block eib in ca.BaseBlock.ElseIfBlocks)
                     {
@@ -685,9 +686,9 @@ namespace VTS.Data.Runtime
                             Parent = baseBlock
                         };
 
-                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock, false, false);
+                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock, false, false, false);
                         elseIfBlock.Conditional = ReadConditional(eib.Conditional, elseIfBlock);
-                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock, false, false);
+                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock, false, false, false);
 
                         baseBlock.ElseIfBlocks.Add(elseIfBlock);
                     }
@@ -712,7 +713,7 @@ namespace VTS.Data.Runtime
                         Parent = this
                     };
 
-                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent, false, true);
+                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent, false, true, false);
 
                     if (te.Conditional.HasValue)
                     {
@@ -772,7 +773,67 @@ namespace VTS.Data.Runtime
                     }
                 }
 
-                // loop through conditional actions again in case they reference triggers or other conditional actions
+                foreach (Abstractions.Sequence s in customScenario.EventSequences)
+                {
+                    Sequence sequence = new Sequence
+                    {
+                        Id = s.Id,
+                        SequenceName = s.SequenceName,
+                        StartImmediately = s.StartImmediately,
+                        WhileLoop = s.WhileLoop,
+                        Parent = this
+                    };
+
+                    foreach (Abstractions.Event e in s.Events)
+                    {
+                        Event @event = new Event
+                        {
+                            Delay = e.Delay,
+                            NodeName = e.NodeName,
+                            Parent = sequence
+                        };
+
+                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence, true, true, false);
+
+                        if (e.Conditional.HasValue)
+                        {
+                            Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.Conditional);
+
+                            if (conditional == null)
+                            {
+                                int cond = e.Conditional.HasValue ? e.Conditional.Value : -1;
+
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional [{cond}] and that conditional could not be found in the list of Conditionals.");
+                            }
+                            else
+                            {
+                                @event.Conditional = conditional;
+                            }
+                        }
+
+                        if (e.ExitConditional.HasValue)
+                        {
+                            Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.ExitConditional.Value);
+
+                            if (conditional == null)
+                            {
+                                int cond = e.ExitConditional.HasValue ? e.ExitConditional.Value : -1;
+
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional [{cond}] and that exit conditional could not be found in the list of Conditionals.");
+                            }
+                            else
+                            {
+                                @event.ExitConditional = conditional;
+                            }
+                        }
+
+                        sequence.Events.Add(@event);
+                    }
+
+                    EventSequences.Add(sequence);
+                }
+
+                // loop through conditional actions again in case they reference triggers, event sequences or other conditional actions
                 for (int i = 0; i < ConditionalActions.Count; i++)
                 {
                     ConditionalAction conditionalAction = ConditionalActions[i];
@@ -794,6 +855,19 @@ namespace VTS.Data.Runtime
                             else
                             {
                                 eventTarget.Target = trigEve;
+                            }
+                        }
+                        else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
+                        {
+                            Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
+
+                            if (sequence == null)
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+                            }
+                            else
+                            {
+                                eventTarget.Target = sequence;
                             }
                         }
 
@@ -841,6 +915,19 @@ namespace VTS.Data.Runtime
                                 eventTarget.Target = trigEve;
                             }
                         }
+                        else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
+                        {
+                            Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
+
+                            if (sequence == null)
+                            {
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+                            }
+                            else
+                            {
+                                eventTarget.Target = sequence;
+                            }
+                        }
 
                         for (int k = 0; k < eventTarget.ParamInfos.Count; k++)
                         {
@@ -867,66 +954,6 @@ namespace VTS.Data.Runtime
                             }
                         }
                     }
-                }
-
-                foreach (Abstractions.Sequence s in customScenario.EventSequences)
-                {
-                    Sequence sequence = new Sequence
-                    {
-                        Id = s.Id,
-                        SequenceName = s.SequenceName,
-                        StartImmediately = s.StartImmediately,
-                        WhileLoop = s.WhileLoop,
-                        Parent = this
-                    };
-
-                    foreach (Abstractions.Event e in s.Events)
-                    {
-                        Event @event = new Event
-                        {
-                            Delay = e.Delay,
-                            NodeName = e.NodeName,
-                            Parent = sequence
-                        };
-
-                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence, true, true);
-
-                        if (e.Conditional.HasValue)
-                        {
-                            Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.Conditional);
-
-                            if (conditional == null)
-                            {
-                                int cond = e.Conditional.HasValue ? e.Conditional.Value : -1;
-
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional [{cond}] and that conditional could not be found in the list of Conditionals.");
-                            }
-                            else
-                            {
-                                @event.Conditional = conditional;
-                            }
-                        }
-
-                        if (e.ExitConditional.HasValue)
-                        {
-                            Conditional conditional = Conditionals.FirstOrDefault(x => x.Id == e.ExitConditional.Value);
-
-                            if (conditional == null)
-                            {
-                                int cond = e.ExitConditional.HasValue ? e.ExitConditional.Value : -1;
-
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional [{cond}] and that exit conditional could not be found in the list of Conditionals.");
-                            }
-                            else
-                            {
-                                @event.ExitConditional = conditional;
-                            }
-                        }
-
-                        sequence.Events.Add(@event);
-                    }
-
-                    EventSequences.Add(sequence);
                 }
 
                 foreach (Abstractions.Objective o in customScenario.Objectives)
@@ -975,7 +1002,7 @@ namespace VTS.Data.Runtime
 
                         foreach (Abstractions.EventTarget et in tei.EventTargets)
                         {
-                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo, true, true));
+                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo, true, true, true));
                         }
 
                         timedEventGroup.TimedEventInfos.Add(timedEventInfo);
@@ -1074,7 +1101,7 @@ namespace VTS.Data.Runtime
             return groupGrouping;
         }
 
-        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent, bool processTriggerEvents, bool processConditionaActionReference)
+        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent, bool processTriggerEvents, bool processConditionaActionReference, bool processEventSequences)
         {
             EventInfo eventInfo = new EventInfo
             {
@@ -1084,13 +1111,13 @@ namespace VTS.Data.Runtime
 
             foreach (Abstractions.EventTarget et in ei.EventTargets)
             {
-                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo, processTriggerEvents, processConditionaActionReference));
+                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo, processTriggerEvents, processConditionaActionReference, processEventSequences));
             }
 
             return eventInfo;
         }
 
-        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent, bool processTriggerEvents, bool processConditionaActionReference)
+        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent, bool processTriggerEvents, bool processConditionaActionReference, bool processEventSequences)
         {
             EventTarget eventTarget = new EventTarget
             {
@@ -1113,7 +1140,7 @@ namespace VTS.Data.Runtime
                     eventTarget.Target = unit;
                 }
             }
-            else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
+            else if (et.TargetType == KeywordStrings.EventTargetEventSequences && processEventSequences)
             {
                 Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
 
@@ -1564,9 +1591,9 @@ namespace VTS.Data.Runtime
                 Parent = this
             };
 
-            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective, true, true);
-            objective.FailEvent = ReadEventInfo(o.FailEvent, objective, true, true);
-            objective.StartEvent = ReadEventInfo(o.StartEvent, objective, true, true);
+            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective, true, true, true);
+            objective.FailEvent = ReadEventInfo(o.FailEvent, objective, true, true, true);
+            objective.StartEvent = ReadEventInfo(o.StartEvent, objective, true, true, true);
 
             int id;
 
@@ -2259,33 +2286,133 @@ namespace VTS.Data.Runtime
         {
             List<Abstractions.UnitGroupSettings> unitGroupSettings = new List<Abstractions.UnitGroupSettings>();
 
-            if (unitGroup.Alpha.Settings != null)
+            if (unitGroup.Alpha?.Settings != null)
             {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Alpha?.Settings));
+            }
+
+            if (unitGroup.Bravo?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Bravo?.Settings));
+            }
+
+            if (unitGroup.Charlie?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Charlie?.Settings));
+            }
+
+            if (unitGroup.Delta?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Delta?.Settings));
+            }
+
+            if (unitGroup.Echo?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Echo?.Settings));
+            }
+
+            if (unitGroup.Foxtrot?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Foxtrot?.Settings));
+            }
+
+            if (unitGroup.Golf?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Golf?.Settings));
+            }
+
+            if (unitGroup.Hotel?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Hotel?.Settings));
+            }
+
+            if (unitGroup.India?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.India?.Settings));
+            }
+
+            if (unitGroup.Juliet?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Juliet?.Settings));
+            }
+
+            if (unitGroup.Kilo?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Kilo?.Settings));
+            }
+
+            if (unitGroup.Lima?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Lima?.Settings));
+            }
+
+            if (unitGroup.Mike?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Mike?.Settings));
+            }
+
+            if (unitGroup.November?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.November?.Settings));
+            }
+
+            if (unitGroup.Oscar?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Oscar?.Settings));
+            }
+
+            if (unitGroup.Papa?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Papa?.Settings));
+            }
+
+            if (unitGroup.Quebec?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Quebec?.Settings));
+            }
+
+            if (unitGroup.Romeo?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Romeo?.Settings));
+            }
+
+            if (unitGroup.Sierra?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Sierra?.Settings));
+            }
+
+            if (unitGroup.Tango?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Tango?.Settings));
+            }
+
+            if (unitGroup.Uniform?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Uniform?.Settings));
+            }
+
+            if (unitGroup.Victor?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Victor?.Settings));
+            }
+
+            if (unitGroup.Whiskey?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Whiskey?.Settings));
+            }
+
+            if (unitGroup.Xray?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Xray?.Settings));
+            }
+
+            if (unitGroup.Yankee?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Yankee?.Settings));
+            }
+
+            if (unitGroup.Zulu?.Settings != null)
+            {
                 unitGroupSettings.Add(WriteUnitGroupSetting(unitGroup.Zulu?.Settings));
             }
 
