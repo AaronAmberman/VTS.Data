@@ -28,10 +28,10 @@
         {
             return new Event
             {
-                Conditional = Conditional,
+                Conditional = Conditional?.Clone(),
                 Delay = Delay,
-                EventInfo = EventInfo.Clone(),
-                ExitConditional = ExitConditional,
+                EventInfo = EventInfo?.Clone(),
+                ExitConditional = ExitConditional?.Clone(),
                 NodeName = NodeName,
                 Parent = Parent
             };

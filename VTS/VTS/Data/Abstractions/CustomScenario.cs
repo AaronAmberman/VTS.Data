@@ -28,7 +28,7 @@ namespace VTS.Data.Abstractions
         public bool IsTraining { get; set; }
         public string MapId { get; set; }
         public bool Multiplayer { get; set; }
-        public int NormalForcedFuel { get; set; }
+        public float NormalForcedFuel { get; set; }
         public int QuickSaveLimit { get; set; }
         public string QuickSaveMode { get; set; }
         public string RefuelWaypointId { get; set; }
@@ -152,7 +152,7 @@ namespace VTS.Data.Abstractions
                 if (property.Name == KeywordStrings.ForceEquips)
                     scenario.ForceEquips = Convert.ToBoolean(property.Value);
                 if (property.Name == KeywordStrings.NormForcedFuel)
-                    scenario.NormalForcedFuel = Convert.ToInt32(property.Value);
+                    scenario.NormalForcedFuel = Convert.ToSingle(property.Value);
                 if (property.Name == KeywordStrings.EquipsConfigurable)
                     scenario.EquipsConfigurable = Convert.ToBoolean(property.Value);
                 if (property.Name == KeywordStrings.BaseBudget)
@@ -1773,6 +1773,8 @@ namespace VTS.Data.Abstractions
 
                 if (objective.Fields.SuccessConditional.HasValue)
                     objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.SuccessConditional, Value = objective.Fields.SuccessConditional.Value.ToString(), IndentDepth = 4 });
+                else if (!objective.Fields.SuccessConditional.HasValue && objective.ObjectiveType == KeywordStrings.ObjectiveTypeConditional)
+                    objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.SuccessConditional, Value = KeywordStrings.Null, IndentDepth = 4 });
 
                 if (objective.Fields.FailConditional.HasValue)
                     objectiveFields.Properties.Add(new VtsProperty { Name = KeywordStrings.FailConditional, Value = objective.Fields.FailConditional.Value.ToString(), IndentDepth = 4 });
@@ -1989,7 +1991,7 @@ namespace VTS.Data.Abstractions
                 {
                     VtsObject e = new VtsObject { Name = KeywordStrings.Event, IndentDepth = 3 };
 
-                    if (@event.ExitConditional.HasValue)
+                    if (@event.Conditional.HasValue)
                         e.Properties.Add(new VtsProperty { Name = KeywordStrings.ConditionalProperty, Value = @event.Conditional.ToString(), IndentDepth = 4 });
 
                     e.Properties.Add(new VtsProperty { Name = KeywordStrings.Delay, Value = @event.Delay.ToString(), IndentDepth = 4 });

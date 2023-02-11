@@ -4,13 +4,15 @@
     public class KeywordStrings
     {
         // misc / on more than one type
+        public const string AlliedUnitGroup = "Allied";
         public const string ConditionalProperty = "conditional";
         public const string Data = "data";
         public const string Enabled = "enabled";
+        public const string EnemyUnitGroup = "Enemy";
         public const string EventName = "eventName";
         public const string EventTargetEventSequences = "Event_Sequences";
         public const string EventTargetStaticObject = "Static_Object";
-        public const string EventTargetTriggerEvents = "Trigger_Events";
+        public const string EventTargetTimedEvents = "Timed_Events";
         public const string EventTargetUnit = "Unit";
         public const string EventTargetUnitGroup = "UnitGroup";
         public const string False = "False";

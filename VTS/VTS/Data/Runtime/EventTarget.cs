@@ -8,7 +8,8 @@
         public string EventName { get; set; }
         public string MethodName { get; set; }
         public List<ParamInfo> ParamInfos { get; set; } = new List<ParamInfo>();
-        // this could be a UnitSpawner, a UitGroup, a TriggerEvent, a System value, ?
+        // this could be a UnitSpawner, a UnitGroup, a TriggerEvent, a System value (like an int), a ConditionalAction, 
+        // an Objective, a Sequence, a TimedEventGroup, a List<UnitSpawner>, a StaticObject
         public object Target { get; set; } 
         public string TargetType { get; set; }
 
@@ -32,7 +33,11 @@
                 EventName = EventName,
                 MethodName = MethodName,
                 ParamInfos = ParamInfos.Select(x => x.Clone()).ToList(),
-                Target = Target is ICloneable cloneable ? cloneable.Clone() : Target, // prefer clone, else just mae reference
+                // we cannot clone the target because the target may be a type that contains EventTargets, and those event
+                // targets may reference a cloneable that has EventTargets and so on (this occurs when the Target is an
+                // Objective with prerequisite Objectives)
+                //Target = Target is ICloneable cloneable ? cloneable.Clone() : Target, // prefer clone, else just reference
+                Target = Target,
                 TargetType = TargetType,
                 Parent = Parent
             };

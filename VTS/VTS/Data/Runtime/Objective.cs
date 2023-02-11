@@ -47,7 +47,11 @@
                 ObjectiveType = ObjectiveType,
                 OrderID = OrderID,
                 Required = Required,
-                PreReqObjectives = PreReqObjectives.Select(x => x.Clone()).ToList(),
+                // we cannot clone the prerequisite objectives because it will lead to a StackOverflowException
+                // as the objectives will just start to circularly clone each other if referenced on an EventTarget
+                // as the Target, just reference
+                //PreReqObjectives = PreReqObjectives.Select(x => x.Clone()).ToList(),
+                PreReqObjectives = PreReqObjectives,
                 StartMode = StartMode,
                 Waypoint = Waypoint is ICloneable cloneable ? cloneable.Clone() : Waypoint, // prefer clone, else just reference
                 CompleteEvent = CompleteEvent.Clone(),

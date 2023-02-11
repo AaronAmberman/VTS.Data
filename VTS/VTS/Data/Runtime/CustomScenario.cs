@@ -40,7 +40,7 @@ namespace VTS.Data.Runtime
         public bool IsTraining { get; set; }
         public string MapId { get; set; }
         public bool Multiplayer { get; set; }
-        public int NormalForcedFuel { get; set; }
+        public float NormalForcedFuel { get; set; }
         public int QuickSaveLimit { get; set; }
         public string QuickSaveMode { get; set; }
         public object RefuelWaypoint { get; set; }
@@ -236,6 +236,106 @@ namespace VTS.Data.Runtime
 
             if (!customScenario.HasError)
                 ReadData();
+        }
+
+        private void AddUnitToUnitGroupIfNotContained(List<UnitSpawner> units, UnitSpawner unit)
+        {
+            bool contained = units.Any(x => x.UnitInstanceId == unit.UnitInstanceId);
+
+            if (!contained)
+            {
+                units.Add(unit);
+            }
+        }
+
+        private void ProcessEventTargetObjectReferences(EventTarget eventTarget, Abstractions.EventTarget et)
+        {
+            if (eventTarget.TargetType == KeywordStrings.TriggerEventsProperty)
+            {
+                TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+
+                if (trigEve == null)
+                {
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                }
+                else
+                {
+                    eventTarget.Target = trigEve;
+                }
+            }
+            else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
+            {
+                Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
+
+                if (sequence == null)
+                {
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+                }
+                else
+                {
+                    eventTarget.Target = sequence;
+                }
+            }
+            else if (et.TargetType == KeywordStrings.Objective)
+            {
+                Objective objective = Objectives.FirstOrDefault(so => so.ObjectiveID == et.TargetId);
+
+                if (objective == null)
+                {
+                    objective = ObjectivesOpFor.FirstOrDefault(so => so.ObjectiveID == et.TargetId);
+
+                    if (objective == null)
+                    {
+                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references objective {et.TargetId} and that objectives could not be found in the list of Objectives or ObjectiveOpFor.");
+                    }
+                    else
+                    {
+                        eventTarget.Target = objective;
+                    }
+                }
+                else
+                {
+                    eventTarget.Target = objective;
+                }
+            }
+            else if (et.TargetType == KeywordStrings.EventTargetTimedEvents)
+            {
+                TimedEventGroup timedEventGroup = TimedEventGroups.FirstOrDefault(teg => teg.GroupId == et.TargetId);
+
+                if (timedEventGroup == null)
+                {
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references timed event group {et.TargetId} and that timed event group could not be found in the list of TimedEventGroups.");
+                }
+                else
+                {
+                    eventTarget.Target = timedEventGroup;
+                }
+            }
+
+            for (int k = 0; k < eventTarget.ParamInfos.Count; k++)
+            {
+                ParamInfo paramInfo = eventTarget.ParamInfos[k];
+                Abstractions.ParamInfo pi = et.ParamInfos[k];
+
+                if (paramInfo.Type == KeywordStrings.ConditionalActionReference)
+                {
+                    string val = pi.Value;
+
+                    if (string.IsNullOrEmpty(val))
+                    {
+                        continue;
+                    }
+
+                    int id = Convert.ToInt32(val);
+
+                    ConditionalAction reference = ConditionalActions.FirstOrDefault(x => x.Id == id);
+
+                    if (reference != null)
+                    {
+                        paramInfo.Value = reference;
+                    }
+                }
+            }
         }
 
         private void WriteWarning(string warning)
@@ -650,6 +750,243 @@ namespace VTS.Data.Runtime
                 }
 
                 /*
+                 * loop through the units again after setting up the unit groups because 
+                 * there is a scenario in which units will not be assigned to a group...
+                 * if a unit is assigned to the wrong group (because VTOL VR regularly 
+                 * does this) then that unit won't get added to the group it needs to 
+                 * be assigned to because the loop logic isn't designed to reach into
+                 * all groups at once and assign missing units
+                 */
+                for (int i = 0; i < Units.Count; i++)
+                {
+                    UnitSpawner unit = Units[i];
+
+                    if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) && unit.UnitFields.UnitGroup != KeywordStrings.Null)
+                    {
+                        string[] groupData = unit.UnitFields.UnitGroup.Split(':');
+
+                        if (groupData[0] == KeywordStrings.AlliedUnitGroup)
+                        {
+                            UnitGroup unitGroup = UnitGroups.FirstOrDefault(x => x.Name == KeywordStrings.Allied);
+
+                            if (groupData[1] == KeywordStrings.Alpha)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Alpha.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Bravo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Bravo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Charlie)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Charlie.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Delta)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Delta.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Echo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Echo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Foxtrot)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Foxtrot.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Golf)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Golf.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Hotel)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Hotel.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.India)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.India.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Juliet)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Juliet.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Kilo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Kilo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Lima)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Lima.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Mike)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Mike.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.November)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.November.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Oscar)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Oscar.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Papa)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Papa.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Quebec)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Quebec.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Romeo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Romeo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Sierra)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Sierra.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Tango)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Tango.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Uniform)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Uniform.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Victor)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Victor.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Whiskey)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Whiskey.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Xray)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Xray.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Yankee)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Yankee.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Zulu)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Zulu.Units, unit);
+                            }
+                        }
+                        else if (groupData[0] == KeywordStrings.EnemyUnitGroup)
+                        {
+                            UnitGroup unitGroup = UnitGroups.FirstOrDefault(x => x.Name == KeywordStrings.Enemy);
+
+                            if (groupData[1] == KeywordStrings.Alpha)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Alpha.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Bravo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Bravo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Charlie)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Charlie.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Delta)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Delta.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Echo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Echo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Foxtrot)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Foxtrot.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Golf)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Golf.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Hotel)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Hotel.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.India)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.India.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Juliet)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Juliet.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Kilo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Kilo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Lima)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Lima.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Mike)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Mike.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.November)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.November.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Oscar)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Oscar.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Papa)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Papa.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Quebec)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Quebec.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Romeo)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Romeo.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Sierra)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Sierra.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Tango)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Tango.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Uniform)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Uniform.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Victor)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Victor.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Whiskey)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Whiskey.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Xray)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Xray.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Yankee)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Yankee.Units, unit);
+                            }
+                            else if (groupData[1] == KeywordStrings.Zulu)
+                            {
+                                AddUnitToUnitGroupIfNotContained(unitGroup.Zulu.Units, unit);
+                            }
+                        }
+                    }
+                }
+
+                /*
                  * get types that depend on other types
                  */
                 foreach (Abstractions.Conditional c in customScenario.Conditionals)
@@ -673,9 +1010,9 @@ namespace VTS.Data.Runtime
                         Parent = conditionalAction
                     };
 
-                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock, false, false, false);
+                    baseBlock.Actions = ReadEventInfo(ca.BaseBlock.Actions, baseBlock);
                     baseBlock.Conditional = ReadConditional(ca.BaseBlock.Conditional, baseBlock);
-                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock, false, false, false);
+                    baseBlock.ElseActions = ReadEventInfo(ca.BaseBlock.ElseActions, baseBlock);
 
                     foreach (Abstractions.Block eib in ca.BaseBlock.ElseIfBlocks)
                     {
@@ -686,9 +1023,9 @@ namespace VTS.Data.Runtime
                             Parent = baseBlock
                         };
 
-                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock, false, false, false);
+                        elseIfBlock.Actions = ReadEventInfo(eib.Actions, elseIfBlock);
                         elseIfBlock.Conditional = ReadConditional(eib.Conditional, elseIfBlock);
-                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock, false, false, false);
+                        elseIfBlock.ElseActions = ReadEventInfo(eib.ElseActions, elseIfBlock);
 
                         baseBlock.ElseIfBlocks.Add(elseIfBlock);
                     }
@@ -713,7 +1050,7 @@ namespace VTS.Data.Runtime
                         Parent = this
                     };
 
-                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent, false, true, false);
+                    triggerEvent.EventInfo = ReadEventInfo(te.EventInfo, triggerEvent);
 
                     if (te.Conditional.HasValue)
                     {
@@ -746,33 +1083,6 @@ namespace VTS.Data.Runtime
                     TriggerEvents.Add(triggerEvent);
                 }
 
-                // loop through a second time in case trigger events reference other trigger events
-                for (int i = 0; i < TriggerEvents.Count; i++)
-                {
-                    TriggerEvent triggerEvent = TriggerEvents[i];
-                    Abstractions.TriggerEvent te = customScenario.TriggerEvents[i];
-
-                    for (int j = 0; j < triggerEvent.EventInfo.EventTargets.Count; j++)
-                    {
-                        EventTarget eventTarget = triggerEvent.EventInfo.EventTargets[j];
-                        Abstractions.EventTarget et = te.EventInfo.EventTargets[j];
-
-                        if (eventTarget.TargetType == KeywordStrings.TriggerEventsProperty)
-                        {
-                            TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
-
-                            if (trigEve == null)
-                            {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
-                            }
-                            else
-                            {
-                                eventTarget.Target = trigEve;
-                            }
-                        }
-                    }
-                }
-
                 foreach (Abstractions.Sequence s in customScenario.EventSequences)
                 {
                     Sequence sequence = new Sequence
@@ -793,7 +1103,7 @@ namespace VTS.Data.Runtime
                             Parent = sequence
                         };
 
-                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence, true, true, false);
+                        @event.EventInfo = ReadEventInfo(e.EventInfo, sequence);
 
                         if (e.Conditional.HasValue)
                         {
@@ -833,151 +1143,14 @@ namespace VTS.Data.Runtime
                     EventSequences.Add(sequence);
                 }
 
-                // loop through conditional actions again in case they reference triggers, event sequences or other conditional actions
-                for (int i = 0; i < ConditionalActions.Count; i++)
-                {
-                    ConditionalAction conditionalAction = ConditionalActions[i];
-                    Abstractions.ConditionalAction ca = customScenario.ConditionalActions[i];
-
-                    for (int j = 0; j < conditionalAction.BaseBlock.Actions.EventTargets.Count; j++)
-                    {
-                        EventTarget eventTarget = conditionalAction.BaseBlock.Actions.EventTargets[j];
-                        Abstractions.EventTarget et = ca.BaseBlock.Actions.EventTargets[j];
-
-                        if (eventTarget.TargetType == KeywordStrings.TriggerEventsProperty)
-                        {
-                            TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
-
-                            if (trigEve == null)
-                            {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
-                            }
-                            else
-                            {
-                                eventTarget.Target = trigEve;
-                            }
-                        }
-                        else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
-                        {
-                            Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
-
-                            if (sequence == null)
-                            {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
-                            }
-                            else
-                            {
-                                eventTarget.Target = sequence;
-                            }
-                        }
-
-                        for (int k = 0; k < eventTarget.ParamInfos.Count; k++)
-                        {
-                            ParamInfo paramInfo = eventTarget.ParamInfos[k];
-                            Abstractions.ParamInfo pi = et.ParamInfos[k];
-
-                            if (paramInfo.Type == KeywordStrings.ConditionalActionReference)
-                            {
-                                string val = pi.Value;
-
-                                if (string.IsNullOrEmpty(val))
-                                {
-                                    continue;
-                                }
-
-                                int id = Convert.ToInt32(val);
-
-                                ConditionalAction reference = ConditionalActions.FirstOrDefault(x => x.Id == id);
-
-                                if (reference != null)
-                                {
-                                    paramInfo.Value = reference;
-                                }
-                            }
-                        }
-                    }
-
-                    for (int j = 0; j < conditionalAction.BaseBlock.ElseActions.EventTargets.Count; j++)
-                    {
-                        EventTarget eventTarget = conditionalAction.BaseBlock.ElseActions.EventTargets[j];
-                        Abstractions.EventTarget et = ca.BaseBlock.ElseActions.EventTargets[j];
-
-                        if (eventTarget.TargetType == KeywordStrings.TriggerEventsProperty)
-                        {
-                            TriggerEvent trigEve = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
-
-                            if (trigEve == null)
-                            {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
-                            }
-                            else
-                            {
-                                eventTarget.Target = trigEve;
-                            }
-                        }
-                        else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
-                        {
-                            Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
-
-                            if (sequence == null)
-                            {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
-                            }
-                            else
-                            {
-                                eventTarget.Target = sequence;
-                            }
-                        }
-
-                        for (int k = 0; k < eventTarget.ParamInfos.Count; k++)
-                        {
-                            ParamInfo paramInfo = eventTarget.ParamInfos[k];
-                            Abstractions.ParamInfo pi = et.ParamInfos[k];
-
-                            if (paramInfo.Type == KeywordStrings.ConditionalActionReference)
-                            {
-                                string val = pi.Value;
-
-                                if (string.IsNullOrEmpty(val))
-                                {
-                                    continue;
-                                }
-
-                                int id = Convert.ToInt32(val);
-
-                                ConditionalAction reference = ConditionalActions.FirstOrDefault(x => x.Id == id);
-
-                                if (reference != null)
-                                {
-                                    paramInfo.Value = reference;
-                                }
-                            }
-                        }
-                    }
-                }
-
                 foreach (Abstractions.Objective o in customScenario.Objectives)
                 {
                     Objectives.Add(ReadObjective(o));
                 }
 
-                // loop through a second time to assign the prereq property because it is a list of other Objectives
-                // (loop a second time because I am not sure if the order of Objectives is guaranteed)
-                for (int i = 0; i < Objectives.Count; i++)
-                {
-                    SetObjectivePreReqs(i, false);
-                }
-
                 foreach (Abstractions.Objective o in customScenario.ObjectivesOpFor)
                 {
                     ObjectivesOpFor.Add(ReadObjective(o));
-                }
-
-                // loop through a second time to assign the prereq property because it is a list of other Objectives
-                // (loop a second time because I am not sure if the order of Objectives is guaranteed)
-                for (int i = 0; i < ObjectivesOpFor.Count; i++)
-                {
-                    SetObjectivePreReqs(i, true);
                 }
 
                 foreach (Abstractions.TimedEventGroup teg in customScenario.TimedEventGroups)
@@ -1002,13 +1175,157 @@ namespace VTS.Data.Runtime
 
                         foreach (Abstractions.EventTarget et in tei.EventTargets)
                         {
-                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo, true, true, true));
+                            timedEventInfo.EventTargets.Add(ReadEventTarget(et, timedEventInfo));
                         }
 
                         timedEventGroup.TimedEventInfos.Add(timedEventInfo);
                     }
 
                     TimedEventGroups.Add(timedEventGroup);
+                }
+
+                // set references to conditional actions, trigger events, event sequences, objectives, objectives op for, timed event groups
+                for (int i = 0; i < ConditionalActions.Count; i++)
+                {
+                    ConditionalAction conditionalAction = ConditionalActions[i];
+                    Abstractions.ConditionalAction ca = customScenario.ConditionalActions[i];
+
+                    for (int j = 0; j < conditionalAction.BaseBlock.Actions.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = conditionalAction.BaseBlock.Actions.EventTargets[j];
+                        Abstractions.EventTarget et = ca.BaseBlock.Actions.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+
+                    for (int j = 0; j < conditionalAction.BaseBlock.ElseActions.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = conditionalAction.BaseBlock.ElseActions.EventTargets[j];
+                        Abstractions.EventTarget et = ca.BaseBlock.ElseActions.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+                }
+
+                // set references to conditional actions, trigger events, event sequences, objectives, objectives op for, timed event groups
+                for (int i = 0; i < TriggerEvents.Count; i++)
+                {
+                    TriggerEvent triggerEvent = TriggerEvents[i];
+                    Abstractions.TriggerEvent te = customScenario.TriggerEvents[i];
+
+                    for (int j = 0; j < triggerEvent.EventInfo.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = triggerEvent.EventInfo.EventTargets[j];
+                        Abstractions.EventTarget et = te.EventInfo.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+                }
+
+                for (int i = 0; i < EventSequences.Count; i++)
+                {
+                    Sequence sequence = EventSequences[i];
+                    Abstractions.Sequence s = customScenario.EventSequences[i];
+
+                    for (int j = 0; j < sequence.Events.Count; j++)
+                    {
+                        Event @event = sequence.Events[j];
+                        Abstractions.Event e = s.Events[j];
+
+                        for (int k = 0; k < @event.EventInfo.EventTargets.Count; k++)
+                        {
+                            EventTarget eventTarget = @event.EventInfo.EventTargets[k];
+                            Abstractions.EventTarget et = e.EventInfo.EventTargets[k];
+
+                            ProcessEventTargetObjectReferences(eventTarget, et);
+                        }
+                    }
+                }
+
+                // set references to conditional actions, trigger events, event sequences, objectives, objectives op for, timed event groups
+                for (int i = 0; i < Objectives.Count; i++)
+                {
+                    Objective objective = Objectives[i];
+                    Abstractions.Objective o = customScenario.Objectives[i];
+
+                    for (int j = 0; j < objective.CompleteEvent.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = objective.CompleteEvent.EventTargets[j];
+                        Abstractions.EventTarget et = o.CompleteEvent.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+
+                    for (int j = 0; j < objective.FailEvent.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = objective.FailEvent.EventTargets[j];
+                        Abstractions.EventTarget et = o.FailEvent.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+
+                    for (int j = 0; j < objective.StartEvent.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = objective.StartEvent.EventTargets[j];
+                        Abstractions.EventTarget et = o.StartEvent.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+
+                    SetObjectivePreReqs(i, false);
+                }
+
+                // set references to conditional actions, trigger events, event sequences, objectives, objectives op for, timed event groups
+                for (int i = 0; i < ObjectivesOpFor.Count; i++)
+                {
+                    Objective objective = ObjectivesOpFor[i];
+                    Abstractions.Objective o = customScenario.ObjectivesOpFor[i];
+
+                    for (int j = 0; j < objective.CompleteEvent.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = objective.CompleteEvent.EventTargets[j];
+                        Abstractions.EventTarget et = o.CompleteEvent.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+
+                    for (int j = 0; j < objective.FailEvent.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = objective.FailEvent.EventTargets[j];
+                        Abstractions.EventTarget et = o.FailEvent.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+
+                    for (int j = 0; j < objective.StartEvent.EventTargets.Count; j++)
+                    {
+                        EventTarget eventTarget = objective.StartEvent.EventTargets[j];
+                        Abstractions.EventTarget et = o.StartEvent.EventTargets[j];
+
+                        ProcessEventTargetObjectReferences(eventTarget, et);
+                    }
+
+                    SetObjectivePreReqs(i, true);
+                }
+
+                for (int i = 0; i < TimedEventGroups.Count; i++)
+                {
+                    TimedEventGroup timedEventGroup = TimedEventGroups[i];
+                    Abstractions.TimedEventGroup teg = customScenario.TimedEventGroups[i];
+
+                    for (int j = 0; j < timedEventGroup.TimedEventInfos.Count; j++)
+                    {
+                        TimedEventInfo timedEventInfo = timedEventGroup.TimedEventInfos[j];
+                        Abstractions.TimedEventInfo tei = teg.TimedEventInfos[j];
+
+                        for (int k = 0; k < timedEventInfo.EventTargets.Count; k++)
+                        {
+                            EventTarget eventTarget = timedEventInfo.EventTargets[k];
+                            Abstractions.EventTarget et = tei.EventTargets[k];
+
+                            ProcessEventTargetObjectReferences(eventTarget, et);
+                        }
+                    }
                 }
 
                 sw.Stop();
@@ -1068,7 +1385,7 @@ namespace VTS.Data.Runtime
                      */
 
                     // check if the unit even belongs with this group (check UnitSpawner.UnitFields.UnitGroup)
-                    if (unit.UnitFields.UnitGroup != null && !string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) && unit.UnitFields.UnitGroup != KeywordStrings.Null)
+                    if (!string.IsNullOrWhiteSpace(unit.UnitFields.UnitGroup) && unit.UnitFields.UnitGroup != KeywordStrings.Null)
                     {
                         string[] groupData = unit.UnitFields.UnitGroup.Split(':');
 
@@ -1101,7 +1418,7 @@ namespace VTS.Data.Runtime
             return groupGrouping;
         }
 
-        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent, bool processTriggerEvents, bool processConditionaActionReference, bool processEventSequences)
+        private EventInfo ReadEventInfo(Abstractions.EventInfo ei, object parent)
         {
             EventInfo eventInfo = new EventInfo
             {
@@ -1111,13 +1428,13 @@ namespace VTS.Data.Runtime
 
             foreach (Abstractions.EventTarget et in ei.EventTargets)
             {
-                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo, processTriggerEvents, processConditionaActionReference, processEventSequences));
+                eventInfo.EventTargets.Add(ReadEventTarget(et, eventInfo));
             }
 
             return eventInfo;
         }
 
-        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent, bool processTriggerEvents, bool processConditionaActionReference, bool processEventSequences)
+        private EventTarget ReadEventTarget(Abstractions.EventTarget et, object parent)
         {
             EventTarget eventTarget = new EventTarget
             {
@@ -1140,32 +1457,32 @@ namespace VTS.Data.Runtime
                     eventTarget.Target = unit;
                 }
             }
-            else if (et.TargetType == KeywordStrings.EventTargetEventSequences && processEventSequences)
-            {
-                Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
+            //else if (et.TargetType == KeywordStrings.EventTargetEventSequences && processEventSequences)
+            //{
+            //    Sequence sequence = EventSequences.FirstOrDefault(es => es.Id == et.TargetId);
 
-                if (sequence == null)
-                {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
-                }
-                else
-                {
-                    eventTarget.Target = sequence;
-                }
-            }
-            else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents && processTriggerEvents)
-            {
-                TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
+            //    if (sequence == null)
+            //    {
+            //        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+            //    }
+            //    else
+            //    {
+            //        eventTarget.Target = sequence;
+            //    }
+            //}
+            //else if (et.TargetType == KeywordStrings.TriggerEventsProperty && processTriggerEvents)
+            //{
+            //    TriggerEvent triggerEvent = TriggerEvents.FirstOrDefault(te => te.Id == et.TargetId);
 
-                if (triggerEvent == null)
-                {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
-                }
-                else
-                {
-                    eventTarget.Target = triggerEvent;
-                }
-            }
+            //    if (triggerEvent == null)
+            //    {
+            //        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+            //    }
+            //    else
+            //    {
+            //        eventTarget.Target = triggerEvent;
+            //    }
+            //}
             else if (et.TargetType == KeywordStrings.EventTargetStaticObject)
             {
                 StaticObject staticObject = StaticObjects.FirstOrDefault(so => so.Id == et.TargetId);
@@ -1179,10 +1496,32 @@ namespace VTS.Data.Runtime
                     eventTarget.Target = staticObject;
                 }
             }
+            //else if (et.TargetType == KeywordStrings.Objective && processObjectives)
+            //{
+            //    Objective objective = Objectives.FirstOrDefault(so => so.ObjectiveID == et.TargetId);
+
+            //    if (objective == null)
+            //    {
+            //        objective = ObjectivesOpFor.FirstOrDefault(so => so.ObjectiveID == et.TargetId);
+
+            //        if (objective == null)
+            //        {
+            //            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references objective {et.TargetId} and that objectives could not be found in the list of Objectives or ObjectiveOpFor.");
+            //        }
+            //        else
+            //        {
+            //            eventTarget.Target = objective;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        eventTarget.Target = objective;
+            //    }
+            //}
             else if (et.TargetType == KeywordStrings.EventTargetUnitGroup)
-                eventTarget.Target = et.TargetId; // just box the int that represents the group because I am not sure how these map
+                eventTarget.Target = et.TargetId;
             else if (et.TargetType == KeywordStrings.System)
-                eventTarget.Target = et.TargetId; // just box up the 0 as I don't believe it is used for system
+                eventTarget.Target = et.TargetId;
 
             foreach (Abstractions.ParamInfo pi in et.ParamInfos)
             {
@@ -1232,7 +1571,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            int id  = Convert.ToInt32(pi.Value);
+                            int id = Convert.ToInt32(pi.Value);
 
                             UnitSpawner match = Units.FirstOrDefault(unit => unit.UnitInstanceId == id);
 
@@ -1263,27 +1602,27 @@ namespace VTS.Data.Runtime
                             }
                             else
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{pi.Value}] in its list of units that could not be found.");
+                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{id}] in its list of units that could not be found.");
                             }
                         }
 
                         paramInfo.Value = paramInfoUnits;
                     }
-                    else if (pi.Type == KeywordStrings.ConditionalActionReference && processConditionaActionReference)
-                    {
-                        int id = Convert.ToInt32(pi.Value);
+                    //else if (pi.Type == KeywordStrings.ConditionalActionReference && processConditionaActionReference)
+                    //{
+                    //    int id = Convert.ToInt32(pi.Value);
 
-                        ConditionalAction ca = ConditionalActions.FirstOrDefault(action => action.Id == id);
+                    //    ConditionalAction ca = ConditionalActions.FirstOrDefault(action => action.Id == id);
 
-                        if (ca != null)
-                        {
-                            paramInfo.Value = ca;
-                        }
-                        else
-                        {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference [{pi.Value}] that could not be found.");
-                        }
-                    }
+                    //    if (ca != null)
+                    //    {
+                    //        paramInfo.Value = ca;
+                    //    }
+                    //    else
+                    //    {
+                    //        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference [{pi.Value}] that could not be found.");
+                    //    }
+                    //}
                     else if (pi.Type == KeywordStrings.AirportReference)
                     {
                         if (pi.Value.StartsWith(KeywordStrings.MapWaypoint)) // BaseInfo object
@@ -1388,7 +1727,7 @@ namespace VTS.Data.Runtime
                     {
                         paramInfo.Value = ReadThreePointValue(pi.Value);
                     }
-                    else if (pi.Type == KeywordStrings.GroundUnitSpawnPlusMoveSpeeds || pi.Type == KeywordStrings.SmokeFlarePlusFlareColors || 
+                    else if (pi.Type == KeywordStrings.GroundUnitSpawnPlusMoveSpeeds || pi.Type == KeywordStrings.SmokeFlarePlusFlareColors ||
                              pi.Type == KeywordStrings.Teams || pi.Type == KeywordStrings.SystemString)
                     {
                         paramInfo.Value = pi.Value;
@@ -1591,9 +1930,9 @@ namespace VTS.Data.Runtime
                 Parent = this
             };
 
-            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective, true, true, true);
-            objective.FailEvent = ReadEventInfo(o.FailEvent, objective, true, true, true);
-            objective.StartEvent = ReadEventInfo(o.StartEvent, objective, true, true, true);
+            objective.CompleteEvent = ReadEventInfo(o.CompleteEvent, objective);
+            objective.FailEvent = ReadEventInfo(o.FailEvent, objective);
+            objective.StartEvent = ReadEventInfo(o.StartEvent, objective);
 
             int id;
 
@@ -2020,22 +2359,22 @@ namespace VTS.Data.Runtime
                             uf.Waypoint = unit.UnitFields.Waypoint.Id.ToString();
                         }
                     }
-                    
+
                     if (unitFieldProperties.Contains(KeywordStrings.CarrierSpawns))
                     {
                         // do I do something to ensure the correct number of units in the property based on ship type?
-                        if (unit.UnitId == KeywordStrings.EscortCruiser) // 1 unit
-                        {
-                        }
-                        else if (unit.UnitId == KeywordStrings.AlliedAaShip) // 6 units
-                        {
-                        }
-                        else if (unit.UnitId == KeywordStrings.AlliedCarrier) // 9 units
-                        {
-                        }
-                        else if (unit.UnitId == KeywordStrings.EnemyCarrier) // 10 units
-                        {
-                        }
+                        //if (unit.UnitId == KeywordStrings.EscortCruiser) // 1 unit
+                        //{
+                        //}
+                        //else if (unit.UnitId == KeywordStrings.AlliedAaShip) // 6 units
+                        //{
+                        //}
+                        //else if (unit.UnitId == KeywordStrings.AlliedCarrier) // 9 units
+                        //{
+                        //}
+                        //else if (unit.UnitId == KeywordStrings.EnemyCarrier) // 10 units
+                        //{
+                        //}
 
                         List<string> unitsOnCarrier = unit.UnitFields.CarrierSpawns.Select(x => $"{x.Item1}:{x.Item2.UnitInstanceId}").ToList();
 
@@ -2044,7 +2383,7 @@ namespace VTS.Data.Runtime
                             uf.CarrierSpawns = string.Join(';', unitsOnCarrier) + ";";
                         }
                     }
-                    
+
                     if (unitFieldProperties.Contains(KeywordStrings.RtbDestination))
                     {
                         if (unit.UnitFields.ReturnToBaseDestination is UnitSpawner u)
@@ -2060,7 +2399,7 @@ namespace VTS.Data.Runtime
                             else uf.ReturnToBaseDestination = KeywordStrings.MapWaypoint + Bases.IndexOf(match).ToString();
                         }
                     }
-                    
+
                     if (unitFieldProperties.Contains(KeywordStrings.Equips))
                     {
                         uf.Equips = unit.UnitFields.Equips;
@@ -2537,7 +2876,7 @@ namespace VTS.Data.Runtime
                     WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a sequence could not be cast as a sequence. Setting TargetId to -1.");
                 }
             }
-            else if (et.TargetType == KeywordStrings.EventTargetTriggerEvents)
+            else if (et.TargetType == KeywordStrings.TriggerEventsProperty)
             {
                 if (eventTarget.Target is TriggerEvent triggerEvent)
                 {
@@ -2552,7 +2891,7 @@ namespace VTS.Data.Runtime
             }
             else if (et.TargetType == KeywordStrings.EventTargetStaticObject)
             {
-                if  (eventTarget.Target is StaticObject staticObject)
+                if (eventTarget.Target is StaticObject staticObject)
                 {
                     et.TargetId = staticObject.Id;
                 }
@@ -2563,13 +2902,42 @@ namespace VTS.Data.Runtime
                     WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a static object could not be cast as a static object. Setting TargetId to -1.");
                 }
             }
+            else if (et.TargetType == KeywordStrings.Objective)
+            {
+                if (eventTarget.Target is Objective objective)
+                {
+                    et.TargetId = objective.ObjectiveID;
+                }
+                else
+                {
+                    et.TargetId = -1;
+
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a objective could not be cast as a objective. Setting TargetId to -1.");
+                }
+            }
+            else if (et.TargetType == KeywordStrings.EventTargetTimedEvents)
+            {
+                if (eventTarget.Target is TimedEventGroup timedEventGroup)
+                {
+                    et.TargetId = timedEventGroup.GroupId;
+                }
+                else
+                {
+                    et.TargetId = -1;
+
+                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a timed event group could not be cast as a timed event group. Setting TargetId to -1.");
+                }
+            }
             else if (et.TargetType == KeywordStrings.EventTargetUnitGroup)
             {
-                et.TargetId = (int)eventTarget.Target; // just unbox the int that represents the group because I am not sure how these map
+                et.TargetId = (int)eventTarget.Target;
             }
             else if (et.TargetType == KeywordStrings.System)
             {
-                et.TargetId = (int)eventTarget.Target; // just unbox the 0 as I don't believe it is used for system
+                if (eventTarget.Target != null)
+                    et.TargetId = (int)eventTarget.Target;
+                else
+                    et.TargetId = -1;
             }
 
             foreach (ParamInfo paramInfo in eventTarget.ParamInfos)
@@ -2627,7 +2995,7 @@ namespace VTS.Data.Runtime
                     {
                         pi.Value = "-1:0";
                     }
-                    else 
+                    else
                     {
                         UnitSpawner unit = paramInfo.Value as UnitSpawner;
 
@@ -2942,6 +3310,13 @@ namespace VTS.Data.Runtime
             }
 
             obj.Fields = objectiveFields;
+
+            if (objective.PreReqObjectives.Count > 0)
+            {
+                string preReqs = string.Join(';', objective.PreReqObjectives.Select(x => x.ObjectiveID)) + ";";
+
+                obj.PreReqObjectives = preReqs;
+            }
 
             return obj;
         }
