@@ -1,7 +1,7 @@
 # VTS
 An API that contains a VTS mission file reader and writer for VTOL VR as well as data abstractions for runtime management of data.
 
-The base namespace contains a KeywordStrings class and all the various keyword strings for the VTS file were moved there for easy management and access. *Note: not 100% of strings exist in this file but all major strings used by the *Raw* namespace exist. In the future 100% of all strings that come the VTS file will be moved into here.*
+The base namespace contains a KeywordStrings class and all the various keyword strings for the VTS file were moved there for easy management and access.
 
 
 
