@@ -135,3 +135,6 @@ In the debug console you will notice some data warnings that come from the API a
    
 ## Performance of Runtime Types
 Using these types can add a bit of overhead but nothing to warrant worry. The performance from above goes to anywhere from .06 to .08 depending on busy my computer is at the time of processing. So in some cases it doubles but processing large files, for the most part, still takes less than 1 second (which will slightly vary depending on big the file actually is...could be more than 1 second). Which should be acceptable.
+
+# Alpha Ready
+The API is alpha ready.
