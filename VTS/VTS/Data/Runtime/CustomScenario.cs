@@ -2362,26 +2362,34 @@ namespace VTS.Data.Runtime
 
                     if (unitFieldProperties.Contains(KeywordStrings.CarrierSpawns))
                     {
-                        // do I do something to ensure the correct number of units in the property based on ship type?
-                        //if (unit.UnitId == KeywordStrings.EscortCruiser) // 1 unit
-                        //{
-                        //}
-                        //else if (unit.UnitId == KeywordStrings.AlliedAaShip) // 6 units
-                        //{
-                        //}
-                        //else if (unit.UnitId == KeywordStrings.AlliedCarrier) // 9 units
-                        //{
-                        //}
-                        //else if (unit.UnitId == KeywordStrings.EnemyCarrier) // 10 units
-                        //{
-                        //}
+                        string unitString = string.Empty;
 
-                        List<string> unitsOnCarrier = unit.UnitFields.CarrierSpawns.Select(x => $"{x.Item1}:{x.Item2.UnitInstanceId}").ToList();
-
-                        if (unitsOnCarrier.Count > 0)
+                        if (unit.UnitId == KeywordStrings.EscortCruiser) // 1 unit
                         {
-                            uf.CarrierSpawns = string.Join(';', unitsOnCarrier) + ";";
+                            unitString = "0:-1;";
                         }
+                        else if (unit.UnitId == KeywordStrings.AlliedAaShip) // 6 units
+                        {
+                            unitString = "0:-1;1:-1;2:-1;3:-1;4:-1;5:-1;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.AlliedCarrier) // 9 units
+                        {
+                            unitString = "0:-1;1:-1;2:-1;3:-1;4:-1;5:-1;6:-1;7:-1;8:-1;";
+                        }
+                        else if (unit.UnitId == KeywordStrings.EnemyCarrier) // 10 units
+                        {
+                            unitString = "0:-1;1:-1;2:-1;3:-1;4:-1;5:-1;6:-1;7:-1;8:-1;9:-1;";
+                        }
+
+                        foreach (Tuple<int, UnitSpawner> unitAndIndex in unit.UnitFields.CarrierSpawns)
+                        {
+                            string toLookFor = $"{unitAndIndex.Item1}:-1";
+                            string toReplaceWith = $"{unitAndIndex.Item1}:{unitAndIndex.Item2.UnitInstanceId}";
+
+                            unitString = unitString.Replace(toLookFor, toReplaceWith);
+                        }
+
+                        uf.CarrierSpawns = unitString;
                     }
 
                     if (unitFieldProperties.Contains(KeywordStrings.RtbDestination))
@@ -3156,12 +3164,12 @@ namespace VTS.Data.Runtime
                         {
                             WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a path reference that could not be cast as a path to read data from.");
 
-                            pi.Value = string.Empty;
+                            pi.Value = KeywordStrings.Null;
                         }
                     }
                     else
                     {
-                        pi.Value = string.Empty;
+                        pi.Value = KeywordStrings.Null;
                     }
                 }
                 else if (pi.Type == KeywordStrings.WaypointParamInfoType)
