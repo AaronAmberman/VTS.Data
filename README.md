@@ -1,3 +1,6 @@
+# Supports
+This API was tested and written against VTOL VR 1.5.7.
+
 # VTS
 An API that contains a VTS mission file reader and writer for VTOL VR as well as data abstractions for runtime management of data.
 
