@@ -132,3 +132,6 @@ In the debug console you will notice some data warnings that come from the API a
      - Unit {unitName} (unitInstanceID) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}).
 3. VTS.Data.Runtime.CustomScenario Data Conversion Warning
    - This occurs within this API when attempting to cast between expected types and the cast fails.
+   
+## Performance of Runtime Types
+Using these types can add a bit of overhead but nothing to warrant worry. The performance from above goes to anywhere from .06 to .08 depending on busy my computer is at the time of processing. So in some cases it doubles but processing large files still takes less than 1 second. Which should be acceptable.
