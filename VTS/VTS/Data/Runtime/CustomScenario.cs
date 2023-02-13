@@ -95,11 +95,21 @@ namespace VTS.Data.Runtime
         /// <exception cref="ArgumentException">Abstraction.CustomScenario.File cannot be null, empty of consist of white-space characters only.</exception>
         /// <exception cref="TypeInitializationException">Occurs if there is an issue during the conversion of the data.</exception>
         public CustomScenario(Abstractions.CustomScenario scenario)
+            : this(scenario, WriteWarning)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="CustomScenario"/> class.</summary>
+        /// <param name="scenario">The custom scenario reference from the Abstraction namespace containing the data from the VTS file.</param>
+        /// <param name="writeWarning">The action to write warning and error information to.</param>
+        /// <exception cref="ArgumentException">Abstraction.CustomScenario.File cannot be null, empty of consist of white-space characters only.</exception>
+        /// <exception cref="TypeInitializationException">Occurs if there is an issue during the conversion of the data.</exception>
+        public CustomScenario(Abstractions.CustomScenario scenario, Action<string> writeWarning)
         {
             if (string.IsNullOrWhiteSpace(scenario.File))
                 throw new ArgumentException("Abstraction.CustomScenario.File cannot be null, empty of consist of white-space characters only.");
 
-            WarningAction = WriteWarning;
+            WarningAction = writeWarning;
 
             customScenario = scenario;
 
@@ -111,11 +121,21 @@ namespace VTS.Data.Runtime
         /// <exception cref="ArgumentException">path cannot be null, empty of consist of white-space characters only.</exception>
         /// <exception cref="TypeInitializationException">Occurs if there is an issue during the conversion of the data.</exception>
         public CustomScenario(string path)
+            : this(path, WriteWarning)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="CustomScenario"/> class.</summary>
+        /// <param name="path">The path to the VTS file to read.</param>
+        /// <param name="writeWarning">The action to write warning and error information to.</param>
+        /// <exception cref="ArgumentException">path cannot be null, empty of consist of white-space characters only.</exception>
+        /// <exception cref="TypeInitializationException">Occurs if there is an issue during the conversion of the data.</exception>
+        public CustomScenario(string path, Action<string> writeWarning)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException("path cannot be null, empty of consist of white-space characters only.");
 
-            WarningAction = WriteWarning;
+            WarningAction = writeWarning;
 
             customScenario = Abstractions.CustomScenario.ReadVtsFile(path);
 
@@ -338,7 +358,7 @@ namespace VTS.Data.Runtime
             }
         }
 
-        private void WriteWarning(string warning)
+        private static void WriteWarning(string warning)
         {
             Debug.WriteLine(warning);
         }
