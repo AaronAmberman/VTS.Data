@@ -276,7 +276,7 @@ namespace VTS.Data.Runtime
 
                 if (trigEve == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
                 }
                 else
                 {
@@ -289,7 +289,7 @@ namespace VTS.Data.Runtime
 
                 if (sequence == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
                 }
                 else
                 {
@@ -306,7 +306,7 @@ namespace VTS.Data.Runtime
 
                     if (objective == null)
                     {
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references objective {et.TargetId} and that objectives could not be found in the list of Objectives or ObjectiveOpFor.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references objective {et.TargetId} and that objectives could not be found in the list of Objectives or ObjectiveOpFor.");
                     }
                     else
                     {
@@ -324,7 +324,7 @@ namespace VTS.Data.Runtime
 
                 if (timedEventGroup == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references timed event group {et.TargetId} and that timed event group could not be found in the list of TimedEventGroups.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references timed event group {et.TargetId} and that timed event group could not be found in the list of TimedEventGroups.");
                 }
                 else
                 {
@@ -570,7 +570,7 @@ namespace VTS.Data.Runtime
 
                         if (match == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: waypoint {id} referenced on unit [unitInstanceID:{us.UnitInstanceId}] could not be found by id. No matching waypoint in the Waypoints collection.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: waypoint {id} referenced on unit [unitInstanceID:{us.UnitInstanceId}] could not be found by id. No matching waypoint in the Waypoints collection.");
                         }
                         else
                         {
@@ -608,7 +608,7 @@ namespace VTS.Data.Runtime
 
                             if (carrierSpawn == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the carrier unit {u.UnitInstanceId} referenced unit {unitId} and that unit could not be found in the collection of Units.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the carrier unit {u.UnitInstanceId} referenced unit {unitId} and that unit could not be found in the collection of Units.");
                             }
                             else
                             {
@@ -628,7 +628,7 @@ namespace VTS.Data.Runtime
 
                             if (index > Bases.Count)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the RTB destination {index} on unit {u.UnitInstanceId} could not be found in the list of Bases as the index was greater than the number of bases.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the RTB destination {index} on unit {u.UnitInstanceId} could not be found in the list of Bases as the index was greater than the number of bases.");
                             }
                             else
                             {
@@ -644,7 +644,7 @@ namespace VTS.Data.Runtime
 
                             if (rtb == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Units.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the RTB destination {id} on unit {u.UnitInstanceId} could not be found in the list of Units.");
                             }
                             else
                             {
@@ -669,7 +669,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Units.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Units.");
                             }
                             else
                             {
@@ -682,7 +682,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the rtbWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
                             }
                             else
                             {
@@ -707,7 +707,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the refuelWptID {customScenario.RefuelWaypointId} could not be found in the list of Units.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit referenced in the refuelWptID {customScenario.RefuelWaypointId} could not be found in the list of Units.");
                             }
                             else
                             {
@@ -721,7 +721,7 @@ namespace VTS.Data.Runtime
 
                             if (match == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the refuelWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the waypoint referenced in the refuelWptID {customScenario.ReturnToBaseWaypointId} could not be found in the list of Waypoints.");
                             }
                             else
                             {
@@ -1078,7 +1078,7 @@ namespace VTS.Data.Runtime
 
                         if (conditional == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references conditional {te.Conditional.Value} and that conditional could not be found in the list of Conditionals.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references conditional {te.Conditional.Value} and that conditional could not be found in the list of Conditionals.");
                         }
                         else
                         {
@@ -1092,7 +1092,7 @@ namespace VTS.Data.Runtime
 
                         if (waypoint == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references waypoint {te.Waypoint.Value} and that waypoint could not be found in the list of Waypoints.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the trigger event {te.Id} references waypoint {te.Waypoint.Value} and that waypoint could not be found in the list of Waypoints.");
                         }
                         else
                         {
@@ -1133,7 +1133,7 @@ namespace VTS.Data.Runtime
                             {
                                 int cond = e.Conditional.HasValue ? e.Conditional.Value : -1;
 
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional [{cond}] and that conditional could not be found in the list of Conditionals.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references conditional [{cond}] and that conditional could not be found in the list of Conditionals.");
                             }
                             else
                             {
@@ -1149,7 +1149,7 @@ namespace VTS.Data.Runtime
                             {
                                 int cond = e.ExitConditional.HasValue ? e.ExitConditional.Value : -1;
 
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional [{cond}] and that exit conditional could not be found in the list of Conditionals.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event sequence {s.Id} references exit conditional [{cond}] and that exit conditional could not be found in the list of Conditionals.");
                             }
                             else
                             {
@@ -1392,7 +1392,7 @@ namespace VTS.Data.Runtime
 
                     if (unit == null)
                     {
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit group {group} references unit {unitId} and that unit could not be found in the list of Units.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the unit group {group} references unit {unitId} and that unit could not be found in the list of Units.");
 
                         continue; // move on as no match was found
                     }
@@ -1414,14 +1414,14 @@ namespace VTS.Data.Runtime
                         {
                             if (groupData[1] != group)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct group. Unit is supposed to be included in {groupData[1]} but it is listed in {group} incorrectly. Skipping unit.");
 
                                 continue;
                             }
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: the unit {unitId} is not assigned to the correct larger group of groups. Current group: {ug.Name}, listed group for unit: {groupData[0]}. This means an Allied unit appeared in a Enemy group or Enemy unit appeared in an Allied group. Skipping unit.");
 
                             continue;
                         }
@@ -1429,7 +1429,7 @@ namespace VTS.Data.Runtime
 
                     // check duplicity, should be ok to check the instance because all instances come from the Units collection
                     if (groupGrouping.Units.Contains(unit))
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario UnitGroup Data Warning: unit {unit.UnitName} (unitInstanceID = {unit.UnitInstanceId}) is already a part of this group. Duplicate ID entry for the same unit within the same group ({group}). Skipping duplicate.");
                     else
                         groupGrouping.Units.Add(unit); // if not a duplicate and we are in the correct group, assign unit
                 }
@@ -1470,7 +1470,7 @@ namespace VTS.Data.Runtime
 
                 if (unit == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references unit {et.TargetId} and that unit could not be found in the list of Units.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references unit {et.TargetId} and that unit could not be found in the list of Units.");
                 }
                 else
                 {
@@ -1483,7 +1483,7 @@ namespace VTS.Data.Runtime
 
             //    if (sequence == null)
             //    {
-            //        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
+            //        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references event sequence {et.TargetId} and that event sequence could not be found in the list of EventSequences.");
             //    }
             //    else
             //    {
@@ -1496,7 +1496,7 @@ namespace VTS.Data.Runtime
 
             //    if (triggerEvent == null)
             //    {
-            //        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
+            //        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references trigger event {et.TargetId} and that trigger event could not be found in the list of TriggerEvents.");
             //    }
             //    else
             //    {
@@ -1509,7 +1509,7 @@ namespace VTS.Data.Runtime
 
                 if (staticObject == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references static object {et.TargetId} and that static object could not be found in the list of StaticObjects.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references static object {et.TargetId} and that static object could not be found in the list of StaticObjects.");
                 }
                 else
                 {
@@ -1526,7 +1526,7 @@ namespace VTS.Data.Runtime
 
             //        if (objective == null)
             //        {
-            //            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references objective {et.TargetId} and that objectives could not be found in the list of Objectives or ObjectiveOpFor.");
+            //            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the event target {et.EventName} references objective {et.TargetId} and that objectives could not be found in the list of Objectives or ObjectiveOpFor.");
             //        }
             //        else
             //        {
@@ -1601,7 +1601,7 @@ namespace VTS.Data.Runtime
                             }
                             else
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{pi.Value}] that could not be found.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{pi.Value}] that could not be found.");
                             }
                         }
                     }
@@ -1622,7 +1622,7 @@ namespace VTS.Data.Runtime
                             }
                             else
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{id}] in its list of units that could not be found.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference [{id}] in its list of units that could not be found.");
                             }
                         }
 
@@ -1640,7 +1640,7 @@ namespace VTS.Data.Runtime
                     //    }
                     //    else
                     //    {
-                    //        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference [{pi.Value}] that could not be found.");
+                    //        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference [{pi.Value}] that could not be found.");
                     //    }
                     //}
                     else if (pi.Type == KeywordStrings.AirportReference)
@@ -1654,7 +1654,7 @@ namespace VTS.Data.Runtime
 
                             if (index > Bases.Count)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a airport reference (base) [{pi.Value}] that could not be found.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a airport reference (base) [{pi.Value}] that could not be found.");
                             }
                             else
                             {
@@ -1670,7 +1670,7 @@ namespace VTS.Data.Runtime
 
                             if (rtb == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a airport reference (unit) [{pi.Value}] that could not be found.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a airport reference (unit) [{pi.Value}] that could not be found.");
                             }
                             else
                             {
@@ -1690,12 +1690,12 @@ namespace VTS.Data.Runtime
                             }
                             else
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching File Data Warning: The VTSAudioReference {pi.Value} could not be found. Please be sure to set the EditorResourcesPath if VTOL VR is installed some where other than Program Files (x86).");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching File Data Warning: The VTSAudioReference {pi.Value} could not be found. Please be sure to set the EditorResourcesPath if VTOL VR is installed some where other than Program Files (x86).");
                             }
                         }
                         catch (Exception ex)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching File Data Warning: The VTSAudioReference {pi.Value} could not be found. Please be sure to set the EditorResourcesPath if VTOL VR is installed some where other than Program Files (x86).{Environment.NewLine}{ex.Message}");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching File Data Warning: The VTSAudioReference {pi.Value} could not be found. Please be sure to set the EditorResourcesPath if VTOL VR is installed some where other than Program Files (x86).{Environment.NewLine}{ex.Message}");
                         }
                     }
                     else if (pi.Type == KeywordStrings.GlobalValueParamInfoType)
@@ -1706,7 +1706,7 @@ namespace VTS.Data.Runtime
 
                         if (globalValue == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a global value reference [{pi.Value}] that could not be found.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a global value reference [{pi.Value}] that could not be found.");
                         }
                         else
                         {
@@ -1721,7 +1721,7 @@ namespace VTS.Data.Runtime
 
                         if (path == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a path reference [{pi.Value}] that could not be found.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a path reference [{pi.Value}] that could not be found.");
                         }
                         else
                         {
@@ -1736,7 +1736,7 @@ namespace VTS.Data.Runtime
 
                         if (waypoint == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference [{pi.Value}] that could not be found.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Index Data Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference [{pi.Value}] that could not be found.");
                         }
                         else
                         {
@@ -1836,7 +1836,7 @@ namespace VTS.Data.Runtime
 
                             if (staticObject == null)
                             {
-                                WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references static object {comp.ObjectReference.Value} and that static object could not be found in the list of StaticObjects.");
+                                WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references static object {comp.ObjectReference.Value} and that static object could not be found in the list of StaticObjects.");
                             }
                             else
                             {
@@ -1856,7 +1856,7 @@ namespace VTS.Data.Runtime
 
                     if (globalValue == null)
                     {
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references global value {comp.GlobalValue} and that global value could not be found in the list of GlobalValues.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references global value {comp.GlobalValue} and that global value could not be found in the list of GlobalValues.");
                     }
                     else
                     {
@@ -1870,7 +1870,7 @@ namespace VTS.Data.Runtime
 
                     if (unit == null)
                     {
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {comp.Unit} and that unit could not be found in the list of Units.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {comp.Unit} and that unit could not be found in the list of Units.");
                     }
                     else
                     {
@@ -1890,7 +1890,7 @@ namespace VTS.Data.Runtime
 
                         if (u == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {id} in the unit list {comp.UnitList} and that unit could not be found in the list of Units.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the computation {comp.Id} on conditinal {c.Id} references unit {id} in the unit list {comp.UnitList} and that unit could not be found in the list of Units.");
                         }
                         else
                         {
@@ -1921,7 +1921,7 @@ namespace VTS.Data.Runtime
 
                         if (item == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: computation {com.Id} references other computations in its factors property. Computation {id} in the factors list could not be found in the list of compuations for conditional {conditional.Id}.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: computation {com.Id} references other computations in its factors property. Computation {id} in the factors list could not be found in the list of compuations for conditional {conditional.Id}.");
                         }
                         else
                         {
@@ -1966,7 +1966,7 @@ namespace VTS.Data.Runtime
 
                     if (unit == null)
                     {
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references unit {id} as a waypoint. The unit could not be found in the list of Units.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references unit {id} as a waypoint. The unit could not be found in the list of Units.");
                     }
                     else
                     {
@@ -1981,7 +1981,7 @@ namespace VTS.Data.Runtime
 
                     if (waypoint == null)
                     {
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references waypoint {id} as a waypoint. The waypoint could not be found in the list of Waypoints.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} references waypoint {id} as a waypoint. The waypoint could not be found in the list of Waypoints.");
                     }
                     else
                     {
@@ -2010,7 +2010,7 @@ namespace VTS.Data.Runtime
 
                 if (conditional == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a fail conditional {o.Fields.FailConditional.Value} and that conditional could not be found in the list of Conditionals.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a fail conditional {o.Fields.FailConditional.Value} and that conditional could not be found in the list of Conditionals.");
                 }
                 else
                 {
@@ -2024,7 +2024,7 @@ namespace VTS.Data.Runtime
 
                 if (conditional == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a success conditional {o.Fields.SuccessConditional.Value} and that conditional could not be found in the list of Conditionals.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a success conditional {o.Fields.SuccessConditional.Value} and that conditional could not be found in the list of Conditionals.");
                 }
                 else
                 {
@@ -2038,7 +2038,7 @@ namespace VTS.Data.Runtime
 
                 if (waypoint == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a drop off rally point waypoint {o.Fields.DropoffRallyPoint.Value} and that waypoint could not be found in the list of Waypoints.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a drop off rally point waypoint {o.Fields.DropoffRallyPoint.Value} and that waypoint could not be found in the list of Waypoints.");
                 }
                 else
                 {
@@ -2052,7 +2052,7 @@ namespace VTS.Data.Runtime
 
                 if (unit == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target {o.Fields.Target.Value} and that unit could not be found in the list of Units.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target {o.Fields.Target.Value} and that unit could not be found in the list of Units.");
                 }
                 else
                 {
@@ -2066,7 +2066,7 @@ namespace VTS.Data.Runtime
 
                 if (unit == null)
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target unit {o.Fields.TargetUnit.Value} and that unit could not be found in the list of Units.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference as target unit {o.Fields.TargetUnit.Value} and that unit could not be found in the list of Units.");
                 }
                 else
                 {
@@ -2086,7 +2086,7 @@ namespace VTS.Data.Runtime
 
                     if (u == null)
                     {
-                        WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference in targets {o.Fields.Targets} and that unit could not be found in the list of Units.");
+                        WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a unit reference in targets {o.Fields.Targets} and that unit could not be found in the list of Units.");
                     }
                     else
                     {
@@ -2132,7 +2132,7 @@ namespace VTS.Data.Runtime
 
                         if (match == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of ObjectivesOpFor.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of ObjectivesOpFor.");
                         }
                         else
                         {
@@ -2145,7 +2145,7 @@ namespace VTS.Data.Runtime
 
                         if (match == null)
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of Objectives.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario No Matching Id Data Warning: the objective {o.ObjectiveName} has a prerequisite objective {id} that could not be found in the List of Objectives.");
                         }
                         else
                         {
@@ -2633,7 +2633,7 @@ namespace VTS.Data.Runtime
             }
             catch (Exception ex)
             {
-                WriteWarning($"An exception occurred attempting to save the custom scenario.{Environment.NewLine}{ex}");
+                WarningAction($"An exception occurred attempting to save the custom scenario.{Environment.NewLine}{ex}");
 
                 return false;
             }
@@ -2888,7 +2888,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a unit could not be cast as a unit. Setting TargetId to -1.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a unit could not be cast as a unit. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == KeywordStrings.EventTargetEventSequences)
@@ -2901,7 +2901,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a sequence could not be cast as a sequence. Setting TargetId to -1.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a sequence could not be cast as a sequence. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == KeywordStrings.TriggerEventsProperty)
@@ -2914,7 +2914,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a trigger event could not be cast as a trigger event. Setting TargetId to -1.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a trigger event could not be cast as a trigger event. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == KeywordStrings.EventTargetStaticObject)
@@ -2927,7 +2927,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a static object could not be cast as a static object. Setting TargetId to -1.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a static object could not be cast as a static object. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == KeywordStrings.Objective)
@@ -2940,7 +2940,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a objective could not be cast as a objective. Setting TargetId to -1.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a objective could not be cast as a objective. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == KeywordStrings.EventTargetTimedEvents)
@@ -2953,7 +2953,7 @@ namespace VTS.Data.Runtime
                 {
                     et.TargetId = -1;
 
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a timed event group could not be cast as a timed event group. Setting TargetId to -1.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the EventTarget.Target [{et.EventName}] listed as a timed event group could not be cast as a timed event group. Setting TargetId to -1.");
                 }
             }
             else if (et.TargetType == KeywordStrings.EventTargetUnitGroup)
@@ -3033,7 +3033,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference that could not be cast as a unit to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a unit reference that could not be cast as a unit to read data from.");
 
                             pi.Value = "-1:0";
                         }
@@ -3056,7 +3056,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a list of units reference that could not be cast as a list of units to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a list of units reference that could not be cast as a list of units to read data from.");
 
                             pi.Value = string.Empty;
                         }
@@ -3078,7 +3078,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference that could not be cast as a conditional action to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a conditional action reference that could not be cast as a conditional action to read data from.");
 
                             pi.Value = string.Empty;
                         }
@@ -3116,7 +3116,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a value reference that could not be cast as a base or a unit to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a value reference that could not be cast as a base or a unit to read data from.");
 
                             pi.Value = string.Empty;
                         }
@@ -3138,7 +3138,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a file info reference that could not be cast as a file info to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a file info reference that could not be cast as a file info to read data from.");
 
                             pi.Value = KeywordStrings.Null;
                         }
@@ -3160,7 +3160,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a global value reference that could not be cast as a global value to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a global value reference that could not be cast as a global value to read data from.");
 
                             pi.Value = string.Empty;
                         }
@@ -3182,7 +3182,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a path reference that could not be cast as a path to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a path reference that could not be cast as a path to read data from.");
 
                             pi.Value = KeywordStrings.Null;
                         }
@@ -3204,7 +3204,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference that could not be cast as a waypoint to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference that could not be cast as a waypoint to read data from.");
 
                             pi.Value = string.Empty;
                         }
@@ -3226,7 +3226,7 @@ namespace VTS.Data.Runtime
                         }
                         else
                         {
-                            WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference that could not be cast as a waypoint to read data from.");
+                            WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: the ParamInfo object with name {pi.Name} and the type of {pi.Type} has a waypoint reference that could not be cast as a waypoint to read data from.");
 
                             pi.Value = string.Empty;
                         }
@@ -3290,7 +3290,7 @@ namespace VTS.Data.Runtime
                 }
                 else
                 {
-                    WriteWarning($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: could not convert the Objective.Waypoint for objective [{objective.ObjectiveName}] to either a unit or a waypoint type.");
+                    WarningAction($"VTS.Data.Runtime.CustomScenario Data Conversion Warning: could not convert the Objective.Waypoint for objective [{objective.ObjectiveName}] to either a unit or a waypoint type.");
                 }
             }
 
