@@ -34,7 +34,7 @@
         {
             return new TriggerEvent
             {
-                Conditional = Conditional,
+                Conditional = Conditional?.Clone(),
                 Enabled = Enabled,
                 EventInfo = EventInfo.Clone(),
                 EventName = EventName,
@@ -44,7 +44,7 @@
                 SphericalRadius = SphericalRadius,
                 TriggerMode = TriggerMode,
                 TriggerType = TriggerType,
-                Waypoint = Waypoint,
+                Waypoint = Waypoint.Clone(),
                 Parent = Parent
             };
         }

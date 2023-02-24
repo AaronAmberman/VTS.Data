@@ -68,7 +68,7 @@ namespace VTS.Data.Runtime
                 AutoReturnToBase = AutoReturnToBase,
                 AwacsVoiceProfile = AwacsVoiceProfile,
                 Behavior = Behavior,
-                CarrierSpawns = CarrierSpawns,
+                CarrierSpawns = CarrierSpawns.Select(x => new Tuple<int, UnitSpawner>(x.Item1, x.Item2.Clone())).ToList(),
                 CombatTarget = CombatTarget,
                 CommsEnabled = CommsEnabled,
                 DefaultBehavior = DefaultBehavior,
@@ -100,7 +100,7 @@ namespace VTS.Data.Runtime
                 StopToEngage = StopToEngage,
                 UnitGroup = UnitGroup,
                 VoiceProfile = VoiceProfile,
-                Waypoint = Waypoint,
+                Waypoint = Waypoint?.Clone(),
                 Parent = Parent
             };
         }

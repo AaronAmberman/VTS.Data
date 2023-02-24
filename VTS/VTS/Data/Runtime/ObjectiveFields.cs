@@ -37,21 +37,21 @@
         {
             return new ObjectiveFields
             {
-                FailConditional = FailConditional,
-                SuccessConditional = SuccessConditional,
+                FailConditional = FailConditional?.Clone(),
+                SuccessConditional = SuccessConditional?.Clone(),
                 Radius = Radius,
-                Targets = Targets,
+                Targets = Targets.Select(x => x.Clone()).ToList(),
                 MinRequired = MinRequired,
                 PerUnitReward = PerUnitReward,
                 FullCompletionBonus = FullCompletionBonus,
                 UnloadRadius = UnloadRadius,
-                DropoffRallyPoint = DropoffRallyPoint,
+                DropoffRallyPoint = DropoffRallyPoint?.Clone(),
                 TriggerRadius = TriggerRadius,
                 SphericalRadius = SphericalRadius,
-                TargetUnit = TargetUnit,
+                TargetUnit = TargetUnit?.Clone(),
                 FuelLevel = FuelLevel,
                 CompletionMode = CompletionMode,
-                Target = Target,
+                Target = Target?.Clone(),
                 Parent = Parent
             };
         }

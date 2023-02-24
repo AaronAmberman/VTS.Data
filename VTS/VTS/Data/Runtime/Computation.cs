@@ -47,7 +47,7 @@
                 ControlValue = ControlValue,
                 CValue = CValue,
                 Factors = Factors.Select (x => x.Clone()).ToList(),
-                GlobalValue = GlobalValue,
+                GlobalValue = GlobalValue.Clone(),
                 Id = Id,
                 IsNot = IsNot,
                 MethodParameters = MethodParameters,
@@ -55,9 +55,9 @@
                 ObjectReference = ObjectReference,
                 Type = Type,
                 UiPosition = UiPosition.Clone(),
-                Unit = Unit,
+                Unit = Unit?.Clone(),
                 UnitGroup = UnitGroup,
-                UnitList = UnitList,
+                UnitList = UnitList.Select(x => x.Clone()).ToList(),
                 VehicleControl = VehicleControl,
                 Parent = Parent
             };
