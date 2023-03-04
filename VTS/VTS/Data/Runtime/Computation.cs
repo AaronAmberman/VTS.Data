@@ -46,7 +46,7 @@
                 ControlCondition = ControlCondition,
                 ControlValue = ControlValue,
                 CValue = CValue,
-                Factors = Factors.Select (x => x.Clone()).ToList(),
+                Factors = Factors.Select(x => x.Clone()).ToList(),
                 GlobalValue = GlobalValue?.Clone(),
                 Id = Id,
                 IsNot = IsNot,
