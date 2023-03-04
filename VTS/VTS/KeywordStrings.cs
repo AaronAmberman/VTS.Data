@@ -343,7 +343,7 @@
         public const string AlliedRearmRefuelPointC = "AlliedRearmRefuelPointC";
         public const string AlliedRearmRefuelPointD = "AlliedRearmRefuelPointD";
 
-        public IReadOnlyList<string> EnemyUnitTypes => new List<string>
+        public static IReadOnlyList<string> EnemyUnitTypes => new List<string>
         {
             DroneCarrier,
             DroneGunBoat,
@@ -376,7 +376,7 @@
             Gav25
         };
 
-        public IReadOnlyList<string> PlayerUnitTypes => new List<string>
+        public static IReadOnlyList<string> PlayerUnitTypes => new List<string>
         {
             AlliedAaShip,
             AlliedCarrier,
