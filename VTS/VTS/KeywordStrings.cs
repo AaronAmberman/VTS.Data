@@ -297,6 +297,119 @@
 
         // units
         public const string Aew50 = "AEW-50";
+        public const string DroneCarrier = "DroneCarrier";
+        public const string DroneGunBoat = "DroneGunBoat";
+        public const string DroneGunBoatRocket = "DroneGunBoatRocket";
+        public const string DroneMissileCruiser = "DroneMissileCruiser";
+        public const string ESuperMissileCruiser = "ESuperMissileCruiser";
+        public const string MineBoat = "MineBoat";
+        public const string Artillery = "Artillery";
+        public const string EnemyMBT1 = "enemyMBT1";
+        public const string EnemySoldier = "EnemySoldier";
+        public const string EnemySoldierMANPAD = "EnemySoldierMANPAD";
+        public const string ERocketTruck = "ERocketTruck";
+        public const string IRAPC = "IRAPC";
+        public const string MAD4Launcher = "MAD-4Launcher";
+        public const string MAD4Radar = "MAD-4Radar";
+        public const string SAAW = "SAAW";
+        public const string Bunker1 = "bunker1";
+        public const string SamBattery1 = "SamBattery1";
+        public const string SamFCR = "SamFCR";
+        public const string SamFCR2 = "SamFCR2";
+        public const string StaticAAA20x2 = "staticAAA-20x2";
+        public const string CylinderTent = "cylinderTent";
+
+        public const string E4 = "E-4";
+        public const string KC49 = "KC-49";
+        public const string AlliedBackstopSAM = "AlliedBackstopSAM";
+        public const string AlliedEWRadar = "AlliedEWRadar";
+        public const string BSTOPRadar = "BSTOPRadar";
+        public const string Bunker2 = "bunker2";
+        public const string PatRadarTrailer = "PatRadarTrailer";
+        public const string PatriotLauncher = "PatriotLauncher";
+        public const string StaticCIWS = "staticCIWS";
+        public const string AlliedCylinderTent = "alliedCylinderTent";
+        public const string AlliedMBT1 = "alliedMBT1";
+        public const string AlliedSoldier = "AlliedSoldier";
+        public const string AlliedSoldierMANPAD = "AlliedSoldierMANPAD";
+        public const string ARocketTruck = "ARocketTruck";
+        public const string PhallanxTruck = "PhallanxTruck";
+        public const string SLAIM120Truck = "SLAIM120Truck";
+        public const string SRADTruck = "SRADTruck";
+        public const string WatchmanTruck = "WatchmanTruck";
+        public const string PlayerSpawn = "PlayerSpawn";
+        public const string AlliedRearmRefuelPoint = "AlliedRearmRefuelPoint";
+        public const string AlliedRearmRefuelPointB = "AlliedRearmRefuelPointB";
+        public const string AlliedRearmRefuelPointC = "AlliedRearmRefuelPointC";
+        public const string AlliedRearmRefuelPointD = "AlliedRearmRefuelPointD";
+
+        public IReadOnlyList<string> EnemyUnitTypes => new List<string>
+        {
+            DroneCarrier,
+            DroneGunBoat,
+            DroneGunBoatRocket,
+            DroneMissileCruiser,
+            EnemyCarrier,
+            ESuperMissileCruiser,
+            MineBoat,
+            Artillery,
+            EnemyMBT1,
+            EnemySoldier,
+            EnemySoldierMANPAD,
+            ERocketTruck,
+            IRAPC,
+            MAD4Launcher,
+            MAD4Radar,
+            SAAW,
+            Bunker1,
+            SamBattery1,
+            SamFCR,
+            SamFCR2,
+            StaticAAA20x2,
+            CylinderTent,
+            Aew50,
+            AiUCAV,
+            ASF30,
+            ASF33,
+            ASF58,
+            EBomberAi,
+            Gav25
+        };
+
+        public IReadOnlyList<string> PlayerUnitTypes => new List<string>
+        {
+            AlliedAaShip,
+            AlliedCarrier,
+            EscortCruiser,
+            AlliedBackstopSAM,
+            AlliedEWRadar,
+            BSTOPRadar,
+            Bunker2,
+            PatRadarTrailer,
+            PatriotLauncher,
+            StaticCIWS,
+            AlliedCylinderTent,
+            AlliedMBT1,
+            AlliedSoldier,
+            AlliedSoldierMANPAD,
+            ARocketTruck,
+            PhallanxTruck,
+            SLAIM120Truck,
+            SRADTruck,
+            WatchmanTruck,
+            PlayerSpawn,
+            AlliedRearmRefuelPoint,
+            AlliedRearmRefuelPointB,
+            AlliedRearmRefuelPointC,
+            AlliedRearmRefuelPointD,
+            ABomberAi,
+            AV42CAi,
+            E4,
+            F45AAi,
+            FA26BAi,
+            KC49,
+            MQ31
+        };
 
         // used by Raw and Abstraction namespaces for VTS object construction and recognition
         public const string Actions = "ACTIONS";
