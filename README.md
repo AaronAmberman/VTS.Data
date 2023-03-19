@@ -141,3 +141,12 @@ Using these types can add a bit of overhead but nothing to warrant worry. The pe
 
 # Alpha Ready
 The API is alpha ready.
+
+# Not Supported
+- DLC content
+   - I do not have any DLC and did not build in their values into the API.
+- Direct weapon support
+   - I did not map out the weapons used by each aircraft.
+   
+# Known Issues
+- The ToString output of X, Y, Z locations or rotations. Some of the ToString calls come out exactly matching...some don't
